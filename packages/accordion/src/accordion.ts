@@ -12,13 +12,16 @@ export default class Accordion {
 
     constructor(accordion: string | HTMLElement, options: AccordionOptions = {}) {
         this.accordionEl = typeof accordion === "string" ? document.querySelector(accordion) as HTMLElement : accordion;
+        if (!this.accordionEl) {
+            throw new Error("Accordion element not found");
+        }
         this.options = {
             accordionType: this.accordionEl.dataset.accordionType as AccordionType || "single",
             preventClosingAll: this.accordionEl.hasAttribute("data-prevent-closing-all") || false,
             defaultValue: this.accordionEl.dataset.defaultValue || "",
             ...options,
         };
-        this.items = $$("[data-accordion-item]", this.accordionEl).filter((item) => item.parentElement === this.accordionEl);
+        this.items = $$("[data-accordion-item]", this.accordionEl).filter((item: { parentElement: HTMLElement; }) => item.parentElement === this.accordionEl);
         this.initAccordion();
     }
 
