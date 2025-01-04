@@ -796,7 +796,7 @@
             "packageExports": {
               ".": {
                 "import": {
-                  "types": "./dist/utilities.d.ts",
+                  "types": "./dist/index.d.ts",
                   "default": "./dist/utilities.js"
                 },
                 "require": {
@@ -10512,6 +10512,11 @@
       }
     ],
     "@flexilla/collapse": [
+      {
+        "source": "@flexilla/collapse",
+        "target": "npm:@biomejs/biome",
+        "type": "static"
+      },
       {
         "source": "@flexilla/collapse",
         "target": "npm:typescript",
