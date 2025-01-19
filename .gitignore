@@ -1,5 +1,6 @@
 node_modules/
 .nx/cache
+.nx/
 lerna-debug.log
 zip
 log
