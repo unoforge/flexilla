@@ -12,10 +12,8 @@
     "build": "npm run build-utilities && npm run build-packages && npx lerna run build --scope=@flexilla/flexilla && npx lerna run build --scope=@flexilla/uno-preset"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.5.1",
     "@types/node": "^20.11.5",
-    "lerna": "^8.1.9",
-    "vite": "^5.0.11"
+    "lerna": "^8.1.9"
   },
   "dependencies": {
     "overlayscrollbars": "^2.10.0"

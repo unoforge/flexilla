@@ -19,7 +19,7 @@ export type PrimitivesOptions = {
 export const presetVariants = (options: PrimitivesOptions = {}): Variant => {
     const {
         prefix = 'fx',
-        variants = 'visible|hidden|active|inactive|open|close',
+        variants = 'visible|hidden|active|inactive|open|close|opened|closed',
         selector = 'data-state',
         isAttrBoolean = false,
     } = options;
