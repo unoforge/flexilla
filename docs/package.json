@@ -20,7 +20,7 @@
     "@astrojs/preact": "^4.0.2",
     "@astrojs/vercel": "^8.0.2",
     "@astrojs/vue": "^5.0.5",
-    "@flexilla/flexilla": "^2.0.64",
+    "@flexilla/flexilla": "^2.0.8",
     "@fontsource/geist-sans": "^5.1.0",
     "@preact/signals": "^1.2.2",
     "astro": "^5.1.7",
