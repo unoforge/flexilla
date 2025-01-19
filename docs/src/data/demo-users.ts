@@ -20,7 +20,7 @@ export const users: {
       description:"💻 building amazing webdesign stuff 🚧 working on @unify-ui-dev ✨ interested in : web development, react/nextjs, tailwindcss, VueJs, UnoCss... C# lover",
       team:{
         name:"UnifyUI Dev",
-        link:"https://github.com/unify-ui-dev",
+        link:"https://github.com/unoforge",
       },
       mail: "johnkatembue4@gmail.com",
       type: "public",
@@ -34,7 +34,7 @@ export const users: {
       description:"Software Developer| Php Developer | Laravel Developer| Inertia | ReactJs | Angular | VueJs | Python",
       team:{
         name:"UnifyUI Dev",
-        link:"https://github.com/unify-ui-dev",
+        link:"https://github.com/unoforge",
       },
       mail: "tresorKasenda",
       type: "private",
@@ -62,7 +62,7 @@ export const users: {
       description:"Je suis un passionné de développement web avec une solide expérience dans la création de sites et d'applications web conviviaux et performants.",
       team:{
         name:"UnifyUI Dev",
-        link:"https://github.com/unify-ui-dev",
+        link:"https://github.com/unoforge",
       },
       mail: "judelFintch",
       type: "private",
