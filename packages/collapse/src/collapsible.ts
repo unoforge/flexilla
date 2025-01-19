@@ -52,12 +52,12 @@ const expandCollapseElement = (
     }
 
 
+    if (triggerElement instanceof HTMLElement) {
+        triggerElement.setAttribute("aria-expanded", state === "open" ? "true" : "false");
+    }
     afterTransition({
         element: collapseElement, callback() {
             changeCollapseElState(collapseElement, state);
-            if (triggerElement instanceof HTMLElement) {
-                triggerElement.setAttribute("aria-expanded", state === "open" ? "true" : "false");
-            }
         }
     })
 }

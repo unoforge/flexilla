@@ -21,7 +21,7 @@ export default class Accordion {
             defaultValue: this.accordionEl.dataset.defaultValue || "",
             ...options,
         };
-        this.items = $$("[data-accordion-item]", this.accordionEl).filter((item: { parentElement: HTMLElement; }) => item.parentElement === this.accordionEl);
+        this.items = $$("[data-accordion-item]", this.accordionEl).filter((item: HTMLElement) => item.parentElement && item.parentElement === this.accordionEl);
         this.initAccordion();
     }
 
