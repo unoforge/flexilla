@@ -27,17 +27,15 @@
     "!biome.js"
   ],
   "scripts": {
-    "build": "rimraf dist && unbuild",
-    "preview": "vite preview",
-    "format": "biome format --write ./src"
+    "build": "rimraf dist && unbuild"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
-    "rimraf": "^5.0.5",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.2.2",
-    "unbuild": "^2.0.0",
-    "unocss": "^0.62.4"
+    "unbuild": "^3.3.1",
+    "unocss": "^0.65.4"
   },
   "peerDependencies": {
     "unocss": ">=0.58.5  <1.0.0"
@@ -53,10 +51,10 @@
   "homepage": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/unify-ui-dev/flexilla"
+    "url": "https://github.com/unoforge/flexilla"
   },
   "bugs": {
-    "url": "https://github.com/unify-ui-dev/flexilla/issues"
+    "url": "https://github.com/unoforge/flexilla/issues"
   },
   "license": "MIT",
   "author": "johnkat-mj"
