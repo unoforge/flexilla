@@ -47,7 +47,7 @@ module.exports = plugin(({ addVariant, e, addComponents }) => {
             ? `.peer:not(${attrGen}) ~ .peer-${e(
                 `${variantName}${separator}${className}`
               )}`
-            : `.peer${attrGen} ~ .${e(
+            : `.peer${attrGen} ~ .peer-${e(
                 `${variantName}${separator}${className}`
               )}`;
         });
@@ -57,10 +57,10 @@ module.exports = plugin(({ addVariant, e, addComponents }) => {
       ({ modifySelectors, separator }) => {
         modifySelectors(({ className }) => {
           return startWithNot
-            ? `.group:not(${attrGen}) .${e(
+            ? `.group:not(${attrGen}) .group-${e(
                 `${variantName}${separator}${className}`
               )}`
-            : `.group${attrGen} .${e(
+            : `.group${attrGen} .group-${e(
                 `${variantName}${separator}${className}`
               )}`;
         });
@@ -71,10 +71,6 @@ module.exports = plugin(({ addVariant, e, addComponents }) => {
   addComponents({
     ".ui-popper": {
       position: "fixed",
-      top: "var(--fx-popper-placement-y)",
-      left: "var(--fx-popper-placement-x)",
-    },".ui-popper-absolute": {
-      position: "absolute",
       top: "var(--fx-popper-placement-y)",
       left: "var(--fx-popper-placement-x)",
     },

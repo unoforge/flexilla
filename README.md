@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://github.com/unify-ui-dev/flexilla" target="_blank">
+<a href="https://github.com/unoforge/flexilla" target="_blank">
 <img src='./docs/public/flexilla-cover.png' width="100%" alt="Flexilla Covers" />
 </a>
 </p>

@@ -4,9 +4,6 @@ Every contribution is welcome to this open source project. However, before submi
 
 - [Flexilla (flexilla) Contributing Guide](#flexilla-flexilla-contributing-guide)
   - [Don't know how to contribute or new to Open Source?](#dont-know-how-to-contribute-or-new-to-open-source)
-  - [Have a question?](#have-a-question)
-    - [Prerequisites](#prerequisites)
-      - [Vs Code Extensions](#vs-code-extensions)
   - [commit-convention](#commit-convention)
   - [Pull Request Guidelines](#pull-request-guidelines)
     - [Steps to PR](#steps-to-pr)
@@ -22,7 +19,7 @@ Take a look at :
 
 ## Have a question?
 
-1. Check our [Github Issues](https://github.com/unify-ui-dev/flexilla/issues) to see if someone has already answered your question.
+1. Check our [Github Issues](https://github.com/unoforge/flexilla/issues) to see if someone has already answered your question.
 2. Go to the [Discord Server](https://discord.gg/6VN6zTPZAy)
 3. Or Contact one of maintainers
 
@@ -59,19 +56,19 @@ Read [this](https://www.conventionalcommits.org/en/v1.0.0/)
 
 After cloning the repository, execute the following commands in the root folder:
 
-1. Install dependencies
+1. Setup
 
 Make sure to install the dependencies:
 
 ```bash
-npm install
+npm run setup
 ```
 
 
 ### Build packages
 
 ```bash
-npx lerna run build
+npm run build
 ```
 
 **Build a single package**
@@ -84,5 +81,5 @@ npm run build
 or 
 
 ```bash
-npx lerna run build -scope=@packageToBuild
+npx lerna run build -scope=@flexilla/packageToBuild
 ```

@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/popover",
   "private": false,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "description": "A lightweight and customizable Popover component for displaying additional information on hover over elements in web applications.",
   "publishConfig": {
