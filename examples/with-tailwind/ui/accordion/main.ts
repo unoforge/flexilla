@@ -1,4 +1,4 @@
-import "./../main"
+import "../../main"
 import { Accordion } from "@flexilla/accordion"
 
 new Accordion('[data-accordion-1]')

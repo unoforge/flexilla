@@ -1,4 +1,4 @@
-import "./../main"
+import "../../main"
 import { Collapse } from "@flexilla/collapse"
 
 

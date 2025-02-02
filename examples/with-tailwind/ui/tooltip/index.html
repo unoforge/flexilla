@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + TS</title>
+  <style>
+    body {
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body class="pt-14 bg-white dark:bg-zinc-950">
+  <section class="max-w-3xl mx-auto space-y-16 relative z-20 pb-20">
+    <div class="space-y-6">
+      <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+        Tooltip
+      </h1>
+      <div
+        class="p-10 rounded-lg bg-gradient-to-bl from-neutral-500 via-gray-300 to-zinc-400 h-96 flex gap-4 items-center justify-center">
+        <div class="flex items-center gap-4 relative">
+          <button aria-label="tooltip with default placement" data-tooltip-trigger data-tooltip-id="tooltip-test"
+            class="relative bg-neutral-800 text-white border border-neutral-800 p-2 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+              <path fill-rule="evenodd"
+                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div data-tooltip-1 id="tooltip-test"
+            class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-48 px-4 py-1.5 text-center text-gray-600 truncate bg-white rounded-lg shadow-lg dark:shadow-none shadow-gray-200 dark:bg-gray-800 dark:text-white">
+            <p>
+              This is a tooltip
+            </p>
+          </div>
+
+          <button aria-label="tooltip with default placement" data-tooltip-trigger data-tooltip-id="tooltip-test2"
+            class="relative bg-neutral-800 text-white border border-neutral-800 p-2 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+              <path fill-rule="evenodd"
+                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div data-tooltip-2 id="tooltip-test2"
+            class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-48 px-4 py-1.5 text-center text-gray-600 truncate bg-white rounded-lg shadow-lg dark:shadow-none shadow-gray-200 dark:bg-gray-800 dark:text-white">
+            <p>
+              This is a tooltip
+            </p>
+          </div>
+
+          <button aria-label="tooltip with default placement" data-tooltip-trigger data-tooltip-id="tooltip-test3"
+            class="relative bg-neutral-800 text-white border border-neutral-800 p-2 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+              <path fill-rule="evenodd"
+                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div data-tooltip-3 id="tooltip-test3"
+            class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-48 px-4 py-1.5 text-center text-gray-600 truncate bg-white rounded-lg shadow-lg dark:shadow-none shadow-gray-200 dark:bg-gray-800 dark:text-white">
+            <p>
+              This is a tooltip
+            </p>
+          </div>
+
+          <button aria-label="tooltip with default placement" data-tooltip-trigger data-tooltip-id="tooltip-test4"
+            class="relative bg-neutral-800 text-white border border-neutral-800 p-2 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+              <path fill-rule="evenodd"
+                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div data-tooltip-4 id="tooltip-test4"
+            class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-48 px-4 py-1.5 text-center text-gray-600 truncate bg-white rounded-lg shadow-lg dark:shadow-none shadow-gray-200 dark:bg-gray-800 dark:text-white">
+            <p>
+              This is a tooltip
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="space-y-6">
+      <div space-y-1>
+        <h1 class="text-xl font-semibold text-gray9 dark:text-white">
+          TriggerMode : Click
+        </h1>
+        <p text-gray7>
+          Show When Trigger Clicked
+        </p>
+      </div>
+      <div
+        class="p-10 rounded-lg bg-gradient-to-bl from-neutral-500 via-gray-300 to-zinc-400 h-96 flex items-center justify-center gap-4">
+        <div class="flex items-center gap4 relative">
+          <button aria-label="tooltip with default placement" data-tooltip-trigger data-tooltip-id="tooltip-test-click"
+            class="relative bg-neutral-800 text-white border border-neutral-800 p-2 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+              <path fill-rule="evenodd"
+                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div data-tooltip-click data-trigger-strategy="click" id="tooltip-test-click"
+            class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-48 px-4 py-1.5 text-center text-gray-600 truncate bg-white rounded-lg shadow-lg dark:shadow-none shadow-gray-200 dark:bg-gray-800 dark:text-white">
+            <p>
+              This is a tooltip
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>

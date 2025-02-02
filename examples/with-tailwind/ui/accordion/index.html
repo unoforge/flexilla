@@ -8,18 +8,18 @@
   <title>Vite + TS</title>
 </head>
 
-<body>
-  <section class="mx-auto space-y-16 max-w2xl py-20">
+<body class="bg-white dark:bg-gray-950">
+  <section class="mx-auto space-y-16 max-w-2xl py-20">
     <div class="space-y-6">
       <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
         Default Accordion
       </h1>
-      <div class="p-10 rounded-lg bg-gradient-to-bl from-blue-600 via-indigo-400 to-sky-600 group-fx-open:bg-zinc-100 peer-fx-open:dark:bg-zinc-900/60">
-        <div data-accordion-1 data-default-value="accordion-1" data-accordion-type="single" class="space-y-2 bg-zinc-200/40 dark:bg-zinc-900/60">
-          <div data-accordion-item data-accordion-value="accordion-1"
-            class="rounded-md">
+      <div class="p-10 rounded-lg bg-gradient-to-bl from-blue-600 via-indigo-400 to-sky-600">
+        <div data-accordion-1 data-default-value="accordion-1"
+          class="space-y-2 bg-zinc-200/40 dark:bg-zinc-900/60 rounded-md">
+          <div data-accordion-item data-accordion-value="accordion-1" class="rounded-md">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
               Is it accessible?
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -29,10 +29,9 @@
               </p>
             </div>
           </div>
-          <div data-accordion-item data-accordion-value="accordion-2"
-            class="rounded-md">
+          <div data-accordion-item data-accordion-value="accordion-2" class="rounded-md">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
               Is it unstyled?
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -42,10 +41,9 @@
               </p>
             </div>
           </div>
-          <div data-accordion-item data-accordion-value="accordion-3"
-            class="rounded-md">
+          <div data-accordion-item data-accordion-value="accordion-3" class="rounded-md">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
               Can it be animated?
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -62,21 +60,21 @@
       <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
         Nested Accordion
       </h1>
-      <div class="p10 rounded-lg bg-gradient-to-bl from-blue-600 via-indigo-400 to-sky-600">
-        <div data-accordion-nested data-default-value="accordion-2" data-accordion-type="single" class="space-y-2 bg-zinc-200/40 dark:bg-zinc-900/60">
-          <div data-accordion-item data-accordion-value="accordion-1"
-            class="rounded-md">
+      <div class="p-10 rounded-lg bg-gradient-to-bl from-neutral-500 via-gray-300 to-zinc-400">
+        <div data-accordion-nested data-default-value="accordion-2" data-accordion-type="single"
+          class="space-y-2 bg-zinc-200/40 dark:bg-zinc-900/60 rounded-md">
+          <div data-accordion-item data-accordion-value="accordion-1" class="rounded-md">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
               Is it accessible?
             </button>
             <div aria-hidden="true" data-accordion-content
               class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear overflow-hidden px-2">
-              <div data-accordion-nested-child data-default-value="accordion-1" data-accordion-type="single" class="space-y-2 bg-zinc-200 dark:bg-zinc-800 rounded-md">
-                <div data-accordion-item data-accordion-value="accordion-1"
-                  class="rounded-md">
+              <div data-accordion-nested-child data-default-value="accordion-1" data-accordion-type="single"
+                class="space-y-2 bg-zinc-200 dark:bg-zinc-800 rounded-md">
+                <div data-accordion-item data-accordion-value="accordion-1" class="rounded-md">
                   <button data-accordion-trigger aria-label="toggle button"
-                    class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+                    class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
                     Is it accessible?
                   </button>
                   <div aria-hidden="true" data-accordion-content
@@ -86,10 +84,9 @@
                     </p>
                   </div>
                 </div>
-                <div data-accordion-item data-accordion-value="accordion-2"
-                  class="rounded-md">
+                <div data-accordion-item data-accordion-value="accordion-2" class="rounded-md">
                   <button data-accordion-trigger aria-label="toggle button"
-                    class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+                    class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
                     Is it unstyled?
                   </button>
                   <div aria-hidden="true" data-accordion-content
@@ -99,10 +96,9 @@
                     </p>
                   </div>
                 </div>
-                <div data-accordion-item data-accordion-value="accordion-3"
-                  class="rounded-md">
+                <div data-accordion-item data-accordion-value="accordion-3" class="rounded-md">
                   <button data-accordion-trigger aria-label="toggle button"
-                    class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+                    class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
                     Can it be animated?
                   </button>
                   <div aria-hidden="true" data-accordion-content
@@ -115,10 +111,9 @@
               </div>
             </div>
           </div>
-          <div data-accordion-item data-accordion-value="accordion-2"
-            class="rounded-md">
+          <div data-accordion-item data-accordion-value="accordion-2" class="rounded-md">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
               Is it unstyled?
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -128,10 +123,9 @@
               </p>
             </div>
           </div>
-          <div data-accordion-item data-accordion-value="accordion-3"
-            class="rounded-md">
+          <div data-accordion-item data-accordion-value="accordion-3" class="rounded-md">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
               Can it be animated?
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -151,15 +145,15 @@
       <div class="p-6 rounded-lg border border-zinc-200 dark:border-zinc-900">
         <div data-accordion-2 data-accordion-type="single" class="space-y-2">
           <div data-accordion-item data-accordion-value="accordion-1"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Is it accessible?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -170,15 +164,15 @@
             </div>
           </div>
           <div data-accordion-item data-default-open data-accordion-value="accordion-2"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Is it unstyled?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -189,15 +183,15 @@
             </div>
           </div>
           <div data-accordion-item data-accordion-value="accordion-3"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Can it be animated?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -217,15 +211,15 @@
       <div class="p-6 rounded-lg border border-zinc-200 dark:border-zinc-900">
         <div data-accordion-3 class="space-y-2">
           <div data-accordion-item data-accordion-value="accordion-1"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Is it accessible?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -236,15 +230,15 @@
             </div>
           </div>
           <div data-accordion-item data-accordion-value="accordion-2"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Is it unstyled?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -255,15 +249,15 @@
             </div>
           </div>
           <div data-accordion-item data-accordion-value="accordion-3"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Can it be animated?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -283,15 +277,15 @@
       <div class="p-6 rounded-lg border border-zinc-200 dark:border-zinc-900">
         <div data-accordion-4 class="space-y-2">
           <div data-accordion-item data-accordion-value="accordion-1"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Is it accessible?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -302,15 +296,15 @@
             </div>
           </div>
           <div data-accordion-item data-accordion-value="accordion-2"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Is it unstyled?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -321,15 +315,15 @@
             </div>
           </div>
           <div data-accordion-item data-accordion-value="accordion-3"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Can it be animated?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -349,16 +343,12 @@
       <div class="p-6 rounded-lg border border-zinc-200 dark:border-zinc-900">
         <div data-accordion-5 class="space-y-2">
           <div data-accordion-item data-accordion-value="accordion-1"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Is it accessible?
-              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
-                <path fill-rule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
-              </svg>
+              <span
+                class="ease-linear duration-300 i-carbon-chevron-down  group-aria-expanded:rotate-180 text-md"></span>
             </button>
             <div aria-hidden="true" data-accordion-content
               class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear max-h-0 overflow-hidden">
@@ -368,15 +358,15 @@
             </div>
           </div>
           <div data-accordion-item data-accordion-value="accordion-2"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Is it unstyled?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content
@@ -387,15 +377,15 @@
             </div>
           </div>
           <div data-accordion-item data-accordion-value="accordion-3"
-            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:b-zinc-200/50 dark:fx-open:b-zinc-800/40">
+            class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40">
             <button data-accordion-trigger aria-label="toggle button"
-              class="px-4 wfull flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
+              class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group">
               Can it be animated?
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                 class="size-5 ease-linear duration-300 group:aria-expanded:rotate-180">
                 <path fill-rule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"></path>
               </svg>
             </button>
             <div aria-hidden="true" data-accordion-content

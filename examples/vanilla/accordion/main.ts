@@ -1,7 +1,10 @@
 import "./../main"
 import { Accordion } from "@flexilla/accordion"
 
-new Accordion('[data-accordion-1]')
+new Accordion('[data-accordion-1]',{
+    accordionType:"single",
+    allowCloseFromContent:true
+})
 
 new Accordion("[data-accordion-nested]")
 new Accordion("[data-accordion-nested-child]")

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + TS</title>
+  <style>
+    body {
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body class="pt-14 bg-white dark:bg-zinc950">
+  <section class="max-w-3xl mx-auto space-y-16 relative z-20 pb-20">
+    <div class="space-y-6">
+      <div class="space-y-1">
+        <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
+            Popover
+        </h1>
+        <p class="text-gray-700">
+            Popover is an extention of tooltip
+        </p>
+    </div>
+      <div
+        class="p-10 rounded-lg bg-gradient-to-bl from-neutral-500 via-gray-300 to-zinc-400 h-96 flex gap-4 items-center justify-center">
+        <div>
+          <button data-popover-trigger data-popover-id="popover-example" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
+            Show PopOver
+          </button>
+          <div data-fx-popper data-popover-content id="popover-example" class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-64 z-20 p-6 bg-zinc-100 dark:bg-zinc-900/50 rounded-md h-48">
+            this is content
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>

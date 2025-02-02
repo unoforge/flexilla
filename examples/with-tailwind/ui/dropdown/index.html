@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en" class="dasrk">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + TS</title>
+  <style>
+    body {
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body class="py-14 bg-white dark:bg-zinc-950">
+  <section class="max-w-3xl mx-auto space-y-16 relative z-20 pb-20">
+    <div class="space-y-6">
+      <div class="space-y-1">
+        <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
+          Dropdown
+        </h1>
+        <p class="text-zinc-700">
+          Dropdow use Popper as base for position
+        </p>
+      </div>
+      <div
+        class="p-10 rounded-lg bg-gradient-to-bl from-neutral-500 via-gray-300 to-zinc-400 h-96 flex gap-4 items-center justify-center">
+        <div data-fx-dropdown  class="relative">
+          <button data-dropdown-trigger data-dropdown-id="dropdown-1" class="border border-zinc-800 hover:bg-zinc-950 bg-zinc-900 text-white px-4 py-2 rounded-lg text-sm">
+            Open Dropdown
+          </button>
+          <div role="list" id="dropdown-1" data-drop-down-1 data-fx-popper
+            class="ui-popper z-20 w-56 border border-zinc-800 bg-zinc-900/80 text-zinc-50 backdrop-filter backdrop-blur-xl rounded-lg flex flex-col overflow-hidden opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+            <a href="#"
+              class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+              Item 1
+            </a>
+            <a href="/"
+              class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+              Item 2
+            </a>
+            <a href="#"
+              class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+              Item 3
+            </a>
+            <a href=""
+              class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+              Item 4
+            </a>
+          </div>
+        </div>
+        <div class="relative">
+          <button data-dropdown-trigger data-dropdown-id="dropdown-2"
+            class="border border-zinc-800 hover:bg-zinc-950 bg-zinc-900 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-x2 [&[aria-expanded=true]>span]-rotate-180">
+            Open Dropdown
+            <span aria-hidden="true" class="flex ease-linear i-carbon-chevron-down duration-200"></span>
+          </button>
+          <div role="list" data-drop-down-2 id="dropdown-2" data-fx-popper class="ui-popper z-20 w-56 border border-zinc-800 bg-zinc-900/80 text-zinc-50 backdrop-filter 
+            backdrop-blur-xl rounded-lg flex flex-col overflow-hidden opacity-0 invisible fx-open:opacity-100 fx-open:visible">
+            <div role="listitem">
+              <a href="#"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+            </div>
+            <div role="listitem">
+              <a href="/"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+            </div>
+            <div role="listitem">
+              <a href="#"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+            </div>
+            <div role="listitem">
+              <a href=""
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="space-y-6">
+      <div space-y-1>
+        <h1 class="text-xl font-semibold text-zinc9 dark-text-white">
+          Hover
+        </h1>
+        <p text-zinc7>
+          Show dropdown-content On Trigger Hover
+        </p>
+      </div>
+      <div
+        class="p-10 rounded-lg bg-gradient-to-bl from-zinc-600 via-neutral4 to-zinc-600 h-96 min-hmax flex items-center justify-center">
+        <div class="flex flex-wrap justify-center gap-4">
+          <div data-fx-dropdown class="relative">
+            <button data-dropdown-trigger data-dropdown-id="dropdown-3" class="border border-zinc-800 hover:bg-zinc-950 bg-zinc-900 text-white px-4 py-2 rounded-lg text-sm">
+              Hover me
+            </button>
+            <div role="list" data-drop-down-3 id="dropdown-3" data-trigger-strategy="hover" data-fx-popper
+              class="ui-popper z-20 w-56 border border-zinc-800 bg-zinc-900/80 text-zinc-50 backdrop-filter backdrop-blur-xl rounded-lg flex flex-col overflow-hidden opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+              <div role="listitem">
+                <a href="#"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                  Item 1
+                </a>
+              </div>
+              <div role="listitem">
+                <a href="/"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                  Item 1
+                </a>
+              </div>
+              <div role="listitem">
+                <a href="#"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                  Item 1
+                </a>
+              </div>
+              <div role="listitem">
+                <a href=""
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                  Item 1
+                </a>
+              </div>
+            </div>
+          </div>
+          <div data-fx-dropdown class="relative">
+            <button data-dropdown-trigger data-dropdown-id="dropdown-4"
+              class="border border-zinc-800 hover:bg-zinc-950 bg-zinc-900 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-x2 [&[aria-expanded=true]>span]-rotate-180">
+              Default DropDown
+              <span aria-hidden="true" class="flex ease-linear i-carbon-chevron-down duration-200"></span>
+            </button>
+            <div role="list" id="dropdown-4" data-drop-down-4 data-trigger-strategy="hover" data-fx-popper
+              class="ui-popper z-20 w-56 border border-zinc-800 bg-zinc-900/80 text-zinc-50 backdrop-filter backdrop-blur-xl rounded-lg flex flex-col overflow-hidden opacity-0 invisible fx-open:opacity-100 fx-open:visible">
+              <a href="#"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+              <a href="/"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 2
+              </a>
+              <a href="#"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 3
+              </a>
+              <a href=""
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 4
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="space-y-6">
+      <div space-y-1>
+        <h1 class="text-xl font-semibold text-zinc9 dark-text-white">
+          Prevent Close
+        </h1>
+        <p text-zinc7>
+          Disable close behavior when clicking Outside the dropdown (or press ESC) or when clicking inside
+          dropdown-content
+        </p>
+      </div>
+      <div
+        class="p-10 rounded-lg bg-gradient-to-bl from-zinc-600 via-neutral4 to-zinc-600 h-96 min-hmax flex items-center justify-center">
+        <div class="flex flex-wrap justify-center gap-4">
+          <div data-fx-dropdown class="relative">
+            <button data-dropdown-trigger data-dropdown-id="dropdown-5"
+              class="border border-zinc-800 hover:bg-zinc-950 bg-zinc-900 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-x2 [&[aria-expanded=true]>span]-rotate-180">
+              Never close from inside
+              <span aria-hidden="true" class="flex ease-linear i-carbon-chevron-down duration-200"></span>
+            </button>
+            <div role="list" data-drop-down-5 data-fx-popper id="dropdown-5" data-prevent-close-inside
+              class="ui-popper z-20 w-56 p-2 border border-zinc-800 bg-zinc-900/80 text-zinc-50 backdrop-filter backdrop-blur-xl rounded-lg flex flex-col overflow-hidden opacity-0 invisible fx-open:opacity-100 fx-open:visible">
+              <div class="pb-2 border-b mb-2 border-b-zinc-600 flex items-center gap-x-3">
+                <span class="size-9 bg-zinc-950 rounded-full flex items-center justify-center text-zinc-100">
+                  <span flex i-carbon-user-activity></span>
+                </span>
+                <div class="flex items-start flex-col">
+                  <h4 class="font-semibold text-white">Johnkat MJ</h4>
+                  <span class="text-sm text-zinc-300">FrontEnd Designer</span>
+                </div>
+              </div>
+              <div role="list">
+                <a href="#"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex items-center gap-x-3 hover-bg-zinc-800/80 p-2 rounded-md">
+                  <span aria-hidden="true" class="flex ease-linear duration-200 i-carbon-edit"></span>
+                  Edit Profile
+                </a>
+                <a href="#"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex items-center gap-x-3 hover-bg-zinc-800/80 p-2 rounded-md">
+                  <span aria-hidden="true" class="flex ease-linear duration-200 i-carbon-settings"></span>
+                  Setting
+                </a>
+                <a href="#"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex items-center gap-x-3 hover-bg-zinc-800/80 p-2 rounded-md">
+                  <span aria-hidden="true" class="flex ease-linear duration-200 i-carbon-activity"></span>
+                  Billing
+                </a>
+                <button
+                  class="focus:outline w-full focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex items-center gap-x-3 hover-bg-zinc-800/80 p-2 rounded-md wfull">
+                  <span flex items-center flex-1 gap-x-3>
+                    <span min-wmax flex i-carbon-moon></span>
+                    <span>Use dark Mode</span>
+                  </span>
+                  <span flex items-center>
+                    <input type="checkbox" name="switch_1" id="switch_1" class="appearance-none  h5 w9
+                    relative focus:visible:ring-2 focus:visible:ring-blue6
+                    dark-indeterminate-bg-current dark-indeterminate-b-transparent disabled-op50 disabled-cursor-not-allowed focus:ring-0 focus:ring-transparent focus:ring-offset-transparent
+                    focus:visible:ring-offset-2 focus:visible:ring-offset-white dark-focus:visible:ring-offset-zinc9
+                    dark-focus:visible:ring-blue-500 rounded-full 
+                    bg-zinc-950 border border-zinc-600 cursor-pointer
+                    before:absolute before:size-4
+                    before:bg-zinc-200 before:rounded-full 
+                    before:top-1/2 before:-translate-y-1/2 before:left-0.5
+                    checked-bg-none
+                    before:duration-300 before:ease-linear checked-before:translate-x-3.5 peer" />
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div data-fx-dropdown class="relative">
+            <button data-dropdown-trigger data-dropdown-id="dropdown-6"
+              class="border border-zinc-800 hover:bg-zinc-950 bg-zinc-900 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-x2 [&[aria-expanded=true]>span]-rotate-180">
+              Never close from outside
+              <span aria-hidden="true" class="flex ease-linear i-carbon-chevron-down duration-200"></span>
+            </button>
+            <div role="list" id="dropdown-6" data-drop-down-6 data-fx-popper data-prevent-close-outside 
+              class="ui-popper z-20 w-56 p-2 border border-zinc-800 bg-zinc-900/80 text-zinc-50 backdrop-filter backdrop-blur-xl rounded-lg flex flex-col overflow-hidden opacity-0 invisible fx-open:opacity-100 fx-open:visible">
+              <div class="pb-2 border-b mb2 border-b-zinc-600 flex items-center gap-x-3">
+                <span class="size-9 bg-zinc-950 rounded-full flex items-center justify-center text-zinc-100">
+                  <span flex i-carbon-user-activity></span>
+                </span>
+                <div class="flex items-start flex-col">
+                  <h4 class="font-semibold text-white">Johnkat MJ</h4>
+                  <span class="text-sm text-zinc-300">FrontEnd Designer</span>
+                </div>
+              </div>
+              <div role="list">
+                <a href="#"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex items-center gap-x-3 hover-bg-zinc-800/80 p-2 rounded-md">
+                  <span aria-hidden="true" class="flex ease-linear duration-200 i-carbon-edit"></span>
+                  Edit Profile
+                </a>
+                <a href="#"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex items-center gap-x-3 hover-bg-zinc-800/80 p-2 rounded-md">
+                  <span aria-hidden="true" class="flex ease-linear duration-200 i-carbon-settings"></span>
+                  Setting
+                </a>
+                <a href="#"
+                  class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex items-center gap-x-3 hover-bg-zinc-800/80 p-2 rounded-md">
+                  <span aria-hidden="true" class="flex ease-linear duration-200 i-carbon-activity"></span>
+                  Billing
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+     
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>
