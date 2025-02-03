@@ -1,0 +1,36 @@
+---
+title: Utilities
+description: Enhances keyboard accessibility
+---
+
+
+The `keyboardNavigation` function enhances keyboard accessibility for a group of elements within a container, allowing users to navigate through them using arrow keys, Home, and End keys.
+
+## Purpose
+
+- To improve accessibility for keyboard users
+- To enable easy navigation through a set of interactive elements (like menu items or buttons)
+- To support different navigation directions (vertical, horizontal, or both)
+
+## Usage
+
+```ts
+import { keyboardNavigation } from '@flexilla/utilities';
+
+const { make, destroy } = keyboardNavigation({
+  containerElement: '#menu',
+  targetChildren: 'a, button',
+  direction: 'all'
+});
+
+// Enable keyboard navigation
+make();
+
+// Disable keyboard navigation when no longer needed
+destroy();
+```
+
+
+## Examples
+
+The dropdown components use this for keyboard navigation. See it [here](/docs/components/dropdown)

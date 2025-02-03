@@ -1,7 +1,7 @@
 class AutoResizableTextArea {
     private textareaElement: HTMLTextAreaElement;
-    private minHeight: number ;
-    private maxHeight: number ;
+    private minHeight: number;
+    private maxHeight: number;
 
     /**
      * Auto-resize Area
@@ -10,11 +10,8 @@ class AutoResizableTextArea {
     constructor(textarea: string | HTMLTextAreaElement, minHeight?: number, maxHeight?: number) {
         this.textareaElement = (typeof textarea === "string") ? document.querySelector(`${textarea}`) as HTMLTextAreaElement : textarea;
         if (!(this.textareaElement instanceof HTMLTextAreaElement)) throw new Error("Provided Element is not a Valid HTMLTextAreaElement");
-        this.minHeight = minHeight || 20;
-        this.maxHeight = maxHeight || 500;
-        // this.autoresizeTextarea();
-        // this.textareaElement.addEventListener("input", this.autoresizeTextarea.bind(this), false);
-        // window.addEventListener("resize", this.autoresizeTextarea.bind(this));
+        this.minHeight = Number(this.textareaElement.getAttribute("data-min-height")) || minHeight || 20;
+        this.maxHeight = Number(this.textareaElement.getAttribute("data-max-height")) || maxHeight || 500;
 
         this.autoresizeTextarea();
         this.textareaElement.addEventListener("input", this.autoresizeTextarea.bind(this), false);
@@ -22,16 +19,11 @@ class AutoResizableTextArea {
     }
 
     private autoresizeTextarea(): void {
-        // this.textareaElement.style.height = "auto";
-        // this.textareaElement.style.height = `${this.textareaElement.scrollHeight}px`;
+        this.textareaElement.style.height = "auto";
+        this.textareaElement.style.height = `${this.textareaElement.scrollHeight}px`;
 
-        const computedStyle = getComputedStyle(this.textareaElement);
-        const padding = parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom);
-        const border = parseFloat(computedStyle.borderTopWidth) + parseFloat(computedStyle.borderBottomWidth);
-
-        // Calculate new height and apply limits
         const newHeight = Math.min(
-            Math.max(this.textareaElement.scrollHeight + padding + border, this.minHeight),
+            Math.max(this.textareaElement.scrollHeight, this.minHeight),
             this.maxHeight
         );
 

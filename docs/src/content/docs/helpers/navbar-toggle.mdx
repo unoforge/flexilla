@@ -1,0 +1,61 @@
+---
+title: Navbar toggle
+description: A usefull function to create easily an interactive navbar
+---
+
+The `toggleNavbar` function creates a toggle mechanism specifically for navigational elements, with optional overlay functionality.
+
+## Purpose
+
+- To toggle the visibility of a navigation menu
+- To control body scroll when the navigation is open (optional)
+- To manage an optional overlay element
+
+
+## Usage
+
+```ts
+import { toggleNavbar } from '@flexilla/utilities';
+
+toggleNavbar({
+  navbarElement: '#mainNavbar',
+  allowBoyScroll: false
+});
+```
+
+### Parameters
+
+The `toggleNavbar` function accepts an options object with the following properties:
+
+- `navbarElement`: A string selector or HTMLElement representing the navbar to be toggled
+- `allowBoyScroll`: (Optional) A boolean indicating whether to allow body scrolling when the navbar is open (default: false)
+
+
+### Behavior
+
+1. It sets up a click event listener on a trigger element (identified by `data-nav-trigger` and `data-toggle-nav` attributes)
+2. When clicked, it toggles the `data-state` attribute of the navbar between "open" and "close"
+3. It updates the `data-expanded` attribute of the trigger element
+4. If `allowBoyScroll` is false, it toggles the `overflow-y` style of the body
+5. If an overlay element exists (identified by `data-navbar-id`), it manages its visibility
+6. It sets up click events to close the navbar when clicking on the navbar itself or the overlay (if not static)
+
+
+### HTML Structure
+
+For the `toggleNavbar` function to work correctly, your HTML should have the following structure:
+
+```html
+<button data-nav-trigger data-toggle-nav="mainNavbar">Toggle Menu</button>
+
+<nav id="mainNavbar">
+  <!-- Navigation content -->
+</nav>
+
+<div data-navbar-id="mainNavbar">
+  <!-- Optional overlay content -->
+</div>
+```
+
+
+## Example

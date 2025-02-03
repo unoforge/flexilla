@@ -16,17 +16,15 @@ export default class Accordion {
             throw new Error("Accordion element not found");
         }
         this.options = {
-            accordionType: this.accordionEl.dataset.accordionType as AccordionType || "single",
-            preventClosingAll: this.accordionEl.hasAttribute("data-prevent-closing-all") || false,
-            defaultValue: this.accordionEl.dataset.defaultValue || "",
-            ...options,
+            accordionType: this.accordionEl.dataset.accordionType as AccordionType || options.accordionType || "single",
+            preventClosingAll: this.accordionEl.hasAttribute("data-prevent-closing-all") || options.preventClosingAll || false,
+            defaultValue: this.accordionEl.dataset.defaultValue || options.defaultValue || "",
+            allowCloseFromContent: this.accordionEl.hasAttribute("data-allow-close-from-content") || options.allowCloseFromContent || false,
+            onChangeItem: options.onChangeItem
         };
         this.items = $$("[data-accordion-item]", this.accordionEl).filter((item: HTMLElement) => item.parentElement && item.parentElement === this.accordionEl);
         this.initAccordion();
     }
-
-
-
 
     private initAccordion() {
         if (!this.accordionEl) return;
@@ -103,23 +101,31 @@ export default class Accordion {
         })
     }
 
+    private triggerItemState = (item: HTMLElement, state: "open" | "close", isOpened: boolean) => {
+        if (this.options.preventClosingAll) {
+            if (this.options.accordionType === "single" && isOpened) return;
+            if (this.options.accordionType === "multiple" && this.items.filter(i => i.getAttribute("data-state") === "open").length === 1 && isOpened) return;
+        }
+        this.setItemState(item, state);
+        if (this.options.accordionType === "single") this.closeOther({ current: item });
+        this.dispatchedEvent(item);
+    }
+
     private addEventListeners() {
         this.items.forEach(item => {
             const trigger = $("[data-accordion-trigger]", item);
+            const content = $("[data-accordion-content]", item)
+            const actionClose = () =>  this.triggerItemState(item, "close", true)
+            
             trigger?.addEventListener("click", (e) => {
                 e.preventDefault();
                 const isOpened = item.getAttribute("data-state") === "open";
                 let state: "open" | "close" = isOpened ? "close" : "open";
-
-                if (this.options.preventClosingAll) {
-                    if (this.options.accordionType === "single" && isOpened) return;
-                    if (this.options.accordionType === "multiple" && this.items.filter(i => i.getAttribute("data-state") === "open").length === 1 && isOpened) return;
-                }
-
-                this.setItemState(item, state);
-                if (this.options.accordionType === "single") this.closeOther({ current: item });
-                this.dispatchedEvent(item);
+                this.triggerItemState(item, state, isOpened)
             });
+            if(this.options.allowCloseFromContent){
+                content?.addEventListener("click", actionClose)
+            }
         });
     }
 
