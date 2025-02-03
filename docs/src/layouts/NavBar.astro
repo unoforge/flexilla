@@ -36,17 +36,18 @@ const navItems = [
         class="flex lg-hidden pr0.5 py1 b-r b-zinc2/80 dark-b-zinc8/80 relative z90 -ml2.5"
       >
         <button
-          data-toggle-navbar
+          data-nav-trigger
+          data-toggle-nav="app-navbar"
           data-expanded="false"
-          class="px2.5 relative space-y-2 [&[data-expanded=true]>#line-1]-rotate-45 [&[data-expanded=true]>#line-2]-rotate-45"
+          class="px2.5 relative space-y-2 group"
           aria-label="toggle navbar"
         >
           <span
-            class="h0.5 flex w6 rd bg-zinc6 dark-bg-zinc4 transition duration-300"
+            class="h0.5 flex w6 rd bg-zinc6 dark-bg-zinc4 transition duration-300 group-aria-expanded-rotate-45"
             id="line-1"
             aria-hidden="true"></span>
           <span
-            class="h0.5 flex w6 rd bg-zinc6 dark-bg-zinc4 transition duration-300"
+            class="h0.5 flex w6 rd bg-zinc6 dark-bg-zinc4 transition duration-300 group-aria-expanded-rotate-45"
             id="line-2"
             aria-hidden="true"></span>
         </button>
@@ -54,7 +55,8 @@ const navItems = [
       <AppLogoLink/>
     </div>
     <div
-      data-navbar
+      data-app-navbar
+      id="app-navbar"
       data-state="close"
       class="fixed w[calc(100%-30px)] lg-w[calc(100%-80px)] px4 sm-px8 py10 lg-py0 lg-px0 left-1/2 -translate-x-1/2 top-5 lg-top-0 rd-xl z80
       scale-80 op0 invisible data-[state=open]-ease-linear data-[state=open]-transition-all data-[state=open]-visible data-[state=open]-scale-100 data-[state=open]-op100

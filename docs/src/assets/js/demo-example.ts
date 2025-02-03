@@ -1,5 +1,6 @@
 import { Dropdown, Tooltip, Modal, Dismissible, Popover } from "@flexilla/flexilla";
-import { $$ } from "./selector";
+import { $$ } from "@flexilla/utilities";
+
 
 
 export const initDemoScrip = () => {

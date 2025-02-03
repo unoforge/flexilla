@@ -31,7 +31,7 @@ export const actionToggler = (options: TogglerOptions) => {
 
 
 
-export const toggleNavbar = ({ navbarElement, allowBoyScroll = false, onToggle }: { navbarElement: string | HTMLElement, allowBoyScroll?: boolean, onToggle?: ({ isExpanded }: { isExpanded: boolean }) => void }) => {
+export const toggleNavbar = ({ navbarElement, allowBodyScroll = false, onToggle }: { navbarElement: string | HTMLElement, allowBodyScroll?: boolean, onToggle?: ({ isExpanded }: { isExpanded: boolean }) => void }) => {
 	const navbar = typeof navbarElement === "string" ? $(navbarElement) as HTMLElement : navbarElement;
 	if (!(navbar instanceof HTMLElement)) return
 
@@ -44,11 +44,11 @@ export const toggleNavbar = ({ navbarElement, allowBoyScroll = false, onToggle }
 			const state = navbar.dataset.state || "close";
 			const dataState = state === "open" ? "close" : "open"
 			navbar.setAttribute("data-state", dataState);
-			trigger.setAttribute("aria-expanded", `${state === "open" ? "false" : "true"}`);
-			if (!allowBoyScroll) document.body.style.overflowY = `${state === "open" ? "auto" : "hidden"}`;
+			trigger.ariaExpanded = state === "open" ? "false" : "true"
+			if (allowBodyScroll) document.body.style.overflowY = `${state === "open" ? "auto" : "hidden"}`;
 			if (overlayEl) {
 				overlayEl.ariaHidden = "true"
-				overlayEl.setAttribute("data-state", "open")
+				overlayEl.setAttribute("data-state", dataState)
 			}
 			onToggle?.({ isExpanded: dataState === "open" })
 		}
@@ -56,7 +56,7 @@ export const toggleNavbar = ({ navbarElement, allowBoyScroll = false, onToggle }
 		const closeNavbar = () => {
 			navbar.setAttribute("data-state", "close");
 			trigger.setAttribute("aria-expanded", "false");
-			if (!allowBoyScroll) document.body.style.overflowY = "auto";
+			if (!allowBodyScroll) document.body.style.overflowY = "auto";
 			if (overlayEl) {
 				overlayEl.setAttribute("data-state", "close")
 			}
