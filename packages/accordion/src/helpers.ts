@@ -1,7 +1,5 @@
 import { $d, $$ } from "@flexilla/utilities/selector"
 
-
-
 const getAdjacentTrigger = (currentTrigger: HTMLElement, goUp: boolean, accordionElement: HTMLElement) => {
     const allAccordionItems = $$("[data-accordion-item]", accordionElement)
     const accordionItems = allAccordionItems.filter((item) => item.parentElement === accordionElement);
@@ -27,11 +25,11 @@ const attachKeyEvent = (event: KeyboardEvent, accordionElement: HTMLElement) => 
 
 
 
-const initItems = (accordionElement: HTMLElement) => {
+const initKeyEvents = (accordionElement: HTMLElement) => {
     accordionElement.addEventListener("keydown", (e: KeyboardEvent) => {
         attachKeyEvent(e, accordionElement)
     });
 }
 
 
-export { initItems as initKeyEvents }
+export { initKeyEvents }

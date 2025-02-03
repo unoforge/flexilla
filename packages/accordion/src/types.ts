@@ -11,6 +11,7 @@ export type AccordionOptions = {
     accordionType?: AccordionType,
     defaultValue?: string,
     preventClosingAll?: boolean,
+    allowCloseFromContent?:boolean
     onChangeItem?: ({ expandedItem }: { expandedItem?: ExpandedItem }) => void
 }
 

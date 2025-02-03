@@ -131,7 +131,7 @@ class Offcanvas {
      * auto init Offcanvas based on the selector provided
      * @param selector {string} default is [data-fx-offcanvas] attribute
      */
-    static autoInit = (selector = "[data-fx-offcanvas]") => {
+    static autoInit = (selector: string = "[data-fx-offcanvas]") => {
         const offCanvasElements = $$(selector)
         for (const offCanvasElement of offCanvasElements) new Offcanvas(offCanvasElement)
     }
