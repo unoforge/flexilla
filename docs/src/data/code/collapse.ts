@@ -31,7 +31,7 @@ export const collapseCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "html",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 <div class="flex flex-col gap3">
@@ -70,7 +70,7 @@ export const collapseCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "unocss",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 `,
@@ -120,7 +120,7 @@ export const collapseCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "html",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 <div class="flex flex-col gap3">

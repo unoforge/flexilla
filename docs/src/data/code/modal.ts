@@ -44,7 +44,7 @@ export const modalCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "html",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 <button data-modal-target="modal-alert1" class="bg-zinc-800 text-white px-4 py-2 rounded-lg text-sm">

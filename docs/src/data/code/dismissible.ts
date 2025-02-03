@@ -37,7 +37,7 @@ export const dismissibleCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "unocss",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 <div data-remove-from-dom class="w-full p-5 rounded-lg bg-zinc-100 bg-zinc-900/50">
@@ -105,7 +105,7 @@ export const dismissibleCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "html",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 <div data-remove-from-screen data-action="hide-from-screen" class="w-full p-5 rounded-lg bg-zinc-100 bg-zinc-900/50">

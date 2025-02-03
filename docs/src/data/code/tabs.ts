@@ -9,7 +9,7 @@ export const tabsCode: SourceData = {
                 {
                     id: "tab1",
                     icon: "html",
-                    title: "with-uno.html",
+                    title: "unocss.html",
                     lang: "html",
                     code: `
 <div data-fx-tabs data-tabs class="wfull">
@@ -58,7 +58,7 @@ export const tabsCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "html",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 <div data-fx-tabs data-tabs class="w-full">
@@ -162,7 +162,7 @@ export const tabsCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "html",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 <div data-vertical-tab data-fx-tabs data-orientation="vertical" class="flex items-start w-full">
@@ -269,7 +269,7 @@ export const tabsCode: SourceData = {
                 {
                     id: "tab2",
                     icon: "html",
-                    title: "with-tail.html",
+                    title: "tailwind.html",
                     lang: "html",
                     code: `
 <div data-with-indicator data-fx-tabs
