@@ -1,0 +1,36 @@
+{
+  "name": "@flexilla/uno-preset",
+  "private": false,
+  "version": "0.0.5",
+  "description": "DEPRECATED: This package is no longer maintained. Use @unifydev/flexilla instead.",
+  "deprecated": "This package is no longer maintained. Please use Replacement Package @unifydev/flexilla instead.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "!dist",
+    "README.md",
+    "package.json",
+    "!vite.config.ts",
+    "!.gitignore",
+    "!tsconfig.json",
+    "!biome.js"
+  ],
+  "keywords": [
+    "uno preset",
+    "flexilla"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unoforge/flexilla"
+  },
+  "bugs": {
+    "url": "https://github.com/unoforge/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "johnkat-mj"
+}

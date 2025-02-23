@@ -5,13 +5,23 @@ import { $, $$, $d, dispatchCustomEvent } from "@flexilla/utilities";
 import { initKeyEvents } from "./helpers";
 
 
+/**
+ * Accordion component class for managing collapsible content sections
+ * @class
+ */
 export default class Accordion {
     private accordionEl: HTMLElement;
     private options: AccordionOptions;
     private items: HTMLElement[];
 
+    /**
+     * Creates an instance of Accordion
+     * @param {string | HTMLElement} accordion - Selector string or HTMLElement for the accordion container
+     * @param {AccordionOptions} [options={}] - Configuration options for the accordion
+     * @throws {Error} When accordion element is not found
+     */
     constructor(accordion: string | HTMLElement, options: AccordionOptions = {}) {
-        this.accordionEl = typeof accordion === "string" ? document.querySelector(accordion) as HTMLElement : accordion;
+        this.accordionEl = typeof accordion === "string" ? $(accordion) as HTMLElement : accordion;
         if (!this.accordionEl) {
             throw new Error("Accordion element not found");
         }
@@ -37,11 +47,11 @@ export default class Accordion {
             if (defaultActive) this.setItemState(defaultActive, "open")
         } else {
             this.closeAll(true);
-            if (preventClosingAll) {
-                const anyOpen = this.items.some(item => item.getAttribute("data-state") === "open");
-                if (!anyOpen) {
-                    this.setItemState(this.items[0], "open");
-                }
+            const anyOpen = this.items.some(item => item.getAttribute("data-state") === "open");
+            if (preventClosingAll && !anyOpen) this.setItemState(this.items[0], "open");
+            else {
+                const allDefOpen = this.items.filter(item => item.getAttribute("data-state") === "open")
+                for (const item of allDefOpen) this.setItemState(item, "open")
             }
         }
         this.addEventListeners();
@@ -115,20 +125,26 @@ export default class Accordion {
         this.items.forEach(item => {
             const trigger = $("[data-accordion-trigger]", item);
             const content = $("[data-accordion-content]", item)
-            const actionClose = () =>  this.triggerItemState(item, "close", true)
-            
+            const actionClose = () => this.triggerItemState(item, "close", true)
+
             trigger?.addEventListener("click", (e) => {
                 e.preventDefault();
                 const isOpened = item.getAttribute("data-state") === "open";
                 let state: "open" | "close" = isOpened ? "close" : "open";
                 this.triggerItemState(item, state, isOpened)
             });
-            if(this.options.allowCloseFromContent){
+            if (this.options.allowCloseFromContent) {
                 content?.addEventListener("click", actionClose)
             }
         });
     }
 
+
+    /**
+     * Shows/expands an accordion item by its ID
+     * @public
+     * @param {string} id - The value/ID of the accordion item to show
+     */
     public show(id: string) {
         const item = $d(`[data-accordion-item][data-accordion-value="${id}"]`, this.accordionEl)
         if (!item) return;
@@ -145,7 +161,11 @@ export default class Accordion {
     }
 
 
-
+    /**
+        * Hides/collapses an accordion item by its ID
+        * @public
+        * @param {string} id - The value/ID of the accordion item to hide
+        */
     public hide(id: string) {
         const item = $d(`[data-accordion-item][data-accordion-value="${id}"]`, this.accordionEl)
         if (!item) return;
@@ -164,8 +184,9 @@ export default class Accordion {
     }
 
     /**
-     * auto init accordion components based on the selector provided
-     * @param selector {string} default is [data-fx-accordion]
+     * Automatically initializes all accordion components matching the selector
+     * @static
+     * @param {string} [selector="[data-fx-accordion]"] - The selector to find accordion elements
      */
     public static autoInit = (selector: string = "[data-fx-accordion]") => {
         const accordions = $$(selector, document.documentElement)
@@ -173,10 +194,11 @@ export default class Accordion {
     }
 
     /**
-         * Shortcut of : new Accordion(...)
-         * @param accordion 
-         * @param options 
-         * @returns 
-    */
+     * Shortcut method to create a new Accordion instance
+     * @static
+     * @param {string | HTMLElement} accordion - Selector string or HTMLElement for the accordion container
+     * @param {AccordionOptions} [options={}] - Configuration options for the accordion
+     * @returns {Accordion} A new Accordion instance
+     */
     public static init = (accordion: string | HTMLElement, options: AccordionOptions = {}) => new Accordion(accordion, options)
 }

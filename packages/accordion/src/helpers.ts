@@ -3,7 +3,6 @@ import { $d, $$ } from "@flexilla/utilities/selector"
 const getAdjacentTrigger = (currentTrigger: HTMLElement, goUp: boolean, accordionElement: HTMLElement) => {
     const allAccordionItems = $$("[data-accordion-item]", accordionElement)
     const accordionItems = allAccordionItems.filter((item) => item.parentElement === accordionElement);
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     const currentTriggerIndex = Array.from(accordionItems).indexOf(currentTrigger.closest('[data-accordion-item]')!);
     const nextIndex = goUp ? currentTriggerIndex - 1 : currentTriggerIndex + 1;
     const nextTrigger = $d("[data-accordion-trigger]", accordionItems[nextIndex]) as HTMLElement
