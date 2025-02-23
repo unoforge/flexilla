@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/tooltip",
   "private": false,
-  "version": "2.0.6",
+  "version": "2.0.7",
   "type": "module",
   "description": "A lightweight and customizable tooltip component for displaying additional information on hover over elements in web applications.",
   "publishConfig": {
@@ -39,7 +39,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@flexilla/utilities": "^2.0.6",
+    "@flexilla/utilities": "^2.0.72",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-plugin-dts": "^3.7.0"
