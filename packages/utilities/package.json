@@ -60,6 +60,16 @@
         "types": "./dist/dom-utilities.d.ts",
         "default": "./dist/dom-utilities.cjs"
       }
+    },
+    "./scroll-to-top": {
+      "import": {
+        "types": "./dist/scroll-to-top.d.ts",
+        "default": "./dist/scroll-to-top.js"
+      },
+      "require": {
+        "types": "./dist/scroll-to-top.d.ts",
+        "default": "./dist/scroll-to-top.cjs"
+      }
     }
   },
   "files": [
@@ -73,11 +83,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "format": "biome format --write ./src"
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.5.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-plugin-dts": "^3.7.0"

@@ -31,7 +31,7 @@ export const actionToggler = (options: TogglerOptions) => {
 
 
 
-export const toggleNavbar = ({ navbarElement, allowBodyScroll = false, onToggle }: { navbarElement: string | HTMLElement, allowBodyScroll?: boolean, onToggle?: ({ isExpanded }: { isExpanded: boolean }) => void }) => {
+export const toggleNavbar = ({ navbarElement, onToggle }: { navbarElement: string | HTMLElement, onToggle?: ({ isExpanded }: { isExpanded: boolean }) => void }) => {
 	const navbar = typeof navbarElement === "string" ? $(navbarElement) as HTMLElement : navbarElement;
 	if (!(navbar instanceof HTMLElement)) return
 
@@ -45,7 +45,6 @@ export const toggleNavbar = ({ navbarElement, allowBodyScroll = false, onToggle 
 			const dataState = state === "open" ? "close" : "open"
 			navbar.setAttribute("data-state", dataState);
 			trigger.ariaExpanded = state === "open" ? "false" : "true"
-			if (allowBodyScroll) document.body.style.overflowY = `${state === "open" ? "auto" : "hidden"}`;
 			if (overlayEl) {
 				overlayEl.ariaHidden = "true"
 				overlayEl.setAttribute("data-state", dataState)
@@ -56,7 +55,6 @@ export const toggleNavbar = ({ navbarElement, allowBodyScroll = false, onToggle 
 		const closeNavbar = () => {
 			navbar.setAttribute("data-state", "close");
 			trigger.setAttribute("aria-expanded", "false");
-			if (!allowBodyScroll) document.body.style.overflowY = "auto";
 			if (overlayEl) {
 				overlayEl.setAttribute("data-state", "close")
 			}

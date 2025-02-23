@@ -12,7 +12,8 @@ export default defineConfig({
         accessibility: resolve(__dirname, 'src/accessibility/index.ts'),
         toggler: resolve(__dirname, 'src/toggler/index.ts'),
         selector: resolve(__dirname, 'src/selector/index.ts'),
-        'dom-utilities': resolve(__dirname, 'src/dom-utilities/index.ts')
+        'dom-utilities': resolve(__dirname, 'src/dom-utilities/index.ts'),
+        'scroll-to-top': resolve(__dirname, 'src/scroll-to-top.ts')
       },
       name: '@flexilla/utilities',
       formats: ["es","cjs"]
