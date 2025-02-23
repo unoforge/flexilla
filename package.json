@@ -15,8 +15,5 @@
   "devDependencies": {
     "@types/node": "^20.11.5",
     "lerna": "^8.1.9"
-  },
-  "dependencies": {
-    "overlayscrollbars": "^2.10.0"
   }
 }
