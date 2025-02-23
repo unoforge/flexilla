@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/auto-resize-area",
   "private": false,
-  "version": "2.0.5",
+  "version": "2.0.6",
   "type": "module",
   "description": "A lightweight JavaScript component that automatically resizes text areas based on content",
   "publishConfig": {
