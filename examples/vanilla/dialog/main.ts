@@ -19,6 +19,20 @@ const options: ModalOptions = {
     },
 
 }
+
+const modalTry = document.querySelector("[data-modal-test-1b]")
+if (modalTry instanceof HTMLElement) {
+    modalTry.addEventListener("modal-open", () => {
+        alert("Modal Opened")
+    })
+    modalTry.addEventListener("before-hide", (event) => {
+        (event as CustomEvent).detail.setExitAction(true)
+        alert('OOps, this modal will never close, youy have to reload this tab')
+    })
+    modalTry.addEventListener("modal-close", () => {
+        alert("Modal closed")
+    })
+}
 new Modal("[data-modal-test-2]", {
     beforeHide: () => {
         console.log("Going")
