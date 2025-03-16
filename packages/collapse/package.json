@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/collapse",
   "private": false,
-  "version": "2.0.7",
+  "version": "2.0.8",
   "type": "module",
   "description": "A versatile and interactive collapse component for creating collapsible sections in web applications, conserving space and improving user experience.",
   "publishConfig": {
