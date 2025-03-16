@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-
 import sharedConfig from './../../shared/vite.config.shared';
 
 export default defineConfig({
@@ -19,4 +18,3 @@ export default defineConfig({
     }
   },
 });
-

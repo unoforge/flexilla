@@ -1,10 +1,12 @@
 import type { EventEffect, PopoverOptions } from "./types"
 import { CreatePopper, type Placement } from 'flexipop'
-import { $, $$, afterTransition } from "@flexilla/utilities"
+import { $, $$, afterTransition, dispatchCustomEvent } from "@flexilla/utilities"
 import { updatePopoverState } from "./helpers"
 
-
-
+/**
+ * Internal class for creating and managing popover functionality.
+ * @internal
+ */
 class CreatePopover {
     private triggerElement: HTMLElement
     private contentElement: HTMLElement
@@ -23,8 +25,8 @@ class CreatePopover {
         this.contentElement = this.getElement(content) as HTMLElement;
         this.triggerElement = this.getElement(trigger) as HTMLElement;
 
-        if (!(this.triggerElement instanceof HTMLElement)) throw new Error("")
-        if (!(this.contentElement instanceof HTMLElement)) throw new Error("")
+        if (!(this.triggerElement instanceof HTMLElement)) throw new Error("Trigger element must be a valid HTML element")
+        if (!(this.contentElement instanceof HTMLElement)) throw new Error("Content element must be a valid HTML element")
 
         this.options = options
 
@@ -71,6 +73,7 @@ class CreatePopover {
     }
 
     private handleKeyDown = (event: KeyboardEvent) => {
+        event.preventDefault()
         if (this.triggerStrategy !== "hover" && event.key === "Escape") {
             if (this.contentElement.getAttribute("data-state") === "open") {
                 if (!this.preventFromCloseOutside) this.hide();
@@ -199,6 +202,11 @@ class CreatePopover {
     }
 }
 
+/**
+ * Creates a new popover instance with the specified trigger and content elements.
+ * @class
+ * @description A class that creates and manages a popover component with customizable trigger and content elements.
+ */
 class Popover {
     private triggerElement: HTMLElement
     private contentElement: HTMLElement
@@ -213,7 +221,23 @@ class Popover {
     private preventFromCloseInside: boolean
     private defaultState: "open" | "close"
 
+    /**
+     * Creates a new Popover instance.
+     * @param {string | HTMLElement} popoverEl - The popover content element or its selector.
+     * @param {PopoverOptions} [options={}] - Configuration options for the popover.
+     * @example
+     * // Create a popover with default options
+     * const popover = new Popover('#my-popover');
+     * 
+     * // Create a popover with custom options
+     * const popover = new Popover('#my-popover', {
+     *   placement: 'top',
+     *   triggerStrategy: 'hover',
+     *   offsetDistance: 10
+     * });
+     */
     constructor(popoverEl: string | HTMLElement, options: PopoverOptions = {}) {
+
         const content = typeof popoverEl === "string" ? $(popoverEl) as HTMLElement : popoverEl
         this.contentElement = content
         this.triggerElement = $(`[data-popover-trigger][data-popover-id=${content.getAttribute("id")}]`) as HTMLElement
@@ -239,6 +263,9 @@ class Popover {
                 onHide: this.options.onHide,
                 onToggle: ({ isHidden }) => {
                     this.options.onToggle?.({ isHidden })
+                    dispatchCustomEvent(this.contentElement, "popover-toggle", {
+                        isHidden: isHidden
+                    })
                 },
                 popper: this.options.popper
             }
@@ -250,15 +277,42 @@ class Popover {
 
     show=()=>{
         this.PopoverInstance.show()
+        dispatchCustomEvent(this.contentElement, "popover-show", {
+            isHidden: false
+        })
     }
     hide=()=>{
         this.PopoverInstance.hide()
+        dispatchCustomEvent(this.contentElement, "popover-hide", {
+            isHidden: true
+        })
     }
 
+    /**
+     * Creates a new Popover instance with the specified options.
+     * @param {string | HTMLElement} popoverEl - The popover content element or its selector.
+     * @param {PopoverOptions} [options] - Configuration options for the popover.
+     * @returns {Popover} A new Popover instance.
+     * @example
+     * const popover = Popover.init('#my-popover', {
+     *   placement: 'bottom',
+     *   triggerStrategy: 'click'
+     * });
+     */
     static init(popoverEl: string | HTMLElement, options?: PopoverOptions) {
         return new Popover(popoverEl, options)
     }
 
+    /**
+     * Automatically initializes all popover elements matching the specified selector.
+     * @param {string} [selector='[data-fx-popover]'] - The selector to find popover elements.
+     * @example
+     * // Initialize all popovers with default selector
+     * Popover.autoInit();
+     * 
+     * // Initialize popovers with custom selector
+     * Popover.autoInit('.custom-popover');
+     */
     static autoInit(selector = "[data-fx-popover]") {
         const popovers = $$(selector)
         for (const popover of popovers) new Popover(popover)

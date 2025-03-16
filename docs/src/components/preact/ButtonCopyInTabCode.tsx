@@ -24,7 +24,6 @@ export default function ButtonCopyInTabCode() {
     };
     return (
         <div ref={triggerBoxRef} className={"relative pr1.5"}>
-            {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
             <button
                 className="flex group items-center justify-center size-8 rd-lg dark-focus-bg-zinc7/80 text-zinc7 dark-text-zinc3 children-flex"
                 aria-label='copy code'

@@ -1,8 +1,29 @@
 import { DropdownOptions } from "./types"
 import { CreatePopover, type Placement } from "@flexilla/popover"
-import { $$, $, keyboardNavigation } from "@flexilla/utilities"
+import { $$, $, keyboardNavigation, dispatchCustomEvent } from "@flexilla/utilities"
 
 
+/**
+ * A class that creates and manages dropdown functionality with popover positioning.
+ * Provides click or hover trigger strategies, customizable placement, and keyboard navigation.
+ * 
+ * @example
+ * ```ts
+ * // Auto initialize all dropdowns with data-fx-dropdown attribute
+ * Dropdown.autoInit()
+ * 
+ * // Initialize a specific dropdown
+ * const dropdown = new Dropdown('#myDropdown', {
+ *   triggerStrategy: 'hover',
+ *   placement: 'bottom-start',
+ *   offsetDistance: 8
+ * })
+ * 
+ * // Control programmatically
+ * dropdown.show()
+ * dropdown.hide()
+ * ```
+ */
 class Dropdown {
     private triggerElement: HTMLElement
     private contentElement: HTMLElement
@@ -20,17 +41,34 @@ class Dropdown {
     private preventFromCloseOutside: boolean
     private preventFromCloseInside: boolean
     private defaultState: "open" | "close"
-    constructor(dropdown: string | HTMLElement, options: DropdownOptions = {}) {
-        const contentElement = typeof dropdown === "string" ? $(dropdown) : dropdown
-        if (!(contentElement instanceof HTMLElement)) throw new Error("Provided Element is not a valid HTMLElement")
-        this.contentElement = contentElement
-        this.triggerElement = $(`[data-dropdown-trigger][data-dropdown-id=${this.contentElement.getAttribute("id")}]`) as HTMLElement
 
-        if (!(this.triggerElement instanceof HTMLElement)) throw new Error("Provide a valid HTML Element for the trigger")
-        if (!(this.contentElement instanceof HTMLElement)) throw new Error("Provide a valid HTML Element for the dropdown conten")
+    /**
+     * Creates a new Dropdown instance
+     * @param dropdown - The dropdown content element or selector
+     * @param options - Configuration options for the dropdown
+     * @throws {Error} If provided elements are not valid HTMLElements
+     */
+    constructor(dropdown: string | HTMLElement, options: DropdownOptions = {}) {
+        const contentElement = typeof dropdown === "string"  ? $(dropdown)  : dropdown;
+
+        if (!(contentElement instanceof HTMLElement)) {
+            throw new Error(
+                "Invalid dropdown content element: Must provide either a valid HTMLElement " +
+                "or a selector string that resolves to an existing HTMLElement"
+            );
+        }
+        if (!contentElement.id) {
+            throw new Error("Dropdown content element must have an 'id' attribute for trigger association")
+        }
+        this.contentElement = contentElement
+
+        const triggerSelector = `[data-dropdown-trigger][data-dropdown-id=${this.contentElement.id}]`
+        this.triggerElement = $(triggerSelector) as HTMLElement
+        if (!(this.triggerElement instanceof HTMLElement)) {
+            throw new Error(`No valid trigger element found. Ensure a trigger element exists with attributes: data-dropdown-trigger and data-dropdown-id="${this.contentElement.id}"`)
+        }
 
         this.options = options
-
         this.triggerStrategy = this.options.triggerStrategy || this.contentElement.dataset.triggerStrategy as "click" | "hover" || "click"
         this.placement = this.options.placement || this.contentElement.dataset.placement as Placement || "bottom-start"
         this.offsetDistance = this.options.offsetDistance || parseInt(`${this.contentElement.dataset.offsetDistance}`) | 6
@@ -83,28 +121,43 @@ class Dropdown {
     }
 
     private onShow = () => {
+        dispatchCustomEvent(this.contentElement, "dropdown-show", {
+            isHidden: false
+        })
         this.options.onShow?.()
     }
     private onHide = () => {
+        dispatchCustomEvent(this.contentElement, "dropdown-hide", {
+            isHidden: true
+        })
         this.options.onHide?.()
     }
 
+    /**
+     * Shows the dropdown
+     */
     show = () => {
         this.CreatePopoverInstance.show()
     }
 
+    /**
+     * Hides the dropdown
+     */
     hide = () => {
         this.CreatePopoverInstance.hide()
     }
 
-
+    /**
+     * Updates the dropdown's placement and offset settings
+     * @param options - The new placement and offset options
+     */
     setShowOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
         this.CreatePopoverInstance.setShowOptions({ placement, offsetDistance })
     }
 
     /**
-     * auto init dropdown Components based on the selector provided
-     * @param selector {string} default is [data-fx-dropdown] attribute
+     * Automatically initializes all dropdown elements that match the given selector
+     * @param selector - The selector to find dropdown elements (default: "[data-fx-dropdown]")
      */
     static autoInit = (selector = "[data-fx-dropdown]") => {
         const dropdowns = $$(selector)
@@ -112,8 +165,10 @@ class Dropdown {
     }
 
     /**
-     * init dropdown Component
-     * @param selector {string} 
+     * Initializes a single dropdown instance
+     * @param dropdown - The dropdown element or selector
+     * @param options - Configuration options for the dropdown
+     * @returns A new Dropdown instance
      */
     static init(dropdown: string | HTMLElement, options: DropdownOptions = {}) {
         new Dropdown(dropdown, options)

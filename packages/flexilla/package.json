@@ -34,8 +34,7 @@
     "package.json",
     "!vite.config.ts",
     "!.gitignore",
-    "!tsconfig.json",
-    "!biome.js"
+    "!tsconfig.json"
   ],
   "scripts": {
     "dev": "vite",

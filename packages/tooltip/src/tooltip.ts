@@ -1,5 +1,5 @@
 import { CreatePopover, type Placement } from "@flexilla/popover"
-import { $, $$ } from "@flexilla/utilities"
+import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
 import type { TooltipOptions } from "./types"
 
 
@@ -68,10 +68,16 @@ class Tooltip {
 
     show = () => {
         this.PopoverInstance.show()
+        dispatchCustomEvent(this.triggerElement, "tooltip-show", {
+            isHidden: false
+        })
     }
 
     hide = () => {
         this.PopoverInstance.hide()
+        dispatchCustomEvent(this.triggerElement, "tooltip-hide", {
+            isHidden: true
+        })
     }
 
     /**

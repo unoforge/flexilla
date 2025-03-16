@@ -2,7 +2,29 @@ import { setAttributes } from "../dom-utilities";
 import { $, $getEl } from "./../selector";
 import type { TogglerOptions } from "./types";
 
-
+/**
+ * Creates a toggle functionality for DOM elements based on provided options.
+ * 
+ * @param {TogglerOptions} options - Configuration options for the toggler
+ * @param {string | HTMLElement} options.trigger - The trigger element that controls the toggle action
+ * @param {Array<{element: string | HTMLElement, attributes: {initial: Record<string, string>, to: Record<string, string>}}>} options.targets - Array of target elements and their toggle attributes
+ * @param {Function} [options.onToggle] - Optional callback function called when toggle state changes
+ * 
+ * @example
+ * ```ts
+ * actionToggler({
+ *   trigger: '#toggleButton',
+ *   targets: [{
+ *     element: '#target',
+ *     attributes: {
+ *       initial: { 'aria-hidden': 'true' },
+ *       to: { 'aria-hidden': 'false' }
+ *     }
+ *   }],
+ *   onToggle: ({ isExpanded }) => console.log('Toggle state:', isExpanded)
+ * });
+ * ```
+ */
 export const actionToggler = (options: TogglerOptions) => {
 	const { trigger, targets, onToggle } = options;
 	const triggerElement = $getEl(trigger);
@@ -29,8 +51,28 @@ export const actionToggler = (options: TogglerOptions) => {
 	});
 };
 
-
-
+/**
+ * Creates a toggleable navbar with accessibility support and optional overlay.
+ * 
+ * @param {Object} params - The parameters for navbar toggle functionality
+ * @param {string | HTMLElement} params.navbarElement - The navbar element to toggle
+ * @param {Function} [params.onToggle] - Optional callback function called when navbar state changes
+ * 
+ * @description
+ * This function sets up a navbar toggle system with the following features:
+ * - Supports both string selectors and HTMLElement references
+ * - Manages aria-expanded states for accessibility
+ * - Handles optional overlay elements
+ * - Supports data attributes for state management
+ * - Automatically closes navbar when clicking outside
+ * 
+ * Required HTML structure:
+ * ```html
+ * <button data-nav-trigger data-toggle-nav="navbar-id">Toggle</button>
+ * <nav id="navbar-id">...</nav>
+ * <div data-nav-overlay data-navbar-id="navbar-id"></div>
+ * ```
+ */
 export const toggleNavbar = ({ navbarElement, onToggle }: { navbarElement: string | HTMLElement, onToggle?: ({ isExpanded }: { isExpanded: boolean }) => void }) => {
 	const navbar = typeof navbarElement === "string" ? $(navbarElement) as HTMLElement : navbarElement;
 	if (!(navbar instanceof HTMLElement)) return

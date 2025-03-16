@@ -29,9 +29,7 @@
     "package.json",
     "!vite.config.ts",
     "!.gitignore",
-    "!tsconfig.json",
-    "!biome.js",
-    "flexilla"
+    "!tsconfig.json"
   ],
   "scripts": {
     "dev": "vite",
