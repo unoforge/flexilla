@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/dismissible",
   "private": false,
-  "version": "2.0.6",
+  "version": "2.0.7",
   "type": "module",
   "description": "A lightweight JavaScript component that automatically makes a component dismissible for easy user interaction.",
   "publishConfig": {
