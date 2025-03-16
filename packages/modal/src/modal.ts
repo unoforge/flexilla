@@ -3,23 +3,57 @@ import { ModalOptions } from "./types";
 import { initModal } from "./helpers";
 import { $, $$ } from "@flexilla/utilities";
 
+/**
+ * Modal Component - A flexible and customizable modal dialog implementation
+ * 
+ * @example
+ * ```typescript
+ * // Create a new modal instance
+ * const modal = new Modal('#myModal', {
+ *   defaultState: 'close',
+ *   animateContent: {
+ *     enterAnimation: 'fadeIn 0.3s ease',
+ *     exitAnimation: 'fadeOut 0.3s ease'
+ *   }
+ * });
+ * 
+ * // Show/hide the modal programmatically
+ * modal.showModal();
+ * modal.hideModal();
+ * ```
+ */
 class Modal {
     private modalElement: HTMLElement
+    /**
+     * Shows the modal dialog
+     * @returns {void}
+     */
     public showModal: () => void
+
+    /**
+     * Hides the modal dialog
+     * @returns {void}
+     */
     public hideModal: () => void
+
+    /**
+     * Checks if the modal is currently hidden
+     * @returns {boolean} True if the modal is hidden, false otherwise
+     */
     public isHidden: () => boolean
     private options: ModalOptions
     private state: string
 
     /**
-     * Modal Component
-     * @param modal 
-     * @param options 
-     * @param triggerElement 
+     * Creates a new Modal instance
+     * @param modal - The modal element or selector string to initialize
+     * @param options - Configuration options for the modal behavior
+     * @param triggerElement - Optional trigger element or selector that opens the modal
+     * @throws {Error} When the provided modal element is invalid or cannot be found
      */
     constructor(modal: string | HTMLElement, options: ModalOptions = {}, triggerElement?: string | HTMLElement) {
         const modalElement = typeof modal === "string" ? $(modal) : modal
-        if (!(modalElement instanceof HTMLElement)) throw new Error("Invalid provided HTMLElement")
+        if (!(modalElement instanceof HTMLElement)) throw new Error("Modal element not found or invalid. Please provide a valid HTMLElement or selector.")
 
         this.modalElement = modalElement
         this.options = options
@@ -44,10 +78,19 @@ class Modal {
         this.isHidden = isHidden
     }
 
-
     /**
-     * auto init Modals based on the selector provided
-     * @param selector {string} default is [data-fx-modal] attribute
+     * Automatically initializes all modal elements matching the provided selector
+     * @param selector - CSS selector to find modal elements (defaults to "[data-fx-modal]")
+     * @returns {void}
+     * 
+     * @example
+     * ```typescript
+     * // Initialize all modals with data-fx-modal attribute
+     * Modal.autoInit();
+     * 
+     * // Initialize modals with custom selector
+     * Modal.autoInit('.custom-modal');
+     * ```
      */
     public static autoInit = (selector: string = "[data-fx-modal]") => {
         const modals = $$(selector)
@@ -55,10 +98,19 @@ class Modal {
     }
 
     /**
-     * Modal Component
-     * @param modal 
-     * @param options 
-     * @param triggerElement 
+     * Creates and initializes a new Modal instance
+     * @param modal - The modal element or selector string
+     * @param options - Configuration options for the modal
+     * @param triggerElement - Optional trigger element or selector
+     * @returns {Modal} A new Modal instance
+     * 
+     * @example
+     * ```typescript
+     * const modal = Modal.init('#myModal', {
+     *   defaultState: 'open',
+     *   allowBodyScroll: true
+     * });
+     * ```
      */
     static init = (modal: string | HTMLElement, options: ModalOptions = {}, triggerElement?: string | HTMLElement) => new Modal(modal, options, triggerElement)
 }

@@ -1,11 +1,26 @@
 
 import type { OffcanvasOptions } from "./types"
 import { closeAllOpenedOffcanvas, toggleOffCanvasState } from "./helpers"
-import { appendBefore, $$, $ } from "@flexilla/utilities"
+import { appendBefore, $$, $, dispatchCustomEvent } from "@flexilla/utilities"
 import { createOverlay, destroyOverlay } from "./offCanvasOverlay"
 
 /**
  * Class representing an Offcanvas element.
+ * An Offcanvas is a sidebar component that can slide in from the edges of the viewport.
+ * It can be triggered to show/hide through various user interactions.
+ * 
+ * @example
+ * ```ts
+ * // Initialize with element ID
+ * const offcanvas = new Offcanvas('#myOffcanvas', {
+ *   allowBodyScroll: true,
+ *   staticBackdrop: false
+ * });
+ * 
+ * // Or initialize with HTMLElement
+ * const element = document.querySelector('#myOffcanvas');
+ * const offcanvas = new Offcanvas(element);
+ * ```
  */
 class Offcanvas {
     private offCanvasElement: HTMLElement
@@ -17,9 +32,21 @@ class Offcanvas {
     private options: OffcanvasOptions
 
     /**
-     * Offcanvas Component
-     * @param offcanvas 
-     * @param options 
+     * Creates an instance of Offcanvas.
+     * @param offcanvas - The offcanvas element selector or HTMLElement
+     * @param options - Configuration options for the offcanvas
+     * @throws {Error} When the provided element is not a valid HTMLElement
+     * 
+     * @example
+     * ```ts
+     * const offcanvas = new Offcanvas('#sidebar', {
+     *   allowBodyScroll: true, // Allow scrolling when offcanvas is open
+     *   staticBackdrop: false, // Close when clicking outside
+     *   backdrop: 'dark',      // Backdrop appearance
+     *   onShow: () => console.log('Offcanvas shown'),
+     *   onHide: () => console.log('Offcanvas hidden')
+     * });
+     * ```
      */
     constructor(offcanvas: string | HTMLElement, options: OffcanvasOptions = {}) {
 
@@ -56,8 +83,15 @@ class Offcanvas {
     }
 
     private closeOffCanvas = () => {
+        let cancelFromBeforeHide = false
+        dispatchCustomEvent(this.offCanvasElement, "offcanvas-before-hide", {
+            offcanvasId: this.offCanvasElement.id,
+            setExitAction: (value: boolean) => {
+                cancelFromBeforeHide = value
+            }
+        })
         const cancelAction = this.options.beforeHide?.()?.cancelAction
-        if (cancelAction) return
+        if (cancelAction || cancelFromBeforeHide) return
         const id = this.offCanvasElement.getAttribute("id")
         const overlayElement = $(`[data-fx-offcanvas-overlay][data-offcanvas-el=${id}]`)
         if (overlayElement instanceof HTMLElement)
@@ -71,6 +105,7 @@ class Offcanvas {
         document.removeEventListener("keydown", this.closeWithEsc)
         !this.allowBodyScroll && !overlayElement && document.removeEventListener("click", (event) => this.closeWhenClickOutSide(event))
         this.options.onHide?.()
+        dispatchCustomEvent(this.offCanvasElement, "offcanvas-close", { offcanvasId: this.offCanvasElement.id })
     }
 
     private openOffCanvas() {
@@ -92,12 +127,15 @@ class Offcanvas {
         }
         document.addEventListener("keydown", this.closeWithEsc)
         this.options.onShow?.()
+        // Dispatch custom event when offcanvas is opened
+        dispatchCustomEvent(this.offCanvasElement, "offcanvas-open", { offcanvasId: this.offCanvasElement.id })
     }
 
     /**
    * Close the Offcanvas when the "Escape" key is pressed.
    */
     private closeWithEsc = (event: KeyboardEvent) => {
+        event.preventDefault()
         if (event.key === "Escape") { this.closeOffCanvas() }
     }
 
@@ -120,16 +158,48 @@ class Offcanvas {
         this.initCloseBtns()
     }
 
+    /**
+     * Opens the offcanvas element.
+     * This method will trigger the beforeShow callback if provided,
+     * show the backdrop if configured, and finally trigger the onShow callback.
+     * 
+     * @example
+     * ```ts
+     * const offcanvas = new Offcanvas('#sidebar');
+     * offcanvas.open();
+     * ```
+     */
     open() {
         this.openOffCanvas()
     }
+
+    /**
+     * Closes the offcanvas element.
+     * This method will trigger the beforeHide callback if provided,
+     * remove the backdrop if present, and finally trigger the onHide callback.
+     * 
+     * @example
+     * ```ts
+     * const offcanvas = new Offcanvas('#sidebar');
+     * offcanvas.close();
+     * ```
+     */
     close() {
         this.closeOffCanvas()
     }
 
     /**
-     * auto init Offcanvas based on the selector provided
-     * @param selector {string} default is [data-fx-offcanvas] attribute
+     * Automatically initializes all offcanvas elements in the document that match the given selector.
+     * @param selector - The selector to find offcanvas elements, defaults to '[data-fx-offcanvas]'
+     * 
+     * @example
+     * ```ts
+     * // Initialize all offcanvas elements with default selector
+     * Offcanvas.autoInit();
+     * 
+     * // Initialize with custom selector
+     * Offcanvas.autoInit('.custom-offcanvas');
+     * ```
      */
     static autoInit = (selector: string = "[data-fx-offcanvas]") => {
         const offCanvasElements = $$(selector)
@@ -137,10 +207,21 @@ class Offcanvas {
     }
 
     /**
-    * Offcanvas Component
-    * @param offcanvas 
-    * @param options 
-    */
+     * Creates a new instance of Offcanvas with the given element and options.
+     * This is an alternative to using the constructor directly.
+     * 
+     * @param offcanvas - The offcanvas element selector or HTMLElement
+     * @param options - Configuration options for the offcanvas
+     * @returns A new Offcanvas instance
+     * 
+     * @example
+     * ```ts
+     * const offcanvas = Offcanvas.init('#sidebar', {
+     *   allowBodyScroll: true,
+     *   staticBackdrop: false
+     * });
+     * ```
+     */
     static init = (offcanvas: string | HTMLElement, options: OffcanvasOptions = {}) => new Offcanvas(offcanvas, options)
 }
 

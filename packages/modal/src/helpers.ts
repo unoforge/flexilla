@@ -1,4 +1,4 @@
-import { $, $$, afterAnimation } from "@flexilla/utilities"
+import { $, $$, afterAnimation, dispatchCustomEvent } from "@flexilla/utilities"
 import { ModalOptions } from "./types";
 import { buildOverlay, destroyOverlay } from "./modalOverlay";
 
@@ -58,6 +58,7 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
     modalContent.setAttribute("data-state", 'close');
 
     const closeModalEsc = (e: KeyboardEvent) => {
+        e.preventDefault()
         if (e.key === "Escape" && !preventCloseModal_) {
             hideModal();
         }
@@ -81,14 +82,15 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
     const showModal = () => {
         const isOpened = modalElement.getAttribute("data-state") === "open"
         if (isOpened) return
-
+    
         closeAll(modalElement)
         overlayElement = !hasDefaultOverlay ? buildOverlay({
             modalContent: modalContent,
             overlayClassName: overlayClassName,
         }) : (overlayElement as HTMLElement)
-
+    
         overlayElement?.setAttribute("data-state", "open")
+        dispatchCustomEvent(modalElement, "modal-open", { modalId: modalElement.id })
         if (animateContent || animationEnter !== "") {
             const contentAnimation = animateContent ? animateContent.enterAnimation : animationEnter;
             contentAnimation !== "" && modalContent.style.setProperty("--un-modal-animation", contentAnimation);
@@ -118,14 +120,22 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
 
 
     const hideModal = () => {
-        const exitAction = beforeHide?.()?.cancelAction
-
-        if (exitAction) return
-
+        let exitAction = false
+        dispatchCustomEvent(modalElement, "before-hide", { 
+            modalId: modalElement.id,
+            setExitAction: (value: boolean) => {
+                exitAction = value
+            }
+        })
+        const exitFromBeforeHide = beforeHide?.()?.cancelAction
+    
+        if (exitAction || exitFromBeforeHide) return
+    
         const closeModal = () => {
             toggleModalState(modalElement, modalContent, "close");
             setBodyScrollable(enableStackedModals_, allowBodyScroll_, modalElement)
             if (!hasDefaultOverlay) destroyOverlay(overlayElement)
+            dispatchCustomEvent(modalElement, "modal-close", { modalId: modalElement.id })
         }
         const closeLastAction = () => {
             if (isKeyDownEventRegistered) {

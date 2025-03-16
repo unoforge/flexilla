@@ -1,10 +1,3 @@
-[data-fx-modal] {
-    display: none;
-}
-[data-fx-modal][data-state="open"] {
-    display: flex;
-}
-
 [data-fx-modal][data-state="open"] [data-modal-content] {
     animation-fill-mode: both;
     animation: var(--un-modal-animation);
@@ -16,7 +9,54 @@
     -webkit-animation: var(--un-modal-animation);
 }
 
-[data-modal-overlay] {
-    position: fixed;
-    inset: 0;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeScale {
+    from {
+        opacity: 0;
+        transform: scale(.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-60px);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-60px);
+    }
 }
