@@ -30,8 +30,8 @@ Take a look at :
 
 #### Tools
 
-2. [Vite JS](https://lerna.js.org/)
-3. [Lerna](https://biomejs.dev/)
+2. [Vite JS](https://vite.dev/)
+3. [Lerna](https://lerna.js.org/)
 
 
 ## commit-convention

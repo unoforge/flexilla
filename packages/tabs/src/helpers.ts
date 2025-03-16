@@ -2,9 +2,6 @@ import { $, $d, setAttributes } from "@flexilla/utilities";
 import { ACTIVE_STATE, INACTIVE_STATE, STATE_TO_FALSE, STATE_TO_TRUE } from "./const";
 import { moveIndicator } from "./indicator";
 
-/**
- * Sets all triggers' data-state attribute to false except the active trigger.
- */
 const setAllTriggerToFalse = (activeTrigger: HTMLElement, tabTriggers: HTMLElement[]) => {
   for (const tabTrigger of tabTriggers) {
     if (tabTrigger !== activeTrigger) {
@@ -14,9 +11,6 @@ const setAllTriggerToFalse = (activeTrigger: HTMLElement, tabTriggers: HTMLEleme
   }
 };
 
-/**
- * Setup the nested tabs if it has a custom indicator
- */
 const setNestedTabsIndicatorCorrectly = ({ indicatorTransformDuration, indicatorTransformEaseing, indicator, triggerElement, tabList }: {  indicatorTransformDuration: number, indicatorTransformEaseing: string, indicator: HTMLSpanElement, triggerElement: HTMLElement, tabList: HTMLElement }) => {
   if (!(indicator instanceof HTMLSpanElement) || !(triggerElement instanceof HTMLElement)) return
   moveIndicator({
@@ -28,10 +22,6 @@ const setNestedTabsIndicatorCorrectly = ({ indicatorTransformDuration, indicator
   });
 }
 
-
-/**
-* Hides all tab panels except the active panel.
-*/
 export const hideAllTabPanels = (activePanel: HTMLElement | undefined, tabPanels: HTMLElement[]) => {
   for (const tabPanel of tabPanels) {
     if (tabPanel !== activePanel) {
@@ -41,13 +31,8 @@ export const hideAllTabPanels = (activePanel: HTMLElement | undefined, tabPanels
   }
 };
 
-/**
- * Activates the selected tab and updates the indicator position.
- */
 export const activeTab = ({ triggerElement, tabTriggers, tabsPanelContainer, showAnimation,  indicatorTransformDuration, indicatorTransformEaseing, tabList }: { triggerElement: HTMLElement, tabTriggers: HTMLElement[], tabsPanelContainer: HTMLElement, showAnimation: string, indicatorTransformDuration: number, indicatorTransformEaseing: string, tabList: HTMLElement }) => {
   const currentTab = $d("[data-tab-panel][data-state=active]", tabsPanelContainer)
-  
-
   if (currentTab instanceof HTMLElement) {
     setAttributes(currentTab, { "data-state": "hidden" })
     currentTab.hidden = true
@@ -94,13 +79,9 @@ export const activeTab = ({ triggerElement, tabTriggers, tabsPanelContainer, sho
     }
   }
 
-
   return { currentTabPanel: toSelectTab }
 };
 
-/**
-* Handles keydown events for tab triggers.
-*/
 export const handleKeyEvent = (event: KeyboardEvent, tabTriggers: HTMLElement[]) => {
   const currentIndex = tabTriggers.findIndex(
     (tabTrigger) => tabTrigger.getAttribute("data-state") === ACTIVE_STATE
