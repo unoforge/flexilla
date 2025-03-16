@@ -25,7 +25,6 @@ export function CopyInBlockBtn() {
     return (
         <>
             <div ref={btnBoxRef} className={"absolute right-2 top-2 z20 invisible op0 group-hover-visible group-hover-op100"}>
-                {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
                 <button
                     className="flex p2 rd-md backdrop-blur-xl bg-zinc2/80 dark-bg-zinc8/80 focus-bg-zinc3/90 dark-focus-bg-zinc7/80 text-zinc7 dark-text-zinc3 children-flex"
                     aria-label='copy code'

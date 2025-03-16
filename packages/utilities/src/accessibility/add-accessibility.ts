@@ -3,6 +3,38 @@ import { $getEl } from "./../selector";
 import { KeyDirAccessibilityOptions } from "./types";
 
 
+/**
+ * Implements keyboard navigation for a container element and its focusable children.
+ * This utility enables arrow key navigation, home/end support, and circular navigation
+ * through focusable elements within a specified container.
+ *
+ * @param {KeyDirAccessibilityOptions} options - Configuration options for keyboard navigation
+ * @param {HTMLElement | string} options.containerElement - The container element or its selector
+ * @param {string | HTMLElement[]} [options.targetChildren='a:not([disabled]), button:not([disabled])'] - Focusable children elements or selector
+ * @param {"up-down" | "left-right" | "all"} options.direction - Navigation direction mode
+ *
+ * @returns {{make: () => void, destroy: () => void}} An object containing methods to initialize and cleanup the keyboard navigation
+ *
+ * @example
+ * // Basic usage with default settings
+ * const nav = keyboardNavigation({
+ *   containerElement: '.nav-container',
+ *   direction: 'all'
+ * });
+ * nav.make();
+ *
+ * @example
+ * // Custom configuration with specific child elements
+ * const nav = keyboardNavigation({
+ *   containerElement: document.getElementById('menu'),
+ *   targetChildren: '.menu-item',
+ *   direction: 'left-right'
+ * });
+ * nav.make();
+ * 
+ * // Cleanup when no longer needed
+ * nav.destroy();
+ */
 export const keyboardNavigation = (
     { containerElement, targetChildren = "a:not([disabled]), button:not([disabled])", direction }: KeyDirAccessibilityOptions
 ) => {
@@ -68,7 +100,7 @@ export const keyboardNavigation = (
                 currentInd = children.length - 1;
                 break;
             default:
-                return; // Exit if the key is not one of the handled keys
+                return; 
         }
 
         if (children[currentInd] !== current) {

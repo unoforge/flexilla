@@ -20,7 +20,6 @@ export function BtnQuickCopy() {
     })
   };
   return (
-    // biome-ignore lint/a11y/useButtonType: <explanation>
     <button className={`${cn(
       'bg-gradient-to-t from-zinc50 to-zinc1 dark-from-zinc950/80 dark-to-zinc9 b b-zinc2/80 dark-b-zinc8/90',
       'flex items-center gap-x3 relative text-sm',

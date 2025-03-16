@@ -30,7 +30,6 @@
     "!vite.config.ts",
     "!.gitignore",
     "!tsconfig.json",
-    "!biome.js",
     "flexilla"
   ],
   "scripts": {
