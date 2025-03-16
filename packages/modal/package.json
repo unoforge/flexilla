@@ -21,7 +21,9 @@
         "default": "./dist/modal.umd.js"
       }
     },
-    "./modal.css": "./dist/modal.css"
+    "./modal.css": "./dist/modal.css",
+    "./animate.css": "./dist/animate.css"
+
   },
   "files": [
     "dist",
@@ -29,8 +31,7 @@
     "package.json",
     "!vite.config.ts",
     "!.gitignore",
-    "!tsconfig.json",
-    "!biome.js"
+    "!tsconfig.json"
   ],
   "scripts": {
     "dev": "vite",
