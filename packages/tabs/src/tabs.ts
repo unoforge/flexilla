@@ -1,9 +1,27 @@
-import { $, $$, $d } from "@flexilla/utilities";
+import { $, $$, $d, dispatchCustomEvent } from "@flexilla/utilities";
 import type { IndicatorOptions, TabsOptions } from "./types";
 import { DEFAULT_INDICATOR, TRANSFORM_DURATION, TRANSFORM_EASING } from "./const";
 import { createIndicator } from "./indicator";
 import { activeTab, handleKeyEvent, hideAllTabPanels } from "./helpers";
 
+/**
+ * A flexible and accessible tabs component that manages tab panels and their triggers.
+ * 
+ * @example
+ * ```js
+ * // Initialize a single tabs instance
+ * const tabs = new Tabs('#my-tabs', {
+ *   defaultValue: 'tab1',
+ *   animationOnShow: 'slide-right',
+ *   indicatorOptions: {
+ *     className: 'tab-indicator'
+ *   }
+ * });
+ *
+ * // Change tab programmatically
+ * tabs.changeTab('tab2');
+ * ```
+ */
 class Tabs {
   private tabsElement: HTMLElement;
   private options: TabsOptions;
@@ -23,6 +41,16 @@ class Tabs {
    * Tabs Components
    * @param tabs 
    * @param options 
+   */
+  /**
+   * Creates a new Tabs instance.
+   * 
+   * @param {string | HTMLElement} tabs - The tabs container element or selector.
+   * @param {TabsOptions} [options={}] - Configuration options for the tabs component.
+   * @param {string} [options.defaultValue] - The initial active tab panel's ID.
+   * @param {string} [options.animationOnShow] - Animation class to apply when showing tab panels.
+   * @param {IndicatorOptions} [options.indicatorOptions] - Configuration for the tab indicator.
+   * @throws {Error} When invalid elements are provided or required elements are missing.
    */
   constructor(tabs: string | HTMLElement, options: TabsOptions = {}) {
     const tabsElement = typeof tabs === "string" ? $(tabs) : tabs
@@ -115,6 +143,10 @@ class Tabs {
         currentTrigger: triggerElement,
         currentPanel: tabAct?.currentTabPanel
       }));
+      dispatchCustomEvent(this.tabsElement, "change-tab", {
+        currentTrigger: triggerElement,
+        currentPanel: tabAct?.currentTabPanel
+      });
     });
 
     triggerElement.addEventListener("keydown", (event) => handleKeyEvent(event, this.tabTriggers));
@@ -123,15 +155,15 @@ class Tabs {
   private initializeTab(
     { tabTriggers, tabPanels, tabsPanelContainer, showAnimation, indicatorTransformDuration, indicatorTransformEaseing, activeTabTrigger, indicatorClassName, tabList }: { tabTriggers: HTMLElement[], tabPanels: HTMLElement[], tabsPanelContainer: HTMLElement, showAnimation: string, indicatorTransformDuration: number, indicatorTransformEaseing: string, activeTabTrigger: HTMLElement, indicatorClassName: string, tabList: HTMLElement }
   ) {
-    for (const tabTrigger of tabTriggers) {
-      this.attachTriggerEvents(tabTrigger);
-    }
-
     createIndicator({
       activeTabTrigger,
       indicatorClassName,
       tabList
     });
+    for (const tabTrigger of tabTriggers) {
+      this.attachTriggerEvents(tabTrigger);
+    }
+
     const activePanel = $d(`[data-tab-panel]#${activeTabTrigger.getAttribute("data-target")}`, tabsPanelContainer)
     hideAllTabPanels(activePanel, tabPanels)
 
@@ -154,6 +186,16 @@ class Tabs {
   /**
    * @param tabValue {string} the value of the targeted tabpanel
    */
+  /**
+   * Changes the active tab programmatically.
+   * 
+   * @param {string} tabValue - The ID of the tab panel to activate.
+   * @example
+   * ```js
+   * // Switch to the tab panel with ID 'tab2'
+   * tabs.changeTab('tab2');
+   * ```
+   */
   changeTab = (tabValue: string) => {
     const triggerElement = $(`[data-tabs-trigger][data-target='${tabValue}']`, this.tabList)
     if (!(triggerElement instanceof HTMLElement)) return
@@ -171,21 +213,45 @@ class Tabs {
       currentTrigger: triggerElement,
       currentPanel: tabAct?.currentTabPanel
     }));
+    dispatchCustomEvent(this.tabsElement, "change-tab", {
+      currentTrigger: triggerElement,
+      currentPanel: tabAct?.currentTabPanel
+    });
   }
 
   /**
-     * auto init Tabs Elements based on the selector provided
-     * @param selector {string} default is [data-fx-tabs] attribute
-     */
-  static autoInit = (selector = "[data-fx-tabs]") => {
+   * Automatically initializes all tabs components in the document that match the selector.
+   * 
+   * @param {string} [selector='[data-fx-tabs]'] - The selector to find tabs components.
+   * @example
+   * ```js
+   * // Initialize all tabs with default selector
+   * Tabs.autoInit();
+   * 
+   * // Initialize tabs with custom selector
+   * Tabs.autoInit('.custom-tabs');
+   * ```
+   */
+  static autoInit = (selector: string = "[data-fx-tabs]") => {
     const tabsEls = $$(selector)
     for (const tabs of tabsEls) new Tabs(tabs)
   }
 
   /**
-   * Tabs Components
-   * @param tabs 
-   * @param options 
+   * Creates and initializes a new Tabs instance.
+   * 
+   * @param {string | HTMLElement} tabs - The tabs container element or selector.
+   * @param {TabsOptions} options - Configuration options for the tabs component.
+   * @returns {Tabs} A new Tabs instance.
+   * @example
+   * ```js
+   * const tabs = Tabs.init('#my-tabs', {
+   *   defaultValue: 'tab1',
+   *   indicatorOptions: {
+   *     className: 'custom-indicator'
+   *   }
+   * });
+   * ```
    */
   static init = (tabs: string | HTMLElement, options: TabsOptions) => new Tabs(tabs, options)
 }
