@@ -1,31 +1,23 @@
-
-import { actionToggler as toggleDataAttribute } from "@flexilla/utilities/toggler"
-import { $, keyboardNavigation } from "@flexilla/utilities"
+import { dispatchCustomEvent } from "@flexilla/utilities"
 import "./../main"
 
-const popperEl = $("[data-fx-popper]") as HTMLElement
-const navigate = keyboardNavigation({
-    containerElement: popperEl,
-    targetChildren: "a:not([disabled]), button:not([disabled])",
-    direction: "up-down"
-})
 
-const triggerElement = $("[data-dropdown-trigger]")
-if (triggerElement instanceof HTMLElement) {
-    toggleDataAttribute({
-        trigger: triggerElement,
-        targets: [
-            {
-                element: popperEl,
-                attributes: {
-                    initial: { 'data-state': 'close' },
-                    to: { 'data-state': 'open' }
-                }
-            }
-        ],
-        onToggle({ isExpanded }) {
-            if (!isExpanded) navigate.destroy()
-            else navigate.make()
-        },
-    })
+const button = document.querySelector('button') as HTMLButtonElement | null;
+const targetDiv = document.querySelector('#target') as HTMLDivElement | null;
+const targetN = document.querySelector('#target') as HTMLDivElement | null;
+
+if (button && targetDiv) {
+    // Add event listener to the div
+    //   targetDiv
+
+    targetN?.addEventListener('custom-click', (event: Event) => {
+        alert('Custom event received!');
+        const data = (event as CustomEvent).detail;
+        console.log(`Received: ${data.message}`)
+    });
+
+    // Dispatch event when button is clicked
+    button.addEventListener('click', () => {
+        dispatchCustomEvent(targetDiv, 'custom-click', { message: 'Hello from button!', sourceBtn:button });
+    });
 }

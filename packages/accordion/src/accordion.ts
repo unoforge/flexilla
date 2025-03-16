@@ -6,8 +6,21 @@ import { initKeyEvents } from "./helpers";
 
 
 /**
- * Accordion component class for managing collapsible content sections
+ * Accordion component class for managing collapsible content sections.
+ * Provides functionality for creating interactive accordion UI elements with single or multiple expandable sections.
+ * 
  * @class
+ * @example
+ * ```typescript
+ * // Create a single-section accordion
+ * const accordion = new Accordion('#myAccordion');
+ * 
+ * // Create a multi-section accordion with options
+ * const multiAccordion = new Accordion('#multiAccordion', {
+ *   accordionType: 'multiple',
+ *   preventClosingAll: true
+ * });
+ * ```
  */
 export default class Accordion {
     private accordionEl: HTMLElement;
@@ -18,12 +31,12 @@ export default class Accordion {
      * Creates an instance of Accordion
      * @param {string | HTMLElement} accordion - Selector string or HTMLElement for the accordion container
      * @param {AccordionOptions} [options={}] - Configuration options for the accordion
-     * @throws {Error} When accordion element is not found
+     * @throws {Error} When accordion element is not found or selector is invalid
      */
     constructor(accordion: string | HTMLElement, options: AccordionOptions = {}) {
         this.accordionEl = typeof accordion === "string" ? $(accordion) as HTMLElement : accordion;
         if (!this.accordionEl) {
-            throw new Error("Accordion element not found");
+            throw new Error(`Accordion element not found: ${typeof accordion === "string" ? `No element matches selector "${accordion}"` : "Provided HTMLElement is null or undefined"}`);
         }
         this.options = {
             accordionType: this.accordionEl.dataset.accordionType as AccordionType || options.accordionType || "single",
@@ -144,6 +157,11 @@ export default class Accordion {
      * Shows/expands an accordion item by its ID
      * @public
      * @param {string} id - The value/ID of the accordion item to show
+     * @example
+     * ```typescript
+     * const accordion = new Accordion('#myAccordion');
+     * accordion.show('section1'); // Expands the accordion item with value="section1"
+     * ```
      */
     public show(id: string) {
         const item = $d(`[data-accordion-item][data-accordion-value="${id}"]`, this.accordionEl)
@@ -165,6 +183,11 @@ export default class Accordion {
         * Hides/collapses an accordion item by its ID
         * @public
         * @param {string} id - The value/ID of the accordion item to hide
+        * @example
+        * ```typescript
+        * const accordion = new Accordion('#myAccordion');
+        * accordion.hide('section1'); // Collapses the accordion item with value="section1"
+        * ```
         */
     public hide(id: string) {
         const item = $d(`[data-accordion-item][data-accordion-value="${id}"]`, this.accordionEl)
@@ -187,6 +210,14 @@ export default class Accordion {
      * Automatically initializes all accordion components matching the selector
      * @static
      * @param {string} [selector="[data-fx-accordion]"] - The selector to find accordion elements
+     * @example
+     * ```typescript
+     * // Initialize all accordion elements with data-fx-accordion attribute
+     * Accordion.autoInit();
+     * 
+     * // Initialize accordions with custom selector
+     * Accordion.autoInit('.custom-accordion');
+     * ```
      */
     public static autoInit = (selector: string = "[data-fx-accordion]") => {
         const accordions = $$(selector, document.documentElement)
@@ -199,6 +230,18 @@ export default class Accordion {
      * @param {string | HTMLElement} accordion - Selector string or HTMLElement for the accordion container
      * @param {AccordionOptions} [options={}] - Configuration options for the accordion
      * @returns {Accordion} A new Accordion instance
+     * @example
+     * ```typescript
+     * // Initialize with selector
+     * const accordion1 = Accordion.init('#myAccordion');
+     * 
+     * // Initialize with HTMLElement and options
+     * const element = document.querySelector('#multiAccordion');
+     * const accordion2 = Accordion.init(element, {
+     *   accordionType: 'multiple',
+     *   preventClosingAll: true
+     * });
+     * ```
      */
     public static init = (accordion: string | HTMLElement, options: AccordionOptions = {}) => new Accordion(accordion, options)
 }
