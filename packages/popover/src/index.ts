@@ -1,4 +1,4 @@
 import "./popover.css"
-export { Popover, CreatePopover } from "./popover"
+export { Popover } from "./popover"
 export type { PopoverOptions } from "./types"
 export type { Placement } from "flexipop"

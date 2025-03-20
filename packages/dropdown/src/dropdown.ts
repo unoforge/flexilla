@@ -1,5 +1,5 @@
 import { DropdownOptions } from "./types"
-import { CreatePopover, type Placement } from "@flexilla/popover"
+import { CreateOverlay, type Placement } from "@flexilla/create-overlay"
 import { $$, $, keyboardNavigation, dispatchCustomEvent } from "@flexilla/utilities"
 
 
@@ -29,7 +29,7 @@ class Dropdown {
     private contentElement: HTMLElement
 
     private options: DropdownOptions
-    private CreatePopoverInstance: CreatePopover
+    private OverlayInstance: CreateOverlay
     private navigationKeys: {
         make: () => void;
         destroy: () => void;
@@ -76,7 +76,7 @@ class Dropdown {
         this.preventFromCloseInside = this.options.preventCloseFromInside || this.contentElement.hasAttribute("data-prevent-close-inside") || false
         this.defaultState = this.options.defaultState || this.contentElement.dataset.defaultState as "close" | "open" || "close";
 
-        this.CreatePopoverInstance = new CreatePopover({
+        this.OverlayInstance = new CreateOverlay({
             trigger: this.triggerElement,
             content: this.contentElement,
             options: {
@@ -97,14 +97,12 @@ class Dropdown {
             }
         })
 
-
         this.navigationKeys = keyboardNavigation({
             containerElement: this.contentElement,
             targetChildren: "a:not([disabled]), button:not([disabled])",
             direction: "up-down"
         })
     }
-
 
     private onToggle = ({ isHidden }: { isHidden?: boolean }) => {
         this.options.onToggle?.({ isHidden })
@@ -137,14 +135,14 @@ class Dropdown {
      * Shows the dropdown
      */
     show = () => {
-        this.CreatePopoverInstance.show()
+        this.OverlayInstance.show()
     }
 
     /**
      * Hides the dropdown
      */
     hide = () => {
-        this.CreatePopoverInstance.hide()
+        this.OverlayInstance.hide()
     }
 
     /**
@@ -152,7 +150,14 @@ class Dropdown {
      * @param options - The new placement and offset options
      */
     setShowOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
-        this.CreatePopoverInstance.setShowOptions({ placement, offsetDistance })
+        this.OverlayInstance.setShowOptions({ placement, offsetDistance })
+    }
+
+    /**
+     * Removes all event listeners
+     */
+    cleanup = ()=>{
+        this.OverlayInstance.destroy()
     }
 
     /**
