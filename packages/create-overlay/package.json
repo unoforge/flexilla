@@ -1,0 +1,68 @@
+{
+  "name": "@flexilla/create-overlay",
+  "private": false,
+  "version": "0.0.0-beta.1",
+  "type": "module",
+  "description": "Flexipop wrapper for Flexilla Overlay components (tooltip, popover, dropdown)",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/create-overlay.js",
+  "module": "./dist/create-overlay.js",
+  "types": "./dist/create-overlay.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/create-overlay.d.ts",
+        "default": "./dist/create-overlay.js"
+      },
+      "require": {
+        "types": "./dist/create-overlay.d.ts",
+        "default": "./dist/create-overlay.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "!vite.config.ts",
+    "!.gitignore",
+    "!tsconfig.json"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vite-plugin-dts": "^3.7.0"
+  },
+  "dependencies": {
+    "flexipop": "latest"
+  },
+  "keywords": [
+    "flexilla",
+    "flexilla utilities",
+    "flexipop",
+    "overlay",
+    "tooltip",
+    "popover",
+    "dropdown",
+    "component",
+    "unoforge",
+    "flexzilla",
+    "flexzila"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unoforge/flexilla"
+  },
+  "bugs": {
+    "url": "https://github.com/unoforge/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "johnkat-mj"
+}
