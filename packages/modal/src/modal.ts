@@ -36,6 +36,8 @@ class Modal {
      */
     public hideModal: () => void
 
+    public cleanup: () => void
+
     /**
      * Checks if the modal is currently hidden
      * @returns {boolean} True if the modal is hidden, false otherwise
@@ -67,7 +69,7 @@ class Modal {
 
         const triggerButton = (typeof triggerElement === "string" ? $(triggerElement) : triggerElement) || $(`[data-modal-target='${modalId}']`);
 
-        const { showModal, hideModal, autoInitModal, isHidden } = initModal(modalElement, triggerButton, this.options);
+        const { showModal, hideModal, autoInitModal, isHidden, cleanup } = initModal(modalElement, triggerButton, this.options);
 
         if (this.state === "open") {
             showModal()
@@ -76,7 +78,10 @@ class Modal {
         this.showModal = showModal
         this.hideModal = hideModal
         this.isHidden = isHidden
+        this.cleanup = cleanup
     }
+
+
 
     /**
      * Automatically initializes all modal elements matching the provided selector

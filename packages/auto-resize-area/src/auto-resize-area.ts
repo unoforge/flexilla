@@ -10,6 +10,8 @@ class AutoResizableTextArea {
     private textareaElement: HTMLTextAreaElement;
     private minHeight: number;
     private maxHeight: number;
+    private boundAutoresize: () => void;
+    private debouncedResize: (...args: any[]) => void;
 
     /**
      * Creates an instance of AutoResizableTextArea.
@@ -34,9 +36,12 @@ class AutoResizableTextArea {
         this.minHeight = Number(this.textareaElement.getAttribute("data-min-height")) || minHeight || 20;
         this.maxHeight = Number(this.textareaElement.getAttribute("data-max-height")) || maxHeight || 500;
 
+        this.boundAutoresize = this.autoresizeTextarea.bind(this);
+        this.debouncedResize = this.debounce(this.boundAutoresize, 100);
+
         this.autoresizeTextarea();
-        this.textareaElement.addEventListener("input", this.autoresizeTextarea.bind(this), false);
-        window.addEventListener("resize", this.debounce(this.autoresizeTextarea.bind(this), 100));
+        this.textareaElement.addEventListener("input", this.boundAutoresize, false);
+        window.addEventListener("resize", this.debouncedResize);
     }
 
     /**
@@ -110,6 +115,15 @@ class AutoResizableTextArea {
      */
     static init(textarea: string | HTMLTextAreaElement): AutoResizableTextArea {
         return new AutoResizableTextArea(textarea);
+    }
+
+    /**
+     * Removes all event listeners and cleans up the instance.
+     * Call this method when the textarea is no longer needed to prevent memory leaks.
+     */
+    public cleanup = ()=> {
+        this.textareaElement.removeEventListener("input", this.boundAutoresize);
+        window.removeEventListener("resize", this.debouncedResize);
     }
 }
 

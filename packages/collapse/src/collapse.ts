@@ -142,6 +142,22 @@ class Collapse {
     }
 
     /**
+     * Cleans up the Collapse instance by removing event listeners.
+     * This method should be called when the collapse component is no longer needed
+     * to prevent memory leaks.
+     * 
+     * @example
+     * ```ts
+     * const collapse = new Collapse('#myCollapse');
+     * // When done with the collapse component
+     * collapse.cleanup();
+     * ```
+     */
+    cleanup(){
+        if (this.collapseTrigger instanceof HTMLElement) this.collapseTrigger.removeEventListener("click", this.toggle)
+    }
+
+    /**
      * Initializes a new Collapse instance with the specified configuration.
      * 
      * @param selector - The CSS selector string or HTMLElement to be collapsed/expanded

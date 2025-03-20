@@ -164,15 +164,17 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
         })
     };
 
+    const closeModalOnX = (e:MouseEvent)=>{
+        e.preventDefault()
+        hideModal()
+    }
+
 
     const autoInitModal = () => {
         if (triggerButton instanceof HTMLElement) triggerButton.addEventListener("click", showModal);
         if (closeButtons.length > 0) {
             for (const closeButton of closeButtons) {
-                closeButton.addEventListener("click", e => {
-                    e.preventDefault()
-                    hideModal()
-                });
+                closeButton.addEventListener("click", closeModalOnX);
             }
         }
     }
@@ -181,7 +183,23 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
         return modalElement.dataset.state === "close"
     }
 
-    return { autoInitModal, showModal, hideModal, isHidden }
+    const cleanup = () => {
+        if (triggerButton instanceof HTMLElement) triggerButton.removeEventListener("click", showModal);
+        if (closeButtons.length > 0) {
+            for (const closeButton of closeButtons) {
+                closeButton.removeEventListener("click", closeModalOnX);
+            }
+        }
+        if (isKeyDownEventRegistered) {
+            document.removeEventListener("keydown", closeModalEsc);
+            isKeyDownEventRegistered = false;
+        }
+        if  (!preventCloseModal && overlayElement instanceof HTMLElement) {
+            overlayElement.removeEventListener("click", hideModal);
+        }
+    }
+
+    return { autoInitModal, showModal, hideModal, isHidden, cleanup }
 };
 
 export { initModal };

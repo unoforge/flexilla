@@ -120,36 +120,51 @@ class Tabs {
       }
     );
   }
+  private handleGlobalTabChanges = (triggerElement: HTMLElement) => {
+    const isCurrent = triggerElement.ariaSelected === "true" || this.activeTabTrigger === triggerElement
+    // if always selected then return void and don't do anything
+    if (isCurrent) return
+
+    this.activeTabTrigger = triggerElement;
+    const tabAct = activeTab({
+      triggerElement,
+      tabTriggers: this.tabTriggers,
+      tabsPanelContainer: this.panelsContainer,
+      showAnimation: this.showAnimation,
+      indicatorTransformDuration: this.indicatorTransformDuration,
+      indicatorTransformEaseing: this.indicatorTransformEaseing,
+      tabList: this.tabList
+    });
+    this.options.onChangeTab && (this.options.onChangeTab({
+      currentTrigger: triggerElement,
+      currentPanel: tabAct?.currentTabPanel
+    }));
+    dispatchCustomEvent(this.tabsElement, "change-tab", {
+      currentTrigger: triggerElement,
+      currentPanel: tabAct?.currentTabPanel
+    });
+  }
+
+  private handleTabChanges = (e: MouseEvent) => {
+    const triggerElement = e.currentTarget as HTMLElement;
+    e.preventDefault();
+    this.handleGlobalTabChanges(triggerElement)
+  }
+
+  private handleKeyEventChanges = (event: KeyboardEvent) => {
+    handleKeyEvent(event, this.tabTriggers)
+  }
 
   private attachTriggerEvents(triggerElement: HTMLElement) {
     if (!(triggerElement instanceof HTMLElement)) return;
-    triggerElement.addEventListener("click", (e) => {
-      e.preventDefault();
-      const isCurrent = triggerElement.ariaSelected === "true" || this.activeTabTrigger === triggerElement
-      // if always selected then return void and don't do anything
-      if (isCurrent) return
+    triggerElement.addEventListener("click", this.handleTabChanges);
+    triggerElement.addEventListener("keydown", this.handleKeyEventChanges);
+  }
 
-      this.activeTabTrigger = triggerElement;
-      const tabAct = activeTab({
-        triggerElement,
-        tabTriggers: this.tabTriggers,
-        tabsPanelContainer: this.panelsContainer,
-        showAnimation: this.showAnimation,
-        indicatorTransformDuration: this.indicatorTransformDuration,
-        indicatorTransformEaseing: this.indicatorTransformEaseing,
-        tabList: this.tabList
-      });
-      this.options.onChangeTab && (this.options.onChangeTab({
-        currentTrigger: triggerElement,
-        currentPanel: tabAct?.currentTabPanel
-      }));
-      dispatchCustomEvent(this.tabsElement, "change-tab", {
-        currentTrigger: triggerElement,
-        currentPanel: tabAct?.currentTabPanel
-      });
-    });
-
-    triggerElement.addEventListener("keydown", (event) => handleKeyEvent(event, this.tabTriggers));
+  cleanup = (triggerElement: HTMLElement) => {
+    if (!(triggerElement instanceof HTMLElement)) return;
+    triggerElement.removeEventListener("click", this.handleTabChanges);
+    triggerElement.removeEventListener("keydown", this.handleKeyEventChanges);
   }
 
   private initializeTab(
@@ -199,24 +214,7 @@ class Tabs {
   changeTab = (tabValue: string) => {
     const triggerElement = $(`[data-tabs-trigger][data-target='${tabValue}']`, this.tabList)
     if (!(triggerElement instanceof HTMLElement)) return
-    this.activeTabTrigger = triggerElement;
-    const tabAct = activeTab({
-      triggerElement,
-      tabTriggers: this.tabTriggers,
-      tabsPanelContainer: this.panelsContainer,
-      showAnimation: this.showAnimation,
-      indicatorTransformDuration: this.indicatorTransformDuration,
-      indicatorTransformEaseing: this.indicatorTransformEaseing,
-      tabList: this.tabList
-    });
-    this.options.onChangeTab && (this.options.onChangeTab({
-      currentTrigger: triggerElement,
-      currentPanel: tabAct?.currentTabPanel
-    }));
-    dispatchCustomEvent(this.tabsElement, "change-tab", {
-      currentTrigger: triggerElement,
-      currentPanel: tabAct?.currentTabPanel
-    });
+    this.handleGlobalTabChanges(triggerElement)
   }
 
   /**
@@ -231,7 +229,7 @@ class Tabs {
    * // Initialize tabs with custom selector
    * Tabs.autoInit('.custom-tabs');
    * ```
-   */
+  */
   static autoInit = (selector: string = "[data-fx-tabs]") => {
     const tabsEls = $$(selector)
     for (const tabs of tabsEls) new Tabs(tabs)
