@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/tooltip",
   "private": false,
-  "version": "2.0.8",
+  "version": "2.0.9",
   "type": "module",
   "description": "A lightweight and customizable tooltip component for displaying additional information on hover over elements in web applications.",
   "publishConfig": {
@@ -43,7 +43,7 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "dependencies": {
-    "@flexilla/create-overlay": "^0.0.0-beta.1"
+    "@flexilla/create-overlay": "^0.0.0"
   },
   "keywords": [
     "popper",
