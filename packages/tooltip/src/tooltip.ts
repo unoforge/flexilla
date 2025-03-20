@@ -1,4 +1,4 @@
-import { CreatePopover, type Placement } from "@flexilla/popover"
+import { CreateOverlay, type Placement } from "@flexilla/create-overlay"
 import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
 import type { TooltipOptions } from "./types"
 
@@ -9,7 +9,7 @@ class Tooltip {
     private contentElement: HTMLElement
 
     private options: TooltipOptions
-    private PopoverInstance: CreatePopover
+    private PopoverInstance: CreateOverlay
 
     private triggerStrategy: "click" | "hover"
     private placement: Placement
@@ -35,7 +35,7 @@ class Tooltip {
         this.preventFromCloseInside = this.options.preventCloseFromInside || content.hasAttribute("data-prevent-close-inside") || false
         this.defaultState = this.options.defaultState || content.dataset.defaultState as "close" | "open" || "close";
 
-        this.PopoverInstance = new CreatePopover({
+        this.PopoverInstance = new CreateOverlay({
             trigger: this.triggerElement,
             content: this.contentElement,
             options: {
@@ -58,7 +58,6 @@ class Tooltip {
                 }
             }
         })
-
     }
 
 
@@ -78,6 +77,10 @@ class Tooltip {
         dispatchCustomEvent(this.triggerElement, "tooltip-hide", {
             isHidden: true
         })
+    }
+
+    cleanup = ()=>{
+        this.PopoverInstance.destroy()
     }
 
     /**

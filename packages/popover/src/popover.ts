@@ -1,206 +1,8 @@
-import type { EventEffect, PopoverOptions } from "./types"
-import { CreatePopper, type Placement } from 'flexipop'
-import { $, $$, afterTransition, dispatchCustomEvent } from "@flexilla/utilities"
-import { updatePopoverState } from "./helpers"
+import type { PopoverOptions } from "./types"
+import {  type Placement } from 'flexipop'
+import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
+import { CreateOverlay } from "@flexilla/create-overlay"
 
-/**
- * Internal class for creating and managing popover functionality.
- * @internal
- */
-class CreatePopover {
-    private triggerElement: HTMLElement
-    private contentElement: HTMLElement
-    private triggerStrategy: "click" | "hover"
-    private placement: Placement
-    private offsetDistance: number
-    private preventFromCloseOutside: boolean
-    private preventFromCloseInside: boolean
-    private options: PopoverOptions
-    private defaultState: "open" | "close"
-    private popper: CreatePopper
-    private eventEffect: EventEffect | undefined
-
-    constructor({ trigger, content, options = {} }: { trigger: string | HTMLElement, content: string | HTMLElement, options?: PopoverOptions }) {
-
-        this.contentElement = this.getElement(content) as HTMLElement;
-        this.triggerElement = this.getElement(trigger) as HTMLElement;
-
-        if (!(this.triggerElement instanceof HTMLElement)) throw new Error("Trigger element must be a valid HTML element")
-        if (!(this.contentElement instanceof HTMLElement)) throw new Error("Content element must be a valid HTML element")
-
-        this.options = options
-
-        this.triggerStrategy = this.options.triggerStrategy || "click"
-        this.placement = this.options.placement || "bottom"
-        this.offsetDistance = this.options.offsetDistance || 6
-        this.preventFromCloseOutside = this.options.preventFromCloseOutside || false
-        this.preventFromCloseInside = this.options.preventCloseFromInside || false
-        this.defaultState = this.options.defaultState || "close";
-        this.eventEffect = this.options.popper?.eventEffect
-        this.popper = new CreatePopper(
-            this.triggerElement,
-            this.contentElement,
-            {
-                placement: this.placement,
-                offsetDistance: this.offsetDistance,
-                eventEffect: this.eventEffect
-            }
-        )
-        this.initInstance()
-    }
-
-    private getElement = (el: string | HTMLElement | undefined) => {
-        return typeof el === "string" ? $(el) : el instanceof HTMLElement ? el : undefined;
-    };
-
-
-    private handleDocumentClick = (event: MouseEvent) => {
-        if (this.contentElement.getAttribute("data-state") === "open") {
-            if (
-                !this.triggerElement.contains(event.target as Node) &&
-                !this.preventFromCloseInside &&
-                !this.preventFromCloseOutside
-            ) {
-                this.hide()
-            }
-            else if (!this.triggerElement.contains(event.target as Node)
-                && !this.contentElement.contains(event.target as Node)
-                && !this.preventFromCloseOutside)
-                this.hide()
-            else if (!this.triggerElement.contains(event.target as Node) && !this.contentElement.contains(event.target as Node) && !this.preventFromCloseOutside) this.hide()
-            else if (!this.triggerElement.contains(event.target as Node) && this.contentElement.contains(event.target as Node) && !this.preventFromCloseInside) this.hide()
-        }
-    }
-
-    private handleKeyDown = (event: KeyboardEvent) => {
-        event.preventDefault()
-        if (this.triggerStrategy !== "hover" && event.key === "Escape") {
-            if (this.contentElement.getAttribute("data-state") === "open") {
-                if (!this.preventFromCloseOutside) this.hide();
-            }
-        }
-    }
-
-
-    private onToggleState(isHidden: boolean) {
-        this.options.onToggle?.({ isHidden: isHidden })
-    }
-
-    private toggleStateOnClick = () => {
-        const state = this.contentElement.dataset.state || "close"
-        if (state === "close") {
-            this.show()
-            if (this.triggerStrategy === "hover") this.addEventOnMouseEnter()
-        } else {
-            this.hide()
-        }
-    }
-
-    private hideOnMouseLeaseTrigger = () => {
-        setTimeout(() => {
-            if (!this.contentElement.matches(':hover')) this.hide();
-        }, 150);
-    }
-
-    private hideOnMouseLeave = () => {
-        setTimeout(() => {
-            if (!this.triggerElement.matches(':hover')) this.hide();
-        }, 150);
-    }
-
-    private addEventOnMouseEnter = () => {
-        this.triggerElement.addEventListener("mouseleave", this.hideOnMouseLeaseTrigger)
-        this.contentElement.addEventListener("mouseleave", this.hideOnMouseLeave)
-    }
-
-    private showOnMouseEnter = () => {
-        this.show()
-        this.addEventOnMouseEnter()
-    }
-
-    show() {
-        this.popper.updatePosition()
-        document.addEventListener("keydown", this.handleKeyDown)
-        document.addEventListener("click", this.handleDocumentClick)
-        this.options.beforeShow?.()
-        updatePopoverState({
-            state: "open",
-            popper: this.contentElement,
-            trigger: this.triggerElement
-        })
-        this.onToggleState(false)
-        this.options.onShow?.()
-    }
-
-    setShowOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
-        this.popper.setOptions({
-            placement,
-            offsetDistance
-        })
-        document.addEventListener("keydown", this.handleKeyDown)
-        document.addEventListener("click", this.handleDocumentClick)
-        this.options.beforeShow?.()
-        updatePopoverState({
-            state: "open",
-            popper: this.contentElement,
-            trigger: this.triggerElement
-        })
-        this.onToggleState(false)
-        this.options.onShow?.()
-    }
-    setPopperOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
-        this.popper.setOptions({
-            placement,
-            offsetDistance
-        })
-    }
-
-    hide() {
-        this.options.beforeHide?.()
-        updatePopoverState({
-            state: "close",
-            popper: this.contentElement,
-            trigger: this.triggerElement
-        })
-        this.triggerStrategy === "click" && document.removeEventListener("click", this.handleDocumentClick)
-        document.removeEventListener("keydown", this.handleKeyDown)
-        if (this.triggerStrategy === "hover") {
-            this.triggerElement.removeEventListener("mouseleave", this.hideOnMouseLeaseTrigger)
-            this.contentElement.removeEventListener("mouseleave", this.hideOnMouseLeave)
-        }
-        afterTransition({
-            element: this.contentElement,
-            callback: () => {
-                this.onToggleState(true)
-                this.popper.cleanupEvents()
-                this.options.onHide?.()
-            }
-        })
-
-    }
-
-    private initInstance() {
-        updatePopoverState({
-            state: this.defaultState,
-            popper: this.contentElement,
-            trigger: this.triggerElement
-        })
-        if (this.defaultState === "open") {
-            this.show()
-        } else {
-            updatePopoverState({
-                state: "close",
-                popper: this.contentElement,
-                trigger: this.triggerElement
-            })
-        }
-
-        this.triggerElement.addEventListener("click", this.toggleStateOnClick)
-        if (this.triggerStrategy === "hover") {
-            this.triggerElement.addEventListener("mouseenter", this.showOnMouseEnter)
-        }
-    }
-}
 
 /**
  * Creates a new popover instance with the specified trigger and content elements.
@@ -212,7 +14,7 @@ class Popover {
     private contentElement: HTMLElement
 
     private options: PopoverOptions
-    private PopoverInstance: CreatePopover
+    private PopoverInstance: CreateOverlay
 
     private triggerStrategy: "click" | "hover"
     private placement: Placement
@@ -249,7 +51,7 @@ class Popover {
         this.preventFromCloseInside = this.options.preventCloseFromInside || content.hasAttribute("data-prevent-close-inside") || false
         this.defaultState = this.options.defaultState || content.dataset.defaultState as "close" | "open" || "close";
 
-        this.PopoverInstance = new CreatePopover({
+        this.PopoverInstance = new CreateOverlay({
             trigger: this.triggerElement,
             content: this.contentElement,
             options: {
@@ -319,4 +121,4 @@ class Popover {
     }
 }
 
-export { CreatePopover, Popover }
+export { Popover }
