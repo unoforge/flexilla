@@ -3,7 +3,7 @@ import "./../main"
 
 new Modal("[data-modal-test-1]")
 
-new Modal("[data-modal-test-1b]")
+
 let isFailed = true
 const options: ModalOptions = {
     animateContent: {
@@ -22,12 +22,13 @@ const options: ModalOptions = {
 
 const modalTry = document.querySelector("[data-modal-test-1b]")
 if (modalTry instanceof HTMLElement) {
+    new Modal(modalTry)
     modalTry.addEventListener("modal-open", () => {
         alert("Modal Opened")
     })
     modalTry.addEventListener("before-hide", (event) => {
         (event as CustomEvent).detail.setExitAction(true)
-        alert('OOps, this modal will never close, youy have to reload this tab')
+        alert('OOps, this modal will never close, youy have to reload this tab 😂😂😂😂 Sorry')
     })
     modalTry.addEventListener("modal-close", () => {
         alert("Modal closed")

@@ -76,7 +76,7 @@ class Offcanvas {
     /**
    * Close the Offcanvas when a click occurs outside of it.
    */
-    private closeWhenClickOutSide(event: MouseEvent) {
+    private closeWhenClickOutSide = (event: MouseEvent) =>{
         const isOpen = this.offCanvasElement.getAttribute("data-state") === "open"
         const clickOutOutside = !this.offCanvasElement.contains(event.target as Node) && ![...this.offCanvasTriggers].includes(event.target as HTMLElement)
         if (isOpen && clickOutOutside) this.closeOffCanvas()
@@ -103,7 +103,7 @@ class Offcanvas {
             "close"
         )
         document.removeEventListener("keydown", this.closeWithEsc)
-        !this.allowBodyScroll && !overlayElement && document.removeEventListener("click", (event) => this.closeWhenClickOutSide(event))
+        !this.allowBodyScroll && !overlayElement && document.removeEventListener("click", this.closeWhenClickOutSide)
         this.options.onHide?.()
         dispatchCustomEvent(this.offCanvasElement, "offcanvas-close", { offcanvasId: this.offCanvasElement.id })
     }
@@ -141,16 +141,16 @@ class Offcanvas {
 
 
     private initCloseBtns() {
-        for (const closeOffCanvas of this.offCanvasCloseBtns) closeOffCanvas.addEventListener("click", () => this.closeOffCanvas())
+        for (const closeOffCanvas of this.offCanvasCloseBtns) closeOffCanvas.addEventListener("click", this.closeOffCanvas)
     }
 
-    private changeState() {
+    private changeState = () => {
         const curState = this.offCanvasElement.getAttribute("data-state")
         curState === "open" ? this.closeOffCanvas() : this.openOffCanvas()
     }
 
     private initTriggers() {
-        for (const triggerBtn of this.offCanvasTriggers) triggerBtn.addEventListener("click", () => this.changeState())
+        for (const triggerBtn of this.offCanvasTriggers) triggerBtn.addEventListener("click", this.changeState)
     }
 
     private setupOffcanvas() {
@@ -189,18 +189,29 @@ class Offcanvas {
     }
 
     /**
-     * Automatically initializes all offcanvas elements in the document that match the given selector.
-     * @param selector - The selector to find offcanvas elements, defaults to '[data-fx-offcanvas]'
+     * Cleans up the offcanvas instance by removing event listeners and references.
+     * Call this method when the offcanvas component is no longer needed to prevent memory leaks.
      * 
      * @example
      * ```ts
-     * // Initialize all offcanvas elements with default selector
-     * Offcanvas.autoInit();
-     * 
-     * // Initialize with custom selector
-     * Offcanvas.autoInit('.custom-offcanvas');
+     * const offcanvas = new Offcanvas('#sidebar');
+     * // ... use offcanvas ...
+     * offcanvas.cleanup();
      * ```
      */
+    cleanup() {
+        for (const triggerBtn of this.offCanvasTriggers) {
+            triggerBtn.removeEventListener("click", this.changeState)
+        }
+        for (const closeBtn of this.offCanvasCloseBtns) {
+            closeBtn.removeEventListener("click", this.closeOffCanvas)
+        }
+        document.removeEventListener("keydown", this.closeWithEsc)
+        if (!this.allowBodyScroll) {
+            document.removeEventListener("click", this.closeWhenClickOutSide)
+        }
+    }
+
     static autoInit = (selector: string = "[data-fx-offcanvas]") => {
         const offCanvasElements = $$(selector)
         for (const offCanvasElement of offCanvasElements) new Offcanvas(offCanvasElement)

@@ -62,9 +62,14 @@ class Dismissible {
     }
 
     /**
-     * auto init Dismissible Element based on the selector provided
-     * @param selector {string} default is [data-fx-dismissible]
+     * Cleanup method to remove event listeners
      */
+    cleanup() {
+        for (const dismissButton of this.dismissButtons) {
+            dismissButton.removeEventListener("click", this.dismiss)
+        }
+    }
+
     public static autoInit = (selector = "[data-fx-dismissible]") => {
         const dismissibleEls = $$(selector)
         for (const dismissible of dismissibleEls) new Dismissible(dismissible)
