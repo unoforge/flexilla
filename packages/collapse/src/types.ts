@@ -8,12 +8,7 @@ export type CollapsibleElement = HTMLElement & {
         transition: string;
     };
 }
-export type ExpandCollapseOptions = {
-    collapseElement: HTMLElement,
-    triggerElement: HTMLElement | null,
-    state: CollapseState,
-    closeHeight?: number,
-}
+
 
 export type CollapseOptions = {
     defaultState?: CollapseState,

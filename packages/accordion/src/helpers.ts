@@ -1,3 +1,4 @@
+import {expandElement, collapseElement, initCollapsible} from "@flexilla/collapsible"
 import { $d, $$ } from "@flexilla/utilities/selector"
 
 const getAdjacentTrigger = (currentTrigger: HTMLElement, goUp: boolean, accordionElement: HTMLElement) => {
@@ -10,7 +11,10 @@ const getAdjacentTrigger = (currentTrigger: HTMLElement, goUp: boolean, accordio
     return nextTrigger ?? (goUp ? $d("[data-accordion-trigger]", accordionItems[accordionItems.length - 1]) : $d("[data-accordion-trigger]", accordionItems[0]))
 }
 
-const attachKeyEvent = (event: KeyboardEvent, accordionElement: HTMLElement) => {
+
+
+
+const initKeyEvents = (event: KeyboardEvent,accordionElement: HTMLElement) => {
     const focusedTrigger = document.activeElement;
     if (!(focusedTrigger instanceof HTMLElement)) return
 
@@ -22,13 +26,25 @@ const attachKeyEvent = (event: KeyboardEvent, accordionElement: HTMLElement) => 
     }
 }
 
+const changeTriggerState = (trigger:HTMLElement, state: "open" | "close") => {
+    trigger.ariaExpanded = state === "open" ? "true" : "false";    
+}
 
-
-const initKeyEvents = (accordionElement: HTMLElement) => {
-    accordionElement.addEventListener("keydown", (e: KeyboardEvent) => {
-        attachKeyEvent(e, accordionElement)
-    });
+const expandCollapseElement = ({collapsible, triggerElement, state, onInit }: { collapsible: HTMLElement, triggerElement: HTMLElement, state: "open" | "close", onInit?: boolean }) => {
+    if(onInit){
+        initCollapsible(collapsible, state)
+        changeTriggerState(triggerElement, state)
+    }else{
+        if(state==="open") {
+            expandElement(collapsible)
+            changeTriggerState(triggerElement, "open")
+        }
+        else {
+            collapseElement(collapsible)
+            changeTriggerState(triggerElement, "close")
+        }
+    }
 }
 
 
-export { initKeyEvents }
+export { initKeyEvents, expandCollapseElement }
