@@ -1,0 +1,67 @@
+{
+  "name": "@flexilla/collapsible",
+  "private": false,
+  "version": "0.0.0-beta.3",
+  "type": "module",
+  "description": "A utility for creating collapsible sections in web applications, conserving space and improving user experience.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/collapsible.js",
+  "module": "./dist/collapsible.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/collapsible.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/collapsible.umd.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json",
+    "!vite.config.ts",
+    "!.gitignore",
+    "!tsconfig.json"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vite-plugin-dts": "^3.7.0"
+  },
+  "dependencies": {
+    "@flexilla/utilities": "latest"
+  },
+  "keywords": [
+    "collapse",
+    "collapsible",
+    "accordion",
+    "js",
+    "ts",
+    "component",
+    "interactive",
+    "intercative component",
+    "Flexilla"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unoforge/flexilla"
+  },
+  "bugs": {
+    "url": "https://github.com/unoforge/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "johnkat-mj"
+}
