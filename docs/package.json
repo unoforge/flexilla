@@ -20,7 +20,7 @@
     "@astrojs/preact": "^4.0.2",
     "@astrojs/vercel": "^8.0.2",
     "@astrojs/vue": "^5.0.5",
-    "@flexilla/flexilla": "^2.0.8",
+    "@flexilla/flexilla": "^2.1.4",
     "@flexilla/utilities": "^2.0.71",
     "@fontsource/geist-sans": "^5.1.0",
     "@preact/signals": "^1.2.2",
@@ -34,10 +34,10 @@
     "vue": "^3.5.10"
   },
   "devDependencies": {
-    "@flexilla/uno-preset": "0.0.4",
     "@iconify-json/carbon": "^1.1.30",
     "@shikijs/transformers": "^1.20.0",
+    "@unifydev/flexilla": "^0.1.0",
     "@unocss/preset-icons": "^0.58.5",
-    "unocss": "^0.63.0"
+    "unocss": "^66.1.0-beta.6"
   }
 }

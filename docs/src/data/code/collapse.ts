@@ -40,7 +40,7 @@ export const collapseCode: SourceData = {
         Trigger collapse
     </button>
     <div data-collapsible-1 id="collapse1"
-        class="overflow-hidden transition-[height] duration-300 ease-linear overflow-hidden w-full max-h-0 fx-open:max-h-none">
+        class="overflow-hidden transition-[height] duration-300 ease-linear overflow-hidden w-full h-0 fx-open-h-auto">
         <div
             class="rounded-md w-full bg-zinc-100/5 dark:bg-zinc-900/5 border border-gray-200 dark:border-gray-800 p-4 inline-flex overflow-hidden">
             <p class="inline-flex">

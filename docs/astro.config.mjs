@@ -3,7 +3,7 @@ import UnoCSS from "unocss/astro";
 import preact from "@astrojs/preact";
 import mdx from "@astrojs/mdx";
 import { transformerNotationDiff } from "@shikijs/transformers";
-import vercel from "@astrojs/vercel/serverless";
+import vercel from "@astrojs/vercel";
 import partytown from "@astrojs/partytown";
 
 
@@ -13,10 +13,6 @@ import vue from "@astrojs/vue";
 export default defineConfig({
   redirects: {
     "/docs": {
-      status: 302,
-      destination: "/docs/getting-started",
-    },
-    "/docs/": {
       status: 302,
       destination: "/docs/getting-started",
     },
@@ -35,6 +31,6 @@ export default defineConfig({
       forward: ["dataLayer.push"],
     },
   }), vue()],
-  output: "server",
+  output: "static",
   adapter: vercel(),
 });

@@ -36,7 +36,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@flexilla/collapsible": "latest",
     "@flexilla/manager": "latest",
     "@flexilla/utilities": "^2.1.0"
   },

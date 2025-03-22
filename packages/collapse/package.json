@@ -41,7 +41,6 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "dependencies": {
-    "@flexilla/collapsible": "latest",
     "@flexilla/manager": "latest",
     "@flexilla/utilities": "latest"
   },
