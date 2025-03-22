@@ -1,0 +1,1 @@
+export { InstancesManager as FlexillaManager } from './instances-manager'

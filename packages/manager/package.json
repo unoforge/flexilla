@@ -1,0 +1,56 @@
+{
+  "name": "@flexilla/manager",
+  "private": false,
+  "version": "0.0.0-beta.1",
+  "type": "module",
+  "description": "Utility that help manage Flexilla Components Instances",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/manager.js",
+  "module": "./dist/manager.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/manager.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/manager.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "!vite.config.ts",
+    "!.gitignore",
+    "!tsconfig.json"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vite-plugin-dts": "^3.7.0"
+  },
+  "keywords": [
+    "flexilla",
+    "flexilla manager"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unoforge/flexilla"
+  },
+  "bugs": {
+    "url": "https://github.com/unoforge/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "johnkat-mj"
+}
