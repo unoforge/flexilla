@@ -3,7 +3,7 @@ import type { OffcanvasOptions } from "./types"
 import { closeAllOpenedOffcanvas, toggleOffCanvasState } from "./helpers"
 import { appendBefore, $$, $, dispatchCustomEvent } from "@flexilla/utilities"
 import { createOverlay, destroyOverlay } from "./offCanvasOverlay"
-
+import { FlexillaManager } from "@flexilla/manager"
 /**
  * Class representing an Offcanvas element.
  * An Offcanvas is a sidebar component that can slide in from the edges of the viewport.
@@ -23,13 +23,13 @@ import { createOverlay, destroyOverlay } from "./offCanvasOverlay"
  * ```
  */
 class Offcanvas {
-    private offCanvasElement: HTMLElement
-    private offCanvasTriggers: HTMLElement[]
-    private offCanvasCloseBtns: HTMLElement[]
-    private allowBodyScroll: boolean
-    private staticBackdrop: boolean
-    private backdrop: string
-    private options: OffcanvasOptions
+    private offCanvasElement!: HTMLElement
+    private offCanvasTriggers!: HTMLElement[]
+    private offCanvasCloseBtns!: HTMLElement[]
+    private allowBodyScroll!: boolean
+    private staticBackdrop!: boolean
+    private backdrop!: string
+    private options!: OffcanvasOptions
 
     /**
      * Creates an instance of Offcanvas.
@@ -52,6 +52,11 @@ class Offcanvas {
 
         const offCanvasElement = typeof offcanvas === "string" ? $(offcanvas) : offcanvas
         if (!(offCanvasElement instanceof HTMLElement)) throw new Error("Invalid Offcanvas, the provided Element is not a valid HTMLElement")
+        const existingInstance = FlexillaManager.getInstance("offcanvas", offCanvasElement);
+        if (existingInstance) {
+            return existingInstance;
+        }
+
         this.options = options
         const { staticBackdrop, allowBodyScroll, backdrop: overlay } = this.options
         this.offCanvasElement = offCanvasElement
@@ -63,6 +68,7 @@ class Offcanvas {
         this.offCanvasCloseBtns = this.findOffCanvasElements("[data-offcanvas-close]", true, offCanvasId, this.offCanvasElement);
         this.backdrop = overlay || this.offCanvasElement.dataset.offcanvasBackdrop || ""
         this.setupOffcanvas()
+        FlexillaManager.register("offcanvas", this.offCanvasElement, this)
     }
 
     private findOffCanvasElements(selector: string, hasChildren: boolean, offCanvasId: string | null, parent?: HTMLElement) {
@@ -76,7 +82,7 @@ class Offcanvas {
     /**
    * Close the Offcanvas when a click occurs outside of it.
    */
-    private closeWhenClickOutSide = (event: MouseEvent) =>{
+    private closeWhenClickOutSide = (event: MouseEvent) => {
         const isOpen = this.offCanvasElement.getAttribute("data-state") === "open"
         const clickOutOutside = !this.offCanvasElement.contains(event.target as Node) && ![...this.offCanvasTriggers].includes(event.target as HTMLElement)
         if (isOpen && clickOutOutside) this.closeOffCanvas()
@@ -210,6 +216,7 @@ class Offcanvas {
         if (!this.allowBodyScroll) {
             document.removeEventListener("click", this.closeWhenClickOutSide)
         }
+        FlexillaManager.removeInstance("offcanvas", this.offCanvasElement)
     }
 
     static autoInit = (selector: string = "[data-fx-offcanvas]") => {

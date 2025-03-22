@@ -1,7 +1,7 @@
 import { DropdownOptions } from "./types"
 import { CreateOverlay, type Placement } from "@flexilla/create-overlay"
 import { $$, $, keyboardNavigation, dispatchCustomEvent } from "@flexilla/utilities"
-
+import { FlexillaManager } from "@flexilla/manager"
 
 /**
  * A class that creates and manages dropdown functionality with popover positioning.
@@ -29,8 +29,8 @@ class Dropdown {
     private contentElement: HTMLElement
 
     private options: DropdownOptions
-    private OverlayInstance: CreateOverlay
-    private navigationKeys: {
+    private OverlayInstance!: CreateOverlay
+    private navigationKeys!: {
         make: () => void;
         destroy: () => void;
     }
@@ -49,7 +49,7 @@ class Dropdown {
      * @throws {Error} If provided elements are not valid HTMLElements
      */
     constructor(dropdown: string | HTMLElement, options: DropdownOptions = {}) {
-        const contentElement = typeof dropdown === "string"  ? $(dropdown)  : dropdown;
+        const contentElement = typeof dropdown === "string" ? $(dropdown) : dropdown;
 
         if (!(contentElement instanceof HTMLElement)) {
             throw new Error(
@@ -75,6 +75,10 @@ class Dropdown {
         this.preventFromCloseOutside = this.options.preventFromCloseOutside || this.contentElement.hasAttribute("data-prevent-close-outside") || false
         this.preventFromCloseInside = this.options.preventCloseFromInside || this.contentElement.hasAttribute("data-prevent-close-inside") || false
         this.defaultState = this.options.defaultState || this.contentElement.dataset.defaultState as "close" | "open" || "close";
+        const existingInstance = FlexillaManager.getInstance('dropdown', this.contentElement);
+        if (existingInstance) {
+            return existingInstance;
+        }
 
         this.OverlayInstance = new CreateOverlay({
             trigger: this.triggerElement,
@@ -102,6 +106,8 @@ class Dropdown {
             targetChildren: "a:not([disabled]), button:not([disabled])",
             direction: "up-down"
         })
+
+        FlexillaManager.register('dropdown', this.contentElement, this)
     }
 
     private onToggle = ({ isHidden }: { isHidden?: boolean }) => {
@@ -156,8 +162,9 @@ class Dropdown {
     /**
      * Removes all event listeners
      */
-    cleanup = ()=>{
+    cleanup = () => {
         this.OverlayInstance.destroy()
+        FlexillaManager.removeInstance('dropdown', this.contentElement)
     }
 
     /**

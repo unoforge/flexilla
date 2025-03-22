@@ -2,6 +2,7 @@
 import { ModalOptions } from "./types";
 import { initModal } from "./helpers";
 import { $, $$ } from "@flexilla/utilities";
+import { FlexillaManager } from "@flexilla/manager"
 
 /**
  * Modal Component - A flexible and customizable modal dialog implementation
@@ -28,21 +29,21 @@ class Modal {
      * Shows the modal dialog
      * @returns {void}
      */
-    public showModal: () => void
+    public showModal!: () => void
 
     /**
      * Hides the modal dialog
      * @returns {void}
      */
-    public hideModal: () => void
+    public hideModal!: () => void
 
-    public cleanup: () => void
+    public cleanup!: () => void
 
     /**
      * Checks if the modal is currently hidden
      * @returns {boolean} True if the modal is hidden, false otherwise
      */
-    public isHidden: () => boolean
+    public isHidden!: () => boolean
     private options: ModalOptions
     private state: string
 
@@ -62,6 +63,10 @@ class Modal {
 
         this.state = options?.defaultState || this.modalElement.dataset.state || "close"
 
+        const existingInstance = FlexillaManager.getInstance('modal', this.modalElement);
+        if (existingInstance) {
+            return existingInstance;
+        }
         if (!this.modalElement.hasAttribute("data-fx-modal")) {
             this.modalElement.setAttribute("data-fx-modal", "");
         }
@@ -79,6 +84,7 @@ class Modal {
         this.hideModal = hideModal
         this.isHidden = isHidden
         this.cleanup = cleanup
+        FlexillaManager.register('modal', this.modalElement, this)
     }
 
 

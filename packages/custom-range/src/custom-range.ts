@@ -1,8 +1,11 @@
+import { FlexillaManager } from "@flexilla/manager"
+
+
 class CustomRangeIndicator {
     private rangeContainer: HTMLElement
     private rangeElement: HTMLInputElement
-    private indicatorElement: HTMLSpanElement
-    private indicatorClassname: string[]
+    private indicatorElement!: HTMLSpanElement
+    private indicatorClassname!: string[]
 
     /**
      * Create a new instance of the CustomRangeIndicator
@@ -18,10 +21,17 @@ class CustomRangeIndicator {
 
         if (!(this.rangeElement instanceof HTMLInputElement)) throw new Error("The provided element doesn't have a valid HTMLInputElement. Make sure to add data-input-range to the input element")
 
+        const existingInstance = FlexillaManager.getInstance('custom-range', this.rangeContainer);
+        if (existingInstance) {
+            return existingInstance;
+        }
+
         this.indicatorClassname = rangeIndicator?.split(" ") || (this.rangeContainer.dataset.rangeIndicator)?.split(" ") || []
         this.indicatorElement = this.initIndicator()
         this.initRange()
         this.updateIndicatorSize()
+
+        FlexillaManager.register('custom-range', this.rangeContainer, this)
     }
 
     private initIndicator() {
@@ -61,6 +71,7 @@ class CustomRangeIndicator {
      */
     public cleanup() {
         this.rangeElement.removeEventListener("input", this.updateIndicatorSize)
+        FlexillaManager.removeInstance('custom-range', this.rangeContainer)
     }
 
     static autoInit = (selector: string = "[data-fx-custom-range]") => {

@@ -1,8 +1,8 @@
 import type { PopoverOptions } from "./types"
-import {  type Placement } from 'flexipop'
+import { type Placement } from 'flexipop'
 import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
 import { CreateOverlay } from "@flexilla/create-overlay"
-
+import { FlexillaManager } from "@flexilla/manager"
 
 /**
  * Creates a new popover instance with the specified trigger and content elements.
@@ -10,18 +10,18 @@ import { CreateOverlay } from "@flexilla/create-overlay"
  * @description A class that creates and manages a popover component with customizable trigger and content elements.
  */
 class Popover {
-    private triggerElement: HTMLElement
-    private contentElement: HTMLElement
+    private triggerElement!: HTMLElement
+    private contentElement!: HTMLElement
 
-    private options: PopoverOptions
-    private PopoverInstance: CreateOverlay
+    private options!: PopoverOptions
+    private PopoverInstance!: CreateOverlay
 
-    private triggerStrategy: "click" | "hover"
-    private placement: Placement
-    private offsetDistance: number
-    private preventFromCloseOutside: boolean
-    private preventFromCloseInside: boolean
-    private defaultState: "open" | "close"
+    private triggerStrategy!: "click" | "hover"
+    private placement!: Placement
+    private offsetDistance!: number
+    private preventFromCloseOutside!: boolean
+    private preventFromCloseInside!: boolean
+    private defaultState!: "open" | "close"
 
     /**
      * Creates a new Popover instance.
@@ -42,6 +42,11 @@ class Popover {
 
         const content = typeof popoverEl === "string" ? $(popoverEl) as HTMLElement : popoverEl
         this.contentElement = content
+
+        const existingInstance = FlexillaManager.getInstance('popover', this.contentElement);
+        if (existingInstance) {
+            return existingInstance;
+        }
         this.triggerElement = $(`[data-popover-trigger][data-popover-id=${content.getAttribute("id")}]`) as HTMLElement
         this.options = options
         this.triggerStrategy = this.options.triggerStrategy || content.dataset.triggerStrategy as "click" | "hover" || "click"
@@ -72,18 +77,20 @@ class Popover {
                 popper: this.options.popper
             }
         })
+
+        FlexillaManager.register("popover", this.contentElement, this)
     }
     setShowOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
         this.PopoverInstance.setShowOptions({ placement, offsetDistance })
     }
 
-    show=()=>{
+    show = () => {
         this.PopoverInstance.show()
         dispatchCustomEvent(this.contentElement, "popover-show", {
             isHidden: false
         })
     }
-    hide=()=>{
+    hide = () => {
         this.PopoverInstance.hide()
         dispatchCustomEvent(this.contentElement, "popover-hide", {
             isHidden: true
@@ -105,6 +112,11 @@ class Popover {
         return new Popover(popoverEl, options)
     }
 
+    cleanup = () => {
+        this.PopoverInstance.cleanup()
+        FlexillaManager.removeInstance('popover', this.contentElement)
+    }
+
     /**
      * Automatically initializes all popover elements matching the specified selector.
      * @param {string} [selector='[data-fx-popover]'] - The selector to find popover elements.
@@ -115,7 +127,7 @@ class Popover {
      * // Initialize popovers with custom selector
      * Popover.autoInit('.custom-popover');
      */
-    static autoInit(selector = "[data-fx-popover]") {
+    static autoInit(selector: string = "[data-fx-popover]") {
         const popovers = $$(selector)
         for (const popover of popovers) new Popover(popover)
     }

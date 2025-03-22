@@ -1,31 +1,50 @@
 import { CreateOverlay, type Placement } from "@flexilla/create-overlay"
 import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
 import type { TooltipOptions } from "./types"
+import { FlexillaManager } from "@flexilla/manager"
 
-
-
+/**
+ * Creates and manages a tooltip component with customizable trigger and content elements.
+ * @class
+ * @description A class that provides tooltip functionality with various positioning and interaction options.
+ */
 class Tooltip {
-    private triggerElement: HTMLElement
+    private triggerElement!: HTMLElement
     private contentElement: HTMLElement
 
-    private options: TooltipOptions
-    private PopoverInstance: CreateOverlay
+    private options!: TooltipOptions
+    private PopoverInstance!: CreateOverlay
 
-    private triggerStrategy: "click" | "hover"
-    private placement: Placement
-    private offsetDistance: number
-    private preventFromCloseOutside: boolean
-    private preventFromCloseInside: boolean
-    private defaultState: "open" | "close"
+    private triggerStrategy!: "click" | "hover"
+    private placement!: Placement
+    private offsetDistance!: number
+    private preventFromCloseOutside!: boolean
+    private preventFromCloseInside!: boolean
+    private defaultState!: "open" | "close"
 
     /**
+     * Creates a new Tooltip instance.
+     * @param {string | HTMLElement} tooltipEl - The tooltip content element or its selector.
+     * @param {TooltipOptions} [options={}] - Configuration options for the tooltip.
+     * @example
+     * // Create a tooltip with default options
+     * const tooltip = new Tooltip('#my-tooltip');
      * 
-     * @param tooltipEl 
-     * @param options 
+     * // Create a tooltip with custom options
+     * const tooltip = new Tooltip('#my-tooltip', {
+     *   placement: 'top',
+     *   triggerStrategy: 'hover',
+     *   offsetDistance: 8
+     * });
      */
     constructor(tooltipEl: string | HTMLElement, options: TooltipOptions = {}) {
         const content = typeof tooltipEl === "string" ? $(tooltipEl) as HTMLElement : tooltipEl
         this.contentElement = content
+
+        const existingInstance = FlexillaManager.getInstance('tooltip', this.contentElement);
+        if (existingInstance) {
+            return existingInstance;
+        }
         this.triggerElement = $(`[data-tooltip-trigger][data-tooltip-id=${content.getAttribute("id")}]`) as HTMLElement
         this.options = options
         this.triggerStrategy = this.options.triggerStrategy || content.dataset.triggerStrategy as "click" | "hover" || "hover"
@@ -58,13 +77,24 @@ class Tooltip {
                 }
             }
         })
+
+        FlexillaManager.register('tooltip', this.contentElement, this)
     }
 
-
+    /**
+     * Updates the tooltip's placement and offset settings.
+     * @param {Object} options - The options to update
+     * @param {Placement} options.placement - New placement for the tooltip
+     * @param {number} [options.offsetDistance] - New offset distance from the trigger element
+     */
     setShowOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
         this.PopoverInstance.setShowOptions({ placement, offsetDistance })
     }
 
+    /**
+     * Shows the tooltip.
+     * @fires tooltip-show - Custom event dispatched when the tooltip is shown
+     */
     show = () => {
         this.PopoverInstance.show()
         dispatchCustomEvent(this.triggerElement, "tooltip-show", {
@@ -72,6 +102,10 @@ class Tooltip {
         })
     }
 
+    /**
+     * Hides the tooltip.
+     * @fires tooltip-hide - Custom event dispatched when the tooltip is hidden
+     */
     hide = () => {
         this.PopoverInstance.hide()
         dispatchCustomEvent(this.triggerElement, "tooltip-hide", {
@@ -79,22 +113,39 @@ class Tooltip {
         })
     }
 
-    cleanup = ()=>{
-        this.PopoverInstance.destroy()
+    /**
+     * Cleans up the tooltip instance and removes it from the manager.
+     * Call this method when the tooltip is no longer needed to prevent memory leaks.
+     */
+    cleanup = () => {
+        this.PopoverInstance.cleanup()
+        FlexillaManager.removeInstance('tooltip', this.contentElement)
     }
 
     /**
-     * 
-     * @param tooltipEl 
-     * @param options 
+     * Creates and initializes a new Tooltip instance.
+     * @param {string | HTMLElement} tooltipEl - The tooltip content element or its selector
+     * @param {TooltipOptions} [options] - Configuration options for the tooltip
+     * @returns {Tooltip} A new Tooltip instance
+     * @example
+     * const tooltip = Tooltip.init('#my-tooltip', {
+     *   placement: 'top',
+     *   triggerStrategy: 'hover'
+     * });
      */
     static init(tooltipEl: string | HTMLElement, options?: TooltipOptions) {
         return new Tooltip(tooltipEl, options)
     }
 
     /**
-     * auto init Tabs Elements based on the selector provided
-     * @param selector {string} default is [data-fx-tabs] attribute
+     * Automatically initializes all tooltip elements matching the specified selector.
+     * @param {string} [selector='[data-fx-tooltip]'] - The selector to find tooltip elements
+     * @example
+     * // Initialize all tooltips with default selector
+     * Tooltip.autoInit();
+     * 
+     * // Initialize tooltips with custom selector
+     * Tooltip.autoInit('.custom-tooltip');
      */
     static autoInit = (selector: string = "[data-fx-tooltip]") => {
         const tooltipEls = $$(selector)
