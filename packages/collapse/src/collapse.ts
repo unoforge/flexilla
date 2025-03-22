@@ -1,9 +1,9 @@
 
 import type { CollapseOptions } from "./types";
-import { expandCollapseElement } from "./collapsible";
 
 import { $$, $, dispatchCustomEvent } from "@flexilla/utilities"
-
+import { expandElement, collapseElement, initCollapsible } from "@flexilla/collapsible"
+import {FlexillaManager} from "@flexilla/manager"
 
 /**
  * A class that implements collapsible functionality for HTML elements.
@@ -26,12 +26,12 @@ import { $$, $, dispatchCustomEvent } from "@flexilla/utilities"
  * ```
  */
 class Collapse {
-    private collapseElement: HTMLElement
-    private defaultState: "open" | "close"
-    private collapseId: string
-    private collapseTrigger: HTMLElement | null
-    private options: CollapseOptions
-    private closeHeight: number
+    private element!: HTMLElement
+    private defaultState!: "open" | "close"
+    private collapseId!: string
+    private collapseTrigger!: HTMLElement | null
+    private options!: CollapseOptions
+    private closeHeight!: number
 
     /**
      * Creates a new Collapse instance.
@@ -42,26 +42,32 @@ class Collapse {
      * @throws {Error} When the provided element is not a valid HTMLElement
      */
     constructor(selector: string | HTMLElement, options: CollapseOptions = {}, triggerSelector?: string) {
-        let collapseElement: HTMLElement | null;
-        collapseElement = typeof selector === "string" ? $(`${selector}`)  : selector;
+        let element: HTMLElement | null;
+        element = typeof selector === "string" ? $(`${selector}`) : selector;
 
-        if (typeof selector === "string" && !collapseElement) {
+        if (typeof selector === "string" && !element) {
             throw new Error(`No element found matching selector: ${selector}`);
         }
 
-        if (!(collapseElement instanceof HTMLElement)) {
+        if (!(element instanceof HTMLElement)) {
             throw new Error("Provided element must be a valid HTMLElement or selector");
         }
-        this.collapseElement = collapseElement
-        this.collapseId = this.collapseElement.getAttribute("id") as string
+
+        this.element = element
+        const existingInstance = FlexillaManager.getInstance('collapse', this.element);
+        if (existingInstance) {
+            return existingInstance;
+        }
+        
+        this.collapseId = this.element.getAttribute("id") as string
 
         this.collapseTrigger = $(`${triggerSelector}`) || $(`[data-collapse-trigger][data-target*='${this.collapseId}']`)
 
         this.options = options
-        this.defaultState = this.options.defaultState || this.collapseElement.dataset.defaultState as "open" | "close" || "close"
-
-        this.closeHeight = this.options.closeHeight || parseInt(this.collapseElement.dataset.closeHeight || "0") || 0
+        this.defaultState = this.element.dataset.state ? (this.element.dataset.state === "open" ? "open" : "close") : this.options.defaultState || "close"
+        this.closeHeight = this.options.closeHeight || parseInt(this.element.dataset.closeHeight || "0") || 0
         this.initCollapse()
+        FlexillaManager.register('collapse', this.element, this)
     }
     /**
      * Expands the collapse element to show its content.
@@ -74,16 +80,13 @@ class Collapse {
      * ```
      */
     show = () => {
-        dispatchCustomEvent(this.collapseElement, "beforeshow", {
+        dispatchCustomEvent(this.element, "before-expand", {
             isExpanded: false
         })
-        expandCollapseElement({
-            collapseElement: this.collapseElement,
-            triggerElement: this.collapseTrigger, state: "open",
-            closeHeight: this.closeHeight
-        })
+        if (this.collapseTrigger) this.collapseTrigger.ariaExpanded = "true"
+        expandElement(this.element)
         this.options.onToggle?.({ isExpanded: true })
-        dispatchCustomEvent(this.collapseElement, "aftershow", {
+        dispatchCustomEvent(this.element, "expanded", {
             isExpanded: false
         })
     }
@@ -98,19 +101,12 @@ class Collapse {
      * ```
      */
     hide = () => {
-        dispatchCustomEvent(this.collapseElement, "beforehide", {
-            isExpanded: false
-        })
-        expandCollapseElement({
-            collapseElement: this.collapseElement,
-            triggerElement: this.collapseTrigger, state: "close",
-            closeHeight: this.closeHeight
-        })
+        if (this.collapseTrigger) this.collapseTrigger.ariaExpanded = "false"
+        collapseElement(this.element, `${this.closeHeight}px`)
         this.options.onToggle?.({ isExpanded: false })
-        dispatchCustomEvent(this.collapseElement, "afterhide", {
-            isExpanded: false
-        })
+        dispatchCustomEvent(this.element, "collapsed", { isExpanded: false })
     }
+
     /**
      * Toggles the collapse element between expanded and collapsed states.
      * Triggers 'beforetoggle' and 'aftertoggle' events, and calls the onToggle callback if provided.
@@ -122,23 +118,22 @@ class Collapse {
      * ```
      */
     toggle = () => {
-        const state = this.collapseElement.dataset.state as "close" | "open" === "close" ? "open" : "close"
-        dispatchCustomEvent(this.collapseElement, "beforetoggle", {
-            isExpanded: state === "open"
-        })
-        if (state === "open") this.show()
+        const isOpen = this.element.dataset.state === "open"
+        if (!isOpen) this.show()
         else this.hide()
-        this.options.onToggle?.({ isExpanded: state === "open" })
-        dispatchCustomEvent(this.collapseElement, "aftertoggle", {
-            isExpanded: state === "open"
-        })
+        this.options.onToggle?.({ isExpanded: !isOpen })
+    }
+
+    setCloseHeight = (closeHeight: number) => {
+        this.closeHeight = closeHeight
     }
 
     private initCollapse() {
-        if (this.collapseTrigger instanceof HTMLElement) this.collapseTrigger.addEventListener("click", this.toggle)
-
-        this.defaultState === "close" ? this.hide() : null
-        this.defaultState === "open" ? this.show() : null
+        if (this.collapseTrigger instanceof HTMLElement) {
+            this.collapseTrigger.addEventListener("click", this.toggle)
+            this.collapseTrigger.ariaExpanded = this.defaultState === "open" ? "true" : "false"
+        }
+        initCollapsible(this.element, this.defaultState, `${this.closeHeight}`)
     }
 
     /**
@@ -153,8 +148,9 @@ class Collapse {
      * collapse.cleanup();
      * ```
      */
-    cleanup(){
+    cleanup() {
         if (this.collapseTrigger instanceof HTMLElement) this.collapseTrigger.removeEventListener("click", this.toggle)
+        FlexillaManager.removeInstance('collapse', this.element)
     }
 
     /**

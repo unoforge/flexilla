@@ -1,9 +1,8 @@
-import { expandCollapseElement } from "@flexilla/collapse";
 import type { AccordionOptions, AccordionType } from "./types";
 import { getAccordionItemMetadata } from "./util";
 import { $, $$, $d, dispatchCustomEvent } from "@flexilla/utilities";
-import { initKeyEvents } from "./helpers";
-
+import { initKeyEvents, expandCollapseElement } from "./helpers";
+import { FlexillaManager } from "@flexilla/manager"
 
 /**
  * Accordion component class for managing collapsible content sections.
@@ -24,8 +23,9 @@ import { initKeyEvents } from "./helpers";
  */
 export default class Accordion {
     private accordionEl: HTMLElement;
-    private options: AccordionOptions;
-    private items: HTMLElement[];
+    private options!: AccordionOptions;
+    private items!: HTMLElement[];
+    private eventListeners: Array<{ element: HTMLElement; type: string; listener: EventListener }> = [];
 
     /**
      * Creates an instance of Accordion
@@ -38,6 +38,11 @@ export default class Accordion {
         if (!this.accordionEl) {
             throw new Error(`Accordion element not found: ${typeof accordion === "string" ? `No element matches selector "${accordion}"` : "Provided HTMLElement is null or undefined"}`);
         }
+
+        const existingInstance = FlexillaManager.getInstance('accordion', this.accordionEl);
+        if (existingInstance) {
+            return existingInstance;
+        }
         this.options = {
             accordionType: this.accordionEl.dataset.accordionType as AccordionType || options.accordionType || "single",
             preventClosingAll: this.accordionEl.hasAttribute("data-prevent-closing-all") || options.preventClosingAll || false,
@@ -47,6 +52,7 @@ export default class Accordion {
         };
         this.items = $$("[data-accordion-item]", this.accordionEl).filter((item: HTMLElement) => item.parentElement && item.parentElement === this.accordionEl);
         this.initAccordion();
+
     }
 
     private initAccordion() {
@@ -57,29 +63,35 @@ export default class Accordion {
         if (accordionType === "single") {
             if (this.options.preventClosingAll && !(defaultActive instanceof HTMLElement)) defaultActive = this.items[0]
             this.closeOther({ current: defaultActive });
-            if (defaultActive) this.setItemState(defaultActive, "open")
+            if (defaultActive) this.setItemState(defaultActive, "open", true)
         } else {
             this.closeAll(true);
             const anyOpen = this.items.some(item => item.getAttribute("data-state") === "open");
-            if (preventClosingAll && !anyOpen) this.setItemState(this.items[0], "open");
+            if (preventClosingAll && !anyOpen) this.setItemState(this.items[0], "open", true);
             else {
                 const allDefOpen = this.items.filter(item => item.getAttribute("data-state") === "open")
-                for (const item of allDefOpen) this.setItemState(item, "open")
+                for (const item of allDefOpen) this.setItemState(item, "open", true)
             }
         }
         this.addEventListeners();
-        initKeyEvents(this.accordionEl)
+        const handleKeyEvents = (e: KeyboardEvent) => {
+            initKeyEvents(e, this.accordionEl)
+        }
+        this.accordionEl.addEventListener("keydown", handleKeyEvents);
+        this.eventListeners.push({ element: this.accordionEl, type: "keydown", listener: handleKeyEvents as EventListener });
+        FlexillaManager.register("accordion", this.accordionEl, this)
     }
 
 
 
-    private setItemState(item: HTMLElement, state: "open" | "close") {
+    private setItemState(item: HTMLElement, state: "open" | "close", onInit?: boolean) {
         item.setAttribute("data-state", state);
         const { accordionContentElement: content, accordionTriggerElement: trigger } = getAccordionItemMetadata(item)
         expandCollapseElement({
-            collapseElement: content,
+            collapsible: content,
             triggerElement: trigger,
             state,
+            onInit
         });
     }
 
@@ -104,22 +116,12 @@ export default class Accordion {
         const { accordionContentElement: content, accordionTriggerElement: trigger, isItemExpanded, accordionItemValue: value } = getAccordionItemMetadata(expandedItem)
         if (this.options.onChangeItem) {
             this.options.onChangeItem({
-                expandedItem: {
-                    accordionItem: this.accordionEl,
-                    trigger,
-                    content,
-                    value,
-                    isExpanded: isItemExpanded,
-                },
+                expandedItem: { accordionItem: this.accordionEl, trigger, content, value, isExpanded: isItemExpanded, },
             });
         }
 
         dispatchCustomEvent(this.accordionEl, "change-item", {
-            targetElement: {
-                trigger,
-                content,
-                isExpanded: isItemExpanded
-            },
+            targetElement: { trigger, content, isExpanded: isItemExpanded },
             items: this.items
         })
     }
@@ -134,20 +136,28 @@ export default class Accordion {
         this.dispatchedEvent(item);
     }
 
+
     private addEventListeners() {
         this.items.forEach(item => {
             const trigger = $("[data-accordion-trigger]", item);
             const content = $("[data-accordion-content]", item)
             const actionClose = () => this.triggerItemState(item, "close", true)
 
-            trigger?.addEventListener("click", (e) => {
+            const clickHandler = (e: Event) => {
                 e.preventDefault();
                 const isOpened = item.getAttribute("data-state") === "open";
                 let state: "open" | "close" = isOpened ? "close" : "open";
                 this.triggerItemState(item, state, isOpened)
-            });
-            if (this.options.allowCloseFromContent) {
-                content?.addEventListener("click", actionClose)
+            };
+
+            if (trigger) {
+                trigger.addEventListener("click", clickHandler);
+                this.eventListeners.push({ element: trigger, type: "click", listener: clickHandler });
+            }
+
+            if (this.options.allowCloseFromContent && content) {
+                content.addEventListener("click", actionClose);
+                this.eventListeners.push({ element: content, type: "click", listener: actionClose });
             }
         });
     }
@@ -204,6 +214,39 @@ export default class Accordion {
         }
         this.setItemState(item, "close");
         this.dispatchedEvent(item);
+    }
+
+    /**
+     * Cleans up the accordion instance by removing event listeners, data attributes, and references.
+     * This should be called when the accordion is no longer needed to prevent memory leaks.
+     * 
+     * @public
+     * @example
+     * ```typescript
+     * const accordion = new Accordion('#myAccordion');
+     * // ... use accordion ...
+     * accordion.cleanup(); // Remove all event listeners and clean up resources
+     * ```
+     */
+    cleanup = () => {
+        if (!this.accordionEl) return;
+        this.items.forEach(item => {
+            if (item && item.hasAttribute('data-state')) {
+                item.removeAttribute('data-state');
+            }
+        });
+
+        this.eventListeners.forEach(({ element, type, listener }) => {
+            if (element && element.removeEventListener) {
+                element.removeEventListener(type, listener);
+            }
+        });
+        
+        this.eventListeners = [];
+        FlexillaManager.removeInstance('accordion', this.accordionEl);
+        this.items = [];
+        this.options = null as any;
+        this.accordionEl = null as any;
     }
 
     /**
