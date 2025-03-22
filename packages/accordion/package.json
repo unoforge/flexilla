@@ -36,8 +36,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@flexilla/collapsible": "^0.0.0-beta.3",
-    "@flexilla/manager": "^0.0.0-beta.1",
+    "@flexilla/collapsible": "latest",
+    "@flexilla/manager": "latest",
     "@flexilla/utilities": "^2.1.0"
   },
   "devDependencies": {
