@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+</head>
+
+<body class="bg-white dark-bg-zinc950">
+    <section class="mx-auto space-y-16 max-w2xl py20">
+        <div class="space-y-6">
+            <h1 class="text-xl font-semibold text-zinc9 dark-text-white">
+                Default Accordion
+            </h1>
+            <div class="p10 rd-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6">
+                <div class="flex flex-col gap3">
+                    <div class="flex wmax">
+                        <button data-collapse-trigger data-target="collapse1"
+                            class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
+                            Trigger Collapse
+                        </button>
+                    </div>
+                    <div data-collapsible-1 id="collapse1"
+                        class="transition-[height] duration-300 ease-linear overflow-hidden w-full h-0 fx-open-h-auto">
+                        <div
+                            class="rd-md w-full bg-zinc1/5 dark-bg-zinc9/5 b b-zinc2/30 dark-b-zinc8/20 p4 inline-flex overflow-hidden">
+                            <p class="text-gray7 dark-text-gray3">
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam, dolorum, incidunt
+                                facilis quasi
+                                non ea mollitia odio, iure adipisci
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="module" src="./main.ts"></script>
+</body>
+
+</html>
