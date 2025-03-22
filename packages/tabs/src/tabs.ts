@@ -3,7 +3,7 @@ import type { IndicatorOptions, TabsOptions } from "./types";
 import { DEFAULT_INDICATOR, TRANSFORM_DURATION, TRANSFORM_EASING } from "./const";
 import { createIndicator } from "./indicator";
 import { activeTab, handleKeyEvent, hideAllTabPanels } from "./helpers";
-
+import { FlexillaManager } from "@flexilla/manager"
 /**
  * A flexible and accessible tabs component that manages tab panels and their triggers.
  * 
@@ -23,19 +23,19 @@ import { activeTab, handleKeyEvent, hideAllTabPanels } from "./helpers";
  * ```
  */
 class Tabs {
-  private tabsElement: HTMLElement;
-  private options: TabsOptions;
-  private indicatorOptions: IndicatorOptions;
-  private defaultTabValue: string;
-  private showAnimation: string;
-  private tabList: HTMLElement;
-  private tabPanels: HTMLElement[];
-  private tabTriggers: HTMLElement[];
-  private activeTabTrigger: HTMLElement;
-  private indicatorClassName: string;
-  private indicatorTransformEaseing: string;
-  private indicatorTransformDuration: number;
-  private panelsContainer: HTMLElement
+  private tabsElement!: HTMLElement;
+  private options!: TabsOptions;
+  private indicatorOptions!: IndicatorOptions;
+  private defaultTabValue!: string;
+  private showAnimation!: string;
+  private tabList!: HTMLElement;
+  private tabPanels!: HTMLElement[];
+  private tabTriggers!: HTMLElement[];
+  private activeTabTrigger!: HTMLElement;
+  private indicatorClassName!: string;
+  private indicatorTransformEaseing!: string;
+  private indicatorTransformDuration!: number;
+  private panelsContainer!: HTMLElement
 
   /**
    * Tabs Components
@@ -59,6 +59,10 @@ class Tabs {
     }
 
     this.tabsElement = tabsElement;
+    const existingInstance = FlexillaManager.getInstance('tabs', this.tabsElement);
+    if (existingInstance) {
+      return existingInstance;
+    }
     this.panelsContainer = $d("[data-panels-container]", this.tabsElement) || this.tabsElement
     this.options = options;
     this.indicatorOptions = this.options.indicatorOptions || DEFAULT_INDICATOR;
@@ -95,6 +99,7 @@ class Tabs {
     this.indicatorTransformEaseing = transformEasing || this.tabsElement.dataset.indicatorTransformEasing || TRANSFORM_EASING;
     this.indicatorTransformDuration = transformDuration || parseInt(this.tabsElement.dataset.indicatorTransformDuration || "") || TRANSFORM_DURATION;
     this.initTabs();
+    FlexillaManager.register('tabs', this.tabsElement, this)
   }
 
   private getDefActivePanelValue = (panelsContainer: HTMLElement) => {
@@ -161,11 +166,35 @@ class Tabs {
     triggerElement.addEventListener("keydown", this.handleKeyEventChanges);
   }
 
-  cleanup = (triggerElement: HTMLElement) => {
+  private cleanupSingle = (triggerElement: HTMLElement) => {
     if (!(triggerElement instanceof HTMLElement)) return;
     triggerElement.removeEventListener("click", this.handleTabChanges);
     triggerElement.removeEventListener("keydown", this.handleKeyEventChanges);
   }
+
+  /**
+   * Cleans up the tabs instance by removing event listeners, attributes, and references.
+   * 
+   * @public
+   * @returns {void}
+   */
+  cleanup = (): void => {
+    if (!this.tabsElement) return;
+    for (const trigger of this.tabTriggers) {
+      this.cleanupSingle(trigger)
+    }
+    FlexillaManager.removeInstance('tabs', this.tabsElement)
+    this.tabTriggers = [];
+    this.tabPanels = [];
+    this.activeTabTrigger = null as any;
+    this.tabList = null as any;
+    this.panelsContainer = null as any;
+    this.tabsElement = null as any;
+    this.options = null as any;
+    this.indicatorOptions = null as any;
+  }
+
+
 
   private initializeTab(
     { tabTriggers, tabPanels, tabsPanelContainer, showAnimation, indicatorTransformDuration, indicatorTransformEaseing, activeTabTrigger, indicatorClassName, tabList }: { tabTriggers: HTMLElement[], tabPanels: HTMLElement[], tabsPanelContainer: HTMLElement, showAnimation: string, indicatorTransformDuration: number, indicatorTransformEaseing: string, activeTabTrigger: HTMLElement, indicatorClassName: string, tabList: HTMLElement }
@@ -251,7 +280,7 @@ class Tabs {
    * });
    * ```
    */
-  static init = (tabs: string | HTMLElement, options: TabsOptions) => new Tabs(tabs, options)
+  static init = (tabs: string | HTMLElement, options: TabsOptions): Tabs => new Tabs(tabs, options)
 }
 
 export default Tabs

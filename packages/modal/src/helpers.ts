@@ -1,3 +1,5 @@
+
+import { FlexillaManager } from "@flexilla/manager"
 import { $, $$, afterAnimation, dispatchCustomEvent } from "@flexilla/utilities"
 import { ModalOptions } from "./types";
 import { buildOverlay, destroyOverlay } from "./modalOverlay";
@@ -82,13 +84,13 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
     const showModal = () => {
         const isOpened = modalElement.getAttribute("data-state") === "open"
         if (isOpened) return
-    
+
         closeAll(modalElement)
         overlayElement = !hasDefaultOverlay ? buildOverlay({
             modalContent: modalContent,
             overlayClassName: overlayClassName,
         }) : (overlayElement as HTMLElement)
-    
+
         overlayElement?.setAttribute("data-state", "open")
         dispatchCustomEvent(modalElement, "modal-open", { modalId: modalElement.id })
         if (animateContent || animationEnter !== "") {
@@ -121,16 +123,16 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
 
     const hideModal = () => {
         let exitAction = false
-        dispatchCustomEvent(modalElement, "before-hide", { 
+        dispatchCustomEvent(modalElement, "before-hide", {
             modalId: modalElement.id,
             setExitAction: (value: boolean) => {
                 exitAction = value
             }
         })
         const exitFromBeforeHide = beforeHide?.()?.cancelAction
-    
+
         if (exitAction || exitFromBeforeHide) return
-    
+
         const closeModal = () => {
             toggleModalState(modalElement, modalContent, "close");
             setBodyScrollable(enableStackedModals_, allowBodyScroll_, modalElement)
@@ -164,7 +166,7 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
         })
     };
 
-    const closeModalOnX = (e:MouseEvent)=>{
+    const closeModalOnX = (e: MouseEvent) => {
         e.preventDefault()
         hideModal()
     }
@@ -190,13 +192,10 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
                 closeButton.removeEventListener("click", closeModalOnX);
             }
         }
-        if (isKeyDownEventRegistered) {
-            document.removeEventListener("keydown", closeModalEsc);
-            isKeyDownEventRegistered = false;
-        }
-        if  (!preventCloseModal && overlayElement instanceof HTMLElement) {
+        if (!preventCloseModal && overlayElement instanceof HTMLElement) {
             overlayElement.removeEventListener("click", hideModal);
         }
+        FlexillaManager.removeInstance("modal", modalElement)
     }
 
     return { autoInitModal, showModal, hideModal, isHidden, cleanup }

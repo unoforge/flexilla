@@ -1,4 +1,5 @@
 import { afterTransition, $, $$ } from "@flexilla/utilities"
+import { FlexillaManager } from "@flexilla/manager"
 
 class Dismissible {
     private dismissibleElement: HTMLElement
@@ -20,7 +21,13 @@ class Dismissible {
         this.dismissButtons = $$("[data-dismiss-btn]", this.dismissibleElement)
         this.onDismiss = onDissmiss
         this.dismissibleElement.setAttribute("aria-hidden", "false")
+
+        const existingInstance = FlexillaManager.getInstance('dismissible', this.dismissibleElement);
+        if (existingInstance) {
+            return existingInstance;
+        }
         this.setupDismissible()
+        FlexillaManager.register('dismissible', this.dismissibleElement, this)
     }
 
     private hideFromScreen = () => {
@@ -68,6 +75,7 @@ class Dismissible {
         for (const dismissButton of this.dismissButtons) {
             dismissButton.removeEventListener("click", this.dismiss)
         }
+        FlexillaManager.removeInstance('dismissible', this.dismissibleElement)
     }
 
     public static autoInit = (selector = "[data-fx-dismissible]") => {

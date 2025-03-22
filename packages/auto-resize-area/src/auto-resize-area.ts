@@ -1,3 +1,4 @@
+import { FlexillaManager } from "@flexilla/manager"
 /**
  * A class that automatically resizes a textarea element based on its content.
  * 
@@ -8,10 +9,10 @@
  */
 class AutoResizableTextArea {
     private textareaElement: HTMLTextAreaElement;
-    private minHeight: number;
-    private maxHeight: number;
-    private boundAutoresize: () => void;
-    private debouncedResize: (...args: any[]) => void;
+    private minHeight!: number;
+    private maxHeight!: number;
+    private boundAutoresize!: () => void;
+    private debouncedResize!: (...args: any[]) => void;
 
     /**
      * Creates an instance of AutoResizableTextArea.
@@ -33,6 +34,11 @@ class AutoResizableTextArea {
         if (!(this.textareaElement instanceof HTMLTextAreaElement)) {
             throw new Error(`Invalid textarea element: The provided ${typeof textarea === 'string' ? 'selector "' + textarea + '"' : 'element'} does not reference a valid HTMLTextAreaElement`);
         }
+        // Check for existing instance
+        const existingInstance = FlexillaManager.getInstance('auto-resize-area', this.textareaElement);
+        if (existingInstance) {
+            return existingInstance;
+        }
         this.minHeight = Number(this.textareaElement.getAttribute("data-min-height")) || minHeight || 20;
         this.maxHeight = Number(this.textareaElement.getAttribute("data-max-height")) || maxHeight || 500;
 
@@ -42,6 +48,8 @@ class AutoResizableTextArea {
         this.autoresizeTextarea();
         this.textareaElement.addEventListener("input", this.boundAutoresize, false);
         window.addEventListener("resize", this.debouncedResize);
+        FlexillaManager.register('auto-resize-area', this.textareaElement, this);
+
     }
 
     /**
@@ -113,17 +121,34 @@ class AutoResizableTextArea {
      * @param textarea - The textarea element or selector.
      * @returns A new instance of AutoResizableTextArea.
      */
-    static init(textarea: string | HTMLTextAreaElement): AutoResizableTextArea {
-        return new AutoResizableTextArea(textarea);
-    }
+    static init = (textarea: string | HTMLTextAreaElement): AutoResizableTextArea => new AutoResizableTextArea(textarea);
 
     /**
-     * Removes all event listeners and cleans up the instance.
+     * Removes all event listeners, resets styles, and cleans up the instance.
      * Call this method when the textarea is no longer needed to prevent memory leaks.
+     * 
+     * @public
+     * @returns {void}
+     * @example
+     * ```typescript
+     * const autoResize = new AutoResizableTextArea('#my-textarea');
+     * // ... use the textarea ...
+     * autoResize.cleanup(); // Clean up when done
+     * ```
      */
-    public cleanup = ()=> {
+    public cleanup = (): void => {
+        if (!this.textareaElement) return;
         this.textareaElement.removeEventListener("input", this.boundAutoresize);
         window.removeEventListener("resize", this.debouncedResize);
+        FlexillaManager.removeInstance('auto-resize-area', this.textareaElement);
+        if (this.debouncedResize) {
+            clearTimeout(this.debouncedResize as unknown as NodeJS.Timeout);
+        }
+        this.boundAutoresize = null as any;
+        this.debouncedResize = null as any;
+        this.textareaElement = null as any;
+        this.minHeight = null as any;
+        this.maxHeight = null as any;
     }
 }
 
