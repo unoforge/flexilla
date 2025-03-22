@@ -2,7 +2,7 @@
 import SEO from "./SEO.astro";
 import { type SeoType } from "@/types/index";
 import "@assets/css/global.css";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 interface Props {
   seo: SeoType;
 }
@@ -17,7 +17,7 @@ const { seo } = Astro.props;
       <link rel="sitemap" href="/sitemap-index.xml" />
     </SEO>
 
-    <ViewTransitions />
+    <ClientRouter />
     <script is:inline>
       const initTheme = () => {
         const docEl = document.documentElement;
