@@ -1,0 +1,9 @@
+{
+  "extends": "./../../shared/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declarationDir": "./dist"
+  },
+  "include": ["src", "../../examples/demo.ts", "../../examples/types.ts"]
+}
