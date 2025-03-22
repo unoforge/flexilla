@@ -47,7 +47,7 @@
     "@flexilla/collapse": "^2.1.0",
     "@flexilla/custom-range": "^2.0.9",
     "@flexilla/dismissible": "^2.0.9",
-    "@flexilla/dropdown": "^2.0.8",
+    "@flexilla/dropdown": "^2.0.8-beta.1",
     "@flexilla/modal": "^2.0.9",
     "@flexilla/offcanvas": "^2.0.10",
     "@flexilla/popover": "^0.0.2",
