@@ -19,8 +19,8 @@ export const accordionCode: SourceData = {
             class="px4 wfull flex justify-between items-center py2 text-zinc8 dark-text-zinc2 font-medium text-lg ease-linear hover-bg-zinc2/50 dark-hover-bg-zinc8/40 rd-md focus:outline-blue6 aria-expanded-text-blue6">
             Is it accessible?
         </button>
-        <div aria-hidden="true" data-accordion-content
-        class="text-zinc7 dark-text-zinc3 duration-200 ease-linear max-h-0 overflow-hidden">
+        <div aria-hidden="true" data-state="open" data-accordion-content
+        class="text-zinc7 dark-text-zinc3 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
             <p class="p4">
                 Yes. It adheres to the WAI-ARIA design pattern.
             </p>
@@ -33,7 +33,7 @@ export const accordionCode: SourceData = {
             Is it unstyled?
         </button>
         <div aria-hidden="true" data-accordion-content
-            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear max-h-0 overflow-hidden">
+            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
             <p class="p4">
             Yes. It's unstyled by default, giving you freedom over the look and feel.
             </p>
@@ -46,7 +46,7 @@ export const accordionCode: SourceData = {
             Can it be animated?
         </button>
         <div aria-hidden="true" data-accordion-content
-            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear max-h-0 overflow-hidden">
+            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
             <p class="p4">
                 Yes! You can use the transition prop to configure the animation.
             </p>
@@ -91,8 +91,8 @@ export default defineConfig({
       class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
       Is it accessible?
     </button>
-    <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear max-h-0 overflow-hidden">
+    <div aria-hidden="false" data-accordion-content data-state="open"
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
       <p class="p-4">
         Yes. It adheres to the WAI-ARIA design pattern.
       </p>
@@ -105,7 +105,7 @@ export default defineConfig({
       Is it unstyled?
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear max-h-0 overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
       <p class="p-4">
         Yes. It's unstyled by default, giving you freedom over the look and feel.
       </p>
@@ -118,7 +118,7 @@ export default defineConfig({
       Can it be animated?
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear max-h-0 overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
       <p class="p-4">
         Yes! You can use the transition prop to configure the animation.
       </p>
@@ -176,7 +176,7 @@ export default {
         <div
             aria-hidden="true"
             data-accordion-content
-            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear max-h-0 overflow-hidden"
+            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden"
         >
             <p class="p4">Yes. It adheres to the WAI-ARIA design pattern.</p>
         </div>
@@ -200,7 +200,7 @@ export default {
         <div
             aria-hidden="true"
             data-accordion-content
-            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear max-h-0 overflow-hidden"
+            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden"
         >
             <p class="p4">
                 Yes. It's unstyled by default, giving you freedom over the look
@@ -226,7 +226,7 @@ export default {
         <div
             aria-hidden="true"
             data-accordion-content
-            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear max-h-0 overflow-hidden"
+            class="text-zinc7 dark-text-zinc3 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden"
         >
             <p class="p4">
                 Yes! You can use the transition prop to configure the animation.
@@ -255,7 +255,7 @@ export default {
       </svg>
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear max-h-0 overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
       <p class="p-4">
         Yes. It adheres to the WAI-ARIA design pattern.
       </p>
@@ -274,7 +274,7 @@ export default {
       </svg>
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear max-h-0 overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
       <p class="p-4">
         Yes. It's unstyled by default, giving you freedom over the look and feel.
       </p>
@@ -293,7 +293,7 @@ export default {
       </svg>
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear max-h-0 overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
       <p class="p-4">
         Yes! You can use the transition prop to configure the animation.
       </p>

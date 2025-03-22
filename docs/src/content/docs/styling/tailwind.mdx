@@ -6,6 +6,8 @@ description: Simplified styling for Flexilla with variants and components
 
 ## Introduction
 
+### Using Tailwind3
+
 The `@flexilla/tailwind-plugin` provides simplified variants and essential components for styling elements in the Flexilla library. Instead of writing verbose attribute-based styling like `data-[state=open]:some-class`, this plugin introduces easy-to-use variants, such as `fx-open:some-class`. Additionally, it includes predefined components like overlays, tab indicators, and animated modal content for quick implementation of common UI features.
 
 ## Installation
@@ -26,6 +28,14 @@ module.exports = {
     // other plugins...
   ],
 }
+```
+
+### With Tailwind4
+
+Just include these variants in your main tailwind config CSS file.
+
+```css
+
 ```
 
 ## Variants

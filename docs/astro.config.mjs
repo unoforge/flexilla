@@ -16,6 +16,10 @@ export default defineConfig({
       status: 302,
       destination: "/docs/getting-started",
     },
+    "/docs/": {
+      status: 302,
+      destination: "/docs/getting-started",
+    },
   },
   site: "https://flexilla-docs.vercel.app",
   markdown: {

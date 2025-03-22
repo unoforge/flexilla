@@ -4,15 +4,10 @@ description: Simplified styling for Flexilla using UnoCSS with customizable stat
 ---
 
 
-<Callout type="warning">
-`@flexilla/uno-preset` will no no longer be supported, if using it make sure to have the 0.0.4 version, `npm i @flexilla/uno-preset@0.0.4`
-It will be moved to `@unifydev/flexilla`
-</Callout>
-
 
 ## Introduction
 
-The `"@flexilla/uno-preset` for UnoCSS provides simplified state-based variants and essential components, making styling easier and more efficient. By default, the state variants are prefixed with `fx`, but this can be customized based on your needs.
+The `@unifydev/flexilla` for UnoCSS provides simplified state-based variants and essential components, making styling easier and more efficient. By default, the state variants are prefixed with `fx`, but this can be customized based on your needs.
 
 Instead of verbose attribute-based syntax like `data-[state=open]:some-class`, you can use concise, readable variants such as `fx-open:some-class`. Additionally, it offers pre-defined components like overlays, tab indicators, and animated modal content.
 
@@ -21,7 +16,7 @@ Instead of verbose attribute-based syntax like `data-[state=open]:some-class`, y
 To get started, install the plugin using npm or yarn:
 
 ```bash
-npm install "@flexilla/uno-preset
+npm install @unifydev/flexilla
 ```
 
 Include it in your UnoCSS configuration:
@@ -29,7 +24,7 @@ Include it in your UnoCSS configuration:
 ```js
 // uno.config.js
 import { defineConfig } from 'unocss';
-import flexilla from '"@flexilla/uno-preset';
+import flexilla from "@unifydev/flexilla;
 
 export default defineConfig({
   presets: [
@@ -43,7 +38,7 @@ export default defineConfig({
 You can easily customize the prefix used for state variants by passing options to the plugin. For example, to change the prefix to `ui`:
 
 ```js
-import flexilla from '"@flexilla/uno-preset';
+import flexilla from "@unifydev/flexilla";
 
 export default defineConfig({
   presets: [
@@ -99,7 +94,7 @@ The plugin also supports `peer-` and `group-` variants, allowing you to target p
 
 ## Components
 
-The `@flexilla/tailwind-plugin` also includes essential UI components, each with predefined styles to speed up your development.
+The `@unifydev/flexilla` also includes essential UI components, each with predefined styles to speed up your development.
 
 ### Popper
 
@@ -111,13 +106,6 @@ The `ui-popper` component positions elements based on custom CSS variables:
 </div>
 ```
 
-For an absolute positioned popper, use:
-
-```html
-<div class="ui-popper-absolute">
-  <!-- Popper content -->
-</div>
-```
 
 ### Animated Modal Content
 
