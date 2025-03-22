@@ -9,7 +9,7 @@ const changeCollapseElState = (collapseElement: HTMLElement, state: "open" | "cl
  * Initializes a collapsible element with the specified state and height
  * @param element - The HTML element to initialize as collapsible
  * @param state - Initial state of the element ('open' or 'close')
- * @param closeHeight - Height of the element when closed (default: "0px")
+ * @param closeHeight - Height of the element when closed (by default: "0px")
  */
 export const initCollapsible = (
     element: HTMLElement,
@@ -32,7 +32,10 @@ export const expandElement = (element: HTMLElement) => {
     afterTransition({
         element: element,
         callback: () => {
-            element.style.height = 'auto';
+            const elementState = element.getAttribute('data-state')
+            if (elementState === 'open') {
+                element.style.height = 'auto';
+            }
         },
     })
 };
@@ -50,9 +53,5 @@ export const collapseElement = (
     element.style.height = `${element.scrollHeight}px`;
     element.offsetHeight;
     element.style.height = closeHeight;
-    afterTransition({
-        element, callback: () => {
-            changeCollapseElState(element, "close")
-        }
-    })
+    changeCollapseElState(element, "close")
 };

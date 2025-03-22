@@ -30,11 +30,3 @@ new Accordion(
         preventClosingAll: true
     }
 )
-
-
-new Accordion(
-    document.querySelector('[data-accordion-5]') as HTMLElement,
-    {
-        defaultValue: "accordion-1",
-    }
-)

@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/collapse",
   "private": false,
-  "version": "2.0.9",
+  "version": "2.1.2",
   "type": "module",
   "description": "A versatile and interactive collapse component for creating collapsible sections in web applications, conserving space and improving user experience.",
   "publishConfig": {
@@ -41,8 +41,7 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "dependencies": {
-    "@flexilla/collapsible": "^0.0.0-beta.3",
-    "@flexilla/manager": "^0.0.0-beta.1",
+    "@flexilla/manager": "latest",
     "@flexilla/utilities": "latest"
   },
   "keywords": [

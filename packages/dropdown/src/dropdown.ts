@@ -163,7 +163,7 @@ class Dropdown {
      * Removes all event listeners
      */
     cleanup = () => {
-        this.OverlayInstance.destroy()
+        this.OverlayInstance.cleanup()
         FlexillaManager.removeInstance('dropdown', this.contentElement)
     }
 

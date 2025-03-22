@@ -2,7 +2,7 @@
 import type { CollapseOptions } from "./types";
 
 import { $$, $, dispatchCustomEvent } from "@flexilla/utilities"
-import { expandElement, collapseElement, initCollapsible } from "@flexilla/collapsible"
+import { expandElement, collapseElement, initCollapsible } from "./../../collapsible/src/collapsible"
 import {FlexillaManager} from "@flexilla/manager"
 
 /**
@@ -65,7 +65,7 @@ class Collapse {
 
         this.options = options
         this.defaultState = this.element.dataset.state ? (this.element.dataset.state === "open" ? "open" : "close") : this.options.defaultState || "close"
-        this.closeHeight = this.options.closeHeight || parseInt(this.element.dataset.closeHeight || "0") || 0
+        this.closeHeight = this.element.dataset.closeHeight ? parseInt(this.element.dataset.closeHeight || "0") : this.options.closeHeight ||  0
         this.initCollapse()
         FlexillaManager.register('collapse', this.element, this)
     }
@@ -133,7 +133,7 @@ class Collapse {
             this.collapseTrigger.addEventListener("click", this.toggle)
             this.collapseTrigger.ariaExpanded = this.defaultState === "open" ? "true" : "false"
         }
-        initCollapsible(this.element, this.defaultState, `${this.closeHeight}`)
+        initCollapsible(this.element, this.defaultState, `${this.closeHeight}px`)
     }
 
     /**

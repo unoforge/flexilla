@@ -3,10 +3,10 @@ import {
   presetIcons,
   presetMini,
   presetAttributify,
-  presetUno,
+  presetWind3,
 } from "unocss";
 
-import unifyUI from "@flexilla/uno-preset"
+import {flexillaPreset} from "@unifydev/flexilla"
 
 export default defineConfig({
   shortcuts:{
@@ -15,12 +15,12 @@ export default defineConfig({
     "doc-tab-indicator-1":"after-absolute after-content-empty after-top-0 after-inset-x-4 after-hpx after-bg-gradient-to-l after-from-transparent after-via-zinc-4 dark-after-via-zinc7 after-to-transparent after-translate-x-4 fx-active-after-translate-x-0 after-duration-300 after-ease-linear after-transition after-invisible fx-active-after-visible"
   },
   presets: [
-    presetUno(),
+    presetWind3(),
     presetAttributify(),
     presetMini({
       dark: "class",
     }),
-    unifyUI({}),
+    flexillaPreset({}),
     presetIcons({
       collections: {
         fx: {
