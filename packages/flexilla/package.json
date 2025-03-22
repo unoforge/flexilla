@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/flexilla",
   "private": false,
-  "version": "2.1.5",
+  "version": "2.1.6",
   "type": "module",
   "description": "A set of unstyled interactive components for building interactive, and customizable user interfaces. Open-Source",
   "publishConfig": {
@@ -44,7 +44,7 @@
   "dependencies": {
     "@flexilla/accordion": "^2.1.1",
     "@flexilla/auto-resize-area": "^2.0.9",
-    "@flexilla/collapse": "^2.1.1",
+    "@flexilla/collapse": "^2.1.2",
     "@flexilla/custom-range": "^2.0.9",
     "@flexilla/dismissible": "^2.0.9",
     "@flexilla/dropdown": "^2.0.8-2.0.9.0",
