@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/tabs",
   "private": false,
-  "version": "2.0.10",
+  "version": "2.0.11",
   "type": "module",
   "description": "A versatile tabs component for organizing content in a tabbed interface, enhancing user navigation.",
   "publishConfig": {
@@ -62,6 +62,6 @@
   "license": "MIT",
   "author": "johnkat-mj",
   "dependencies": {
-    "@flexilla/manager": "^0.0.0-beta.1"
+    "@flexilla/manager": "^0.0.0"
   }
 }
