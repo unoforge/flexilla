@@ -1,0 +1,87 @@
+@import url(./theme.css);
+@import url(./base.css);
+@import url(./btn-styles.css);
+@import url(./ui.css);
+
+
+*::selection {
+  color           : hsl(var(--c-primary-950));
+  background-color: hsl(var(--c-primary-300));
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: transparent !important;
+}
+
+::-webkit-scrollbar {
+  width           : 0 !important;
+  height          : 0 !important;
+  background-color: transparent;
+}
+
+
+html {
+  max-width      : 100vw;
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+  font-family: 'Geist Sans', 'geistSans', "Inter Variable", 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  font-synthesis-weight: none;
+  text-rendering       : optimizeLegibility;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dark:root {
+    color-scheme: dark;
+  }
+}
+
+.hidden-scrollbar {
+  content: '';
+}
+
+@media (max-width: 1279px) {
+  .hidden-scrollbar {
+    overflow: hidden !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .overflow-small-device {
+    overflow  : hidden;
+    overflow-y: auto;
+  }
+
+  .hidden-scrollbar-on-navopen {
+    overflow: hidden !important;
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity  : 0;
+    transform: scale(.85);
+  }
+
+  to {
+    opacity  : 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOutScale {
+  from {
+    opacity  : 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity  : 0;
+    transform: scale(.85);
+  }
+}

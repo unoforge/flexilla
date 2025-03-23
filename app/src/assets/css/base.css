@@ -1,0 +1,45 @@
+
+:root {
+    /* Background colors */
+    --bg: var(--c-white);
+    --bg-lighter: var(--c-gray-50);
+    --bg-light: var(--c-gray-100);
+    --bg-high: var(--c-gray-200);
+    --bg-higher: var(--c-gray-300);
+
+    /* Foreground colors */
+    --fg: var(--c-gray-700);
+    --fg-subtext: var(--c-gray-600);
+    --fg-title: var(--c-gray-900);
+    --fg-subtitle: var(--c-gray-800);
+    --border: var(--c-gray-200);
+
+    /* Border colors */
+    --border-lighter: var(--c-gray-50);
+    --border-light: var(--c-gray-200);
+    --border-high: var(--c-gray-300);
+    --border-higher: var(--c-gray-400);
+}
+
+.dark {
+    /* Background colors */
+    --bg:var(--c-gray-950);
+    --bg-lighter: var(--c-gray-900);
+    --bg-light: var(--c-gray-900);
+    --bg-high: var(--c-gray-800);
+    --bg-higher: var(--c-gray-700);
+
+    /* Foreground colors */
+    --fg-text: var(--c-gray-300);
+    --fg-title: var(--c-white);
+    --fg-subtitle: var(--c-gray-200);
+    --fg-subtext: var(--c-gray-300);
+    --fg-light: var(--c-gray-400);
+
+    /* Border colors */
+    --border: var(--c-gray-900);
+    --border-light: var(--c-gray-800);
+    --border-lighter: var(--c-gray-900);
+    --border-high: var(--c-gray-700);
+    --border-higher: var(--c-gray-600);
+}

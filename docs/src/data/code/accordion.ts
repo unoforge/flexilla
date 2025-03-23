@@ -88,11 +88,11 @@ export default defineConfig({
   <div data-accordion-item data-accordion-value="accordion-1"
     class="rounded-md">
     <button data-accordion-trigger aria-label="toggle button"
-      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
+      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
       Is it accessible?
     </button>
     <div aria-hidden="false" data-accordion-content data-state="open"
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden">
       <p class="p-4">
         Yes. It adheres to the WAI-ARIA design pattern.
       </p>
@@ -101,11 +101,11 @@ export default defineConfig({
   <div data-accordion-item data-accordion-value="accordion-2"
     class="rounded-md">
     <button data-accordion-trigger aria-label="toggle button"
-      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
+      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
       Is it unstyled?
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden">
       <p class="p-4">
         Yes. It's unstyled by default, giving you freedom over the look and feel.
       </p>
@@ -114,11 +114,11 @@ export default defineConfig({
   <div data-accordion-item data-accordion-value="accordion-3"
     class="rounded-md">
     <button data-accordion-trigger aria-label="toggle button"
-      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6">
+      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded:text-blue-600">
       Can it be animated?
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden">
       <p class="p-4">
         Yes! You can use the transition prop to configure the animation.
       </p>
@@ -255,7 +255,7 @@ export default {
       </svg>
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden">
       <p class="p-4">
         Yes. It adheres to the WAI-ARIA design pattern.
       </p>
@@ -274,7 +274,7 @@ export default {
       </svg>
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden">
       <p class="p-4">
         Yes. It's unstyled by default, giving you freedom over the look and feel.
       </p>
@@ -293,7 +293,7 @@ export default {
       </svg>
     </button>
     <div aria-hidden="true" data-accordion-content
-      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open-h-auto overflow-hidden">
+      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden">
       <p class="p-4">
         Yes! You can use the transition prop to configure the animation.
       </p>
