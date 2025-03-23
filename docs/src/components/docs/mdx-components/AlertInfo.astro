@@ -23,7 +23,7 @@ const getIcon = (type: "update" | "note" | "warning" | "important") => {
 <div
   data-alert
   class={`
-  ${cn("wfull b rd-xl p2 flex items-center gap-x4 my4 first-mt0 last-mb0", {
+  ${cn("wfull b rd-xl p2 flex items-start gap-x4 my4 first-mt0 last-mb0", {
     "bg-cyan1/10 dark-bg-cyan9/10 text-cyan8 dark-text-cyan5 b-cyan6/20": type === "update",
     "bg-blue1/10 dark-bg-blue9/10 text-blue8 dark-text-blue5 b-blue6/20": type === "note",
     "bg-orange1/10 dark-bg-orange9/10 dark-text-orange5 b-orange6/20": type === "warning",
@@ -31,7 +31,7 @@ const getIcon = (type: "update" | "note" | "warning" | "important") => {
   })}
   `}
 >
-  <div class="pl2">
+  <div class="pl2 min-wmax pt1">
     <span aria-hidden="true" class={`flex ${getIcon(type)} text-lg`}></span>
   </div>
   <div class={`flex-1`}>

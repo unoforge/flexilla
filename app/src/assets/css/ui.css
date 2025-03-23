@@ -1,0 +1,191 @@
+:root {
+    --ui-input-focus-outline: var(--c-primary-600);
+    --ui-input-invalid-outline: var(--c-danger-600);
+    --ui-input-place-holder: var(--c-gray-500);
+    --switch-thumb-primary: var(--c-primary-600);
+    --switch-checked-thumb-primary: var(--c-primary-500);
+    --switch-checked-thumb-primary: var(--primary-600)
+  }
+  
+  
+  
+  /* -- ui-soft-* (bg and text) */
+  .ui-soft-gray {
+    --ui-soft-bg: hsl(var(--c-gray-100) / .4);
+    --ui-soft-text: hsl(var(--c-gray-700));
+  }
+  
+  .ui-soft-primary {
+    --ui-soft-bg: hsl(var(--c-primary-100) / .4);
+    --ui-soft-text: hsl(var(--c-primary-600));
+  }
+  
+  .ui-soft-secondary {
+    --ui-soft-bg: hsl(var(--c-secondary-100) / .4);
+    --ui-soft-text: hsl(var(--c-secondary-600));
+  }
+  .ui-soft-accent {
+    --ui-soft-bg: hsl(var(--c-accent-100) / .4);
+    --ui-soft-text: hsl(var(--c-accent-600));
+  }
+  .ui-soft-info {
+    --ui-soft-bg: hsl(var(--c-info-100) / .4);
+    --ui-soft-text: hsl(var(--c-info-600));
+  }
+  .ui-soft-success {
+    --ui-soft-bg: hsl(var(--c-success-100) / .4);
+    --ui-soft-text: hsl(var(--c-success-600));
+  }
+  .ui-soft-warning {
+    --ui-soft-bg: hsl(var(--c-warning-100) / .4);
+    --ui-soft-text: hsl(var(--c-warning-600));
+  }
+  
+  
+  .ui-soft-danger {
+    --ui-soft-bg: hsl(var(--c-danger-100) / .4);
+    --ui-soft-text: hsl(var(--c-danger-600));
+  }
+  
+  /* -- ui-subtle-* (bg, text, and border) */
+  .ui-subtle-gray {
+    --ui-subtle-bg: hsl(var(--c-gray-100) / .4);
+    --ui-subtle-text: hsl(var(--c-gray-700));
+    --ui-subtle-border: hsl(var(--c-gray-200));
+  }
+  
+  .ui-subtle-primary {
+    --ui-subtle-bg: hsl(var(--c-primary-100) / .4);
+    --ui-subtle-text: hsl(var(--c-primary-600));
+    --ui-subtle-border: hsl(var(--c-primary-300));
+  }
+  
+  .ui-subtle-secondary {
+    --ui-subtle-bg: hsl(var(--c-secondary-100) / .4);
+    --ui-subtle-text: hsl(var(--c-secondary-600));
+    --ui-subtle-border: hsl(var(--c-secondary-300));
+  }
+  .ui-subtle-accent {
+    --ui-subtle-bg: hsl(var(--c-accent-100) / .4);
+    --ui-subtle-text: hsl(var(--c-accent-600));
+    --ui-subtle-border: hsl(var(--c-accent-300));
+  }
+  .ui-subtle-info{
+    --ui-subtle-bg: hsl(var(--c-info-100) / .4);
+    --ui-subtle-text: hsl(var(--c-info-600));
+    --ui-subtle-border: hsl(var(--c-info-300));
+  }
+  .ui-subtle-success {
+    --ui-subtle-bg: hsl(var(--c-success-100) / .4);
+    --ui-subtle-text: hsl(var(--c-success-600));
+    --ui-subtle-border: hsl(var(--c-success-300));
+  }
+  .ui-subtle-warning {
+    --ui-subtle-bg: hsl(var(--c-warning-100) / .4);
+    --ui-subtle-text: hsl(var(--c-warning-600));
+    --ui-subtle-border: hsl(var(--c-warning-300));
+  }
+  
+  
+  .ui-subtle-danger {
+    --ui-subtle-bg: hsl(var(--c-danger-100) / .4);
+    --ui-subtle-text: hsl(var(--c-danger-600));
+    --ui-subtle-border: hsl(var(--c-danger-300));
+  }
+  
+  .ui-subtle-warning {
+    --ui-subtle-bg: hsl(var(--c-warning-100) / .4);
+    --ui-subtle-text: hsl(var(--c-warning-600));
+    --ui-subtle-border: hsl(var(--c-warning-300));
+  }
+  
+  
+  /* ===== DARK THEME CLASSES (within .dark) ===== */
+  .dark .ui-soft-gray {
+    --ui-soft-bg: hsl(var(--c-gray-800) / .3);
+    --ui-soft-text: hsl(var(--c-gray-300));
+  }
+  
+  .dark .ui-soft-primary {
+    --ui-soft-bg: hsl(var(--c-primary-900) / .3);
+    --ui-soft-text: hsl(var(--c-primary-300));
+  }
+  
+  .dark .ui-soft-secondary {
+    --ui-soft-bg: hsl(var(--c-secondary-900) / .3);
+    --ui-soft-text: hsl(var(--c-secondary-300));
+  }
+  .dark .ui-soft-accent {
+    --ui-soft-bg: hsl(var(--c-accent-900) / .3);
+    --ui-soft-text: hsl(var(--c-accent-300));
+  }
+  .dark .ui-soft-info {
+    --ui-soft-bg: hsl(var(--c-info-900) / .3);
+    --ui-soft-text: hsl(var(--c-info-300));
+  }
+  .dark .ui-soft-success {
+    --ui-soft-bg: hsl(var(--c-success-900) / .3);
+    --ui-soft-text: hsl(var(--c-success-300));
+  }
+  .dark .ui-soft-warning {
+    --ui-soft-bg: hsl(var(--c-warning-900) / .3);
+    --ui-soft-text: hsl(var(--c-warning-300));
+  }
+  .dark .ui-soft-danger {
+    --ui-soft-bg: hsl(var(--c-danger-900) / .3);
+    --ui-soft-text: hsl(var(--c-danger-300));
+  }
+  
+  .dark .ui-subtle-gray {
+    --ui-subtle-bg: hsl(var(--c-gray-800) / .3);
+    --ui-subtle-text: hsl(var(--c-gray-300));
+    --ui-subtle-border: hsl(var(--c-gray-800) / .8);
+  }
+  
+  .dark .ui-subtle-primary {
+    --ui-subtle-bg: hsl(var(--c-primary-900) / .3);
+    --ui-subtle-text: hsl(var(--c-primary-300));
+    --ui-subtle-border: hsl(var(--c-primary-900) / .6);
+  }
+  
+  .dark .ui-subtle-secondary {
+    --ui-subtle-bg: hsl(var(--c-secondary-900) / .3);
+    --ui-subtle-text: hsl(var(--c-secondary-500));
+    --ui-subtle-border: hsl(var(--c-secondary-900) / .5);
+  }
+  
+  .dark .ui-subtle-accent {
+    --ui-subtle-bg: hsl(var(--c-accent-900) / .3);
+    --ui-subtle-text: hsl(var(--c-accent-300));
+    --ui-subtle-border: hsl(var(--c-accent-900) / .6);
+  }
+  
+  .dark .ui-subtle-info {
+    --ui-subtle-bg: hsl(var(--c-info-900) / .3);
+    --ui-subtle-text: hsl(var(--c-info-300));
+    --ui-subtle-border: hsl(var(--c-info-900) / .6);
+  }
+  
+  .dark .ui-subtle-success {
+    --ui-subtle-bg: hsl(var(--c-success-900) / .3);
+    --ui-subtle-text: hsl(var(--c-success-300));
+    --ui-subtle-border: hsl(var(--c-success-900) / .6);
+  }
+  
+  .dark .ui-subtle-info {
+    --ui-subtle-bg: hsl(var(--c-info-900) / .3);
+    --ui-subtle-text: hsl(var(--c-info-300));
+    --ui-subtle-border: hsl(var(--c-info-900) / .6);
+  }
+  
+  .dark .ui-subtle-danger {
+    --ui-subtle-bg: hsl(var(--c-danger-900) / .3);
+    --ui-subtle-text: hsl(var(--c-danger-500));
+    --ui-subtle-border: hsl(var(--c-danger-900) / .5);
+  }
+  
+  .dark .ui-subtle-warning {
+    --ui-subtle-bg: hsl(var(--c-warning-900) / .3);
+    --ui-subtle-text: hsl(var(--c-warning-300));
+    --ui-subtle-border: hsl(var(--c-warning-900) / .6);
+  }

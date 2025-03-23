@@ -7,6 +7,6 @@ interface Props extends HTMLAttributes<"h3">{
 
 const { class:className, ...rest } = Astro.props
 ---
-<h3 class={`${cn("scroll-mt20 first-mt0 mt-8 font-medium text-zinc8 dark-text-zinc50", className)}`} {...rest}>
+<h3 class={`${cn("scroll-mt20 first-mt0 mt-8 font-semibold text-zinc8 dark-text-zinc50", className)}`} {...rest}>
     <slot/>
 </h3>

@@ -1,103 +1,76 @@
 <p align="center">
-<a href="https://github.com/unoforge/flexilla" target="_blank">
-<img src='./docs/public/flexilla-cover.png' width="100%" alt="Flexilla Covers" />
-</a>
+  <a href="https://github.com/unoforge/flexilla" target="_blank">
+    <img src="./docs/public/flexilla-cover.png" width="100%" alt="Flexilla Covers" />
+  </a>
 </p>
 
 # Flexilla
 
-Flexilla is an open-source set of unstyled interactive UI components for building interactive and customizable user interfaces.
+Flexilla is an open-source library of unstyled, interactive UI components designed for building accessible, customizable user interfaces. Use Flexilla to add interactivity to your UI with ease.
 
-## Why Flexilla
+## Why Use Flexilla?
 
-Flexilla is a set of unstyled components  that help you quickly add interactivity to your UI Element with accessibility in mind. Flexilla includes Dropdown, collapse, accordion, tabs, Offcanvas and more.
-
-## Installation
-
-### Install all components
-
-To install the library :
-
-1. Install It From Npm
-   
-You need to add it as a dependency in your project using npm or any other package manager
-
-```bash
-npm install @flexilla/flexilla
-```
-Or
-```bash
-yarn add @flexilla/flexilla
-```
-
-2. Use CDN
-
-Import Module from CDN
-
-```html
-<script type="module">
-  import * as flexilla from 'https://cdn.jsdelivr.net/npm/@flexilla/flexilla@latest/+esm';
-  new flexilla.Accordion("#ac-el")
-</script>
-```
-
-> **Note** : You can use any available CDN Deliver
-
-### Install a single package
-
-If you want to use only one package or two then we recommand you to install only those packages
-
-1. let's say you need an Accordion component only
-
-```shell
-npm install @flexilla/accordion
-```
-
-2. From CDN
-```html
-<script type="module"> 
-import * as flexillatabs from 'https://cdn.jsdelivr.net/npm/@flexilla/tabs@latest/+esm'
-new  flexillatabs.Tabs("#myTabs")
-</script>
-```
-
-
-[Check all packages](./packages/)
-
-## Usage
-
-See examples [Here](./examples/vanilla/)
+Flexilla provides a collection of unstyled components that you can integrate into your projects without any design constraints. Key features include:
+- **Interactivity:** Components such as dropdowns, collapses, accordions, tabs, offcanvas menus, and more.
+- **Accessibility:** Built with accessibility in mind to ensure your UI works for everyone.
+- **Customization:** Unstyled elements allow you to apply your own design system seamlessly.
 
 ## Contributing
 
-To contribute to this project, please make sure you read our [contributing guide](CONTRIBUTING.MD) before submitting a pull request.
+We welcome contributions! To get started, please review our [contributing guide](CONTRIBUTING.MD) before submitting a pull request.
 
-## ✨ Maintainers 
-
+## Maintainers
 
 <table>
-<tr>
-<td align="center" width="200"><pre><a href="https://github.com/Johnkat-Mj"><img src="https://avatars.githubusercontent.com/u/59884686?v=4" width="200" alt="Johnkat MJ Github Avatar" /><br><sub>Johnkat MJ</sub></a><br>@johnkat-mj</pre></td>
-<td align="center" width="200"><pre><a href="https://github.com/Tresor-Kasenda"><img src="https://avatars.githubusercontent.com/u/34010260?v=4" width="200" alt="Tresor Kasenda Github Avatar" /><br><sub>Tresor Kasenda</sub></a><br>@tresor-kasenda</pre></td>
-</tr>
+  <tr>
+    <td align="center" width="200">
+      <a href="https://github.com/Johnkat-Mj">
+        <img src="https://avatars.githubusercontent.com/u/59884686?v=4" width="200" alt="Johnkat MJ Github Avatar" />
+        <br>
+        <sub>Johnkat MJ</sub>
+      </a>
+      <br>@johnkat-mj
+    </td>
+    <td align="center" width="200">
+      <a href="https://github.com/Tresor-Kasenda">
+        <img src="https://avatars.githubusercontent.com/u/34010260?v=4" width="200" alt="Tresor Kasenda Github Avatar" />
+        <br>
+        <sub>Tresor Kasenda</sub>
+      </a>
+      <br>@tresor-kasenda
+    </td>
+  </tr>
 </table>
 
+## Feature Requests & Discussions
 
-## 🙌 Acknowledgement
+We value your feedback! Here’s how you can get involved:
 
-Flexilla is made possible thanks to the inspirations from the following projects:
+### Feature Requests
+- **Before Posting:** Please check existing [issues](https://github.com/unoforge/flexilla/issues) to avoid duplicates.
+- **Tagging:** Use the `enhancement` label when submitting your request.
 
-- <a href="https://github.com/htmlstreamofficial/preline" target="_blank">Preline Plugins</a>
-- <a href="https://github.com/themesberg/flowbite" target="_blank">Flowbite Plugin</a>
+### Discussions
+- Visit our [Discussions](https://github.com/unoforge/flexilla/discussions) tab and select the appropriate category:
+  - **💡 Ideas:** For feature suggestions.
+  - **🤔 Q&A:** For questions.
+  - **🌟 Show and Tell:** To share your projects.
+  - **💬 General:** For any other topics.
 
+Your insights help make Flexilla even better!
+
+## Acknowledgements
+
+Flexilla is inspired by and built upon great projects, including:
+- [Preline Plugins](https://github.com/htmlstreamofficial/preline) by HTML Stream
+- [Flowbite Plugin](https://github.com/themesberg/flowbite) by Themesberg
 
 ## Community
 
-Connect with us for future updates
+Stay connected and get the latest updates:
+- Join our [Discord](https://discord.gg/6VN6zTPZAy)
 
-- [Discord](https://discord.gg/6VN6zTPZAy).
+## License
 
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
 
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [**MIT License**](LICENSE) file for details.

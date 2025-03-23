@@ -40,9 +40,7 @@ yarn add @flexilla/accordion
   - **Trigger**: Add the `data-accordion-trigger` attribute to the element used as a trigger (recommended to use a `button` element).
   - **Content**: Add the `data-accordion-content` attribute to the collapsible container (recommended to use a `div` element).
 
-<Callout type="important">
-  It's important to set some attributes and default styles to make the accordion work correctly. You can follow the provided example.
-</Callout>
+
 
 <Tabs values={["Preview", "Code"]} autoHeight>
   <TabPanel value="Preview" active={true}>
@@ -54,6 +52,65 @@ yarn add @flexilla/accordion
     <CodeLoader source="accordionDefault"/>
   </TabPanel>
 </Tabs>
+
+## Styling & Animation Setup
+
+To ensure proper functionality and smooth animations, you need to set up some basic styles:
+
+### Base Requirements
+
+1. The collapsible content needs two essential styles:
+   - `overflow-hidden` - Prevents content from showing during transitions
+   - `transition` property for the height - Enables smooth animations
+
+2. Height management:
+   - Closed state: `height: 0`
+   - Open state: `height: auto`
+
+### CSS Implementation
+
+```css
+[data-accordion-content] {
+  overflow: hidden;
+  transition: height 0.2s ease;
+  height: 0;
+}
+
+[data-accordion-content][data-state="open"] {
+  height: auto;
+}
+```
+
+### With Tailwind/UnoCSS
+
+```html
+<div 
+  data-accordion-content 
+  class="overflow-hidden transition-[height] duration-200 h-0 data-[state=open]:h-auto"
+>
+  <!-- Content here -->
+</div>
+```
+
+<Callout type="note">
+The `fx-open` variant is equivalent to `data-[state=open]` when using custom Variant from `@unifydev/flexilla`[unocss](docs/styling/unocss) and `@flexilla/tailwind-plugin`[Tailwind](/docs/styling/tailwind).
+- With Tailwind : fx-open:some-class
+- With UnoCSS : fx-open:some-class or fx-open-some-class
+</Callout>
+
+
+### Setting Default Open State
+
+If you want an item to be open by default, add `data-state="open"` to its content:
+
+```html
+<div data-accordion-item data-accordion-value="accordion-1">
+  <button data-accordion-trigger>Trigger</button>
+  <div data-accordion-content data-state="open">
+    <!-- This content will be visible by default -->
+  </div>
+</div>
+```
 
 ## Consuming the Component
 
