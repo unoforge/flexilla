@@ -25,22 +25,22 @@ import { FlexillaManager } from "@flexilla/manager"
  * ```
  */
 class Dropdown {
-    private triggerElement: HTMLElement
+    private triggerElement!: HTMLElement
     private contentElement: HTMLElement
 
-    private options: DropdownOptions
+    private options!: DropdownOptions
     private OverlayInstance!: CreateOverlay
     private navigationKeys!: {
         make: () => void;
         destroy: () => void;
     }
 
-    private triggerStrategy: "click" | "hover"
-    private placement: Placement
-    private offsetDistance: number
-    private preventFromCloseOutside: boolean
-    private preventFromCloseInside: boolean
-    private defaultState: "open" | "close"
+    private triggerStrategy!: "click" | "hover"
+    private placement!: Placement
+    private offsetDistance!: number
+    private preventFromCloseOutside!: boolean
+    private preventFromCloseInside!: boolean
+    private defaultState!: "open" | "close"
 
     /**
      * Creates a new Dropdown instance
@@ -61,7 +61,10 @@ class Dropdown {
             throw new Error("Dropdown content element must have an 'id' attribute for trigger association")
         }
         this.contentElement = contentElement
-
+        const existingInstance = FlexillaManager.getInstance('dropdown', this.contentElement);
+        if (existingInstance) {
+            return existingInstance;
+        }
         const triggerSelector = `[data-dropdown-trigger][data-dropdown-id=${this.contentElement.id}]`
         this.triggerElement = $(triggerSelector) as HTMLElement
         if (!(this.triggerElement instanceof HTMLElement)) {
@@ -75,10 +78,7 @@ class Dropdown {
         this.preventFromCloseOutside = this.options.preventFromCloseOutside || this.contentElement.hasAttribute("data-prevent-close-outside") || false
         this.preventFromCloseInside = this.options.preventCloseFromInside || this.contentElement.hasAttribute("data-prevent-close-inside") || false
         this.defaultState = this.options.defaultState || this.contentElement.dataset.defaultState as "close" | "open" || "close";
-        const existingInstance = FlexillaManager.getInstance('dropdown', this.contentElement);
-        if (existingInstance) {
-            return existingInstance;
-        }
+
 
         this.OverlayInstance = new CreateOverlay({
             trigger: this.triggerElement,

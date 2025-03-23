@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@flexilla/flexilla": "^2.0.3",
+    "@flexilla/flexilla": "^2.1.6",
     "@tailwindcss/vite": "^4.0.0-alpha.9",
     "tailwindcss": "^4.0.0-alpha.9",
     "vue": "^3.4.21"
@@ -28,7 +28,7 @@
     "eslint-plugin-vue": "^9.17.0",
     "npm-run-all2": "^6.1.2",
     "typescript": "~5.4.0",
-    "vite": "^5.1.5",
+    "vite": "^6.2.2",
     "vue-tsc": "^2.0.6"
   }
 }
