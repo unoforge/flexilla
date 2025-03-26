@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/modal",
   "private": false,
-  "version": "2.0.9",
+  "version": "2.0.10",
   "type": "module",
   "description": "A customizable modal component for creating interactive pop-up dialogs in web applications.",
   "publishConfig": {

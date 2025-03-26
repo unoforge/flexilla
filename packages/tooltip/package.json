@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/tooltip",
   "private": false,
-  "version": "2.0.10",
+  "version": "2.0.11",
   "type": "module",
   "description": "A lightweight and customizable tooltip component for displaying additional information on hover over elements in web applications.",
   "publishConfig": {
