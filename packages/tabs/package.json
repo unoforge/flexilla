@@ -7,7 +7,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/tabs.umd.js",
+  "main": "./dist/tabs.umd.cjs",
   "module": "./dist/tabs.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/tabs.umd.js"
+        "default": "./dist/tabs.umd.cjs"
       }
     },
     "./tabs.css": "./dist/tabs.css"

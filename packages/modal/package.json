@@ -7,7 +7,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/modal.umd.js",
+  "main": "./dist/modal.umd.cjs",
   "module": "./dist/modal.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/modal.umd.js"
+        "default": "./dist/modal.umd.cjs"
       }
     },
     "./modal.css": "./dist/modal.css",

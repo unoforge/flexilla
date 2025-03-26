@@ -7,7 +7,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/collapse.umd.js",
+  "main": "./dist/collapse.umd.cjs",
   "module": "./dist/collapse.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/collapse.umd.js"
+        "default": "./dist/collapse.umd.cjs"
       }
     }
   },

@@ -7,7 +7,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/auto-resize-area.umd.js",
+  "main": "./dist/auto-resize-area.umd.cjs",
   "module": "./dist/auto-resize-area.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/auto-resize-area.umd.js"
+        "default": "./dist/auto-resize-area.umd.cjs"
       }
     }
   },

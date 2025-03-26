@@ -7,7 +7,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/custom-range.umd.js",
+  "main": "./dist/custom-range.umd.cjs",
   "module": "./dist/custom-range.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/custom-range.umd.js"
+        "default": "./dist/custom-range.umd.cjs"
       }
     }
   },

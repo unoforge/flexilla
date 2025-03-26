@@ -7,7 +7,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/accordion.umd.js",
+  "main": "./dist/accordion.umd.cjs",
   "module": "./dist/accordion.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/accordion.umd.js"
+        "default": "./dist/accordion.umd.cjs"
       }
     }
   },

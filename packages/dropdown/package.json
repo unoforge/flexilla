@@ -7,7 +7,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/dropdown.umd.js",
+  "main": "./dist/dropdown.umd.cjs",
   "module": "./dist/dropdown.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/dropdown.umd.js"
+        "default": "./dist/dropdown.umd.cjs"
       }
     },
     "./dropdown.css": "./dist/dropdown.css"

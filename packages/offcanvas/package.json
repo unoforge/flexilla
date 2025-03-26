@@ -8,7 +8,7 @@
     "access": "public"
   },
   "main": "./dist/offcanvas.js",
-  "module": "./dist/offcanvas.umd.js",
+  "module": "./dist/offcanvas.umd.cjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/offcanvas.umd.js"
+        "default": "./dist/offcanvas.umd.cjs"
       }
     },
     "./offcanvas.css": "./dist/offcanvas.css"
