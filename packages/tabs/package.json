@@ -1,13 +1,13 @@
 {
   "name": "@flexilla/tabs",
   "private": false,
-  "version": "2.0.11",
+  "version": "2.0.12",
   "type": "module",
   "description": "A versatile tabs component for organizing content in a tabbed interface, enhancing user navigation.",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/tabs.umd.js",
+  "main": "./dist/tabs.umd.cjs",
   "module": "./dist/tabs.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/tabs.umd.js"
+        "default": "./dist/tabs.umd.cjs"
       }
     },
     "./tabs.css": "./dist/tabs.css"

@@ -57,15 +57,7 @@ export const actionToggler = (options: TogglerOptions) => {
  * @param {Object} params - The parameters for navbar toggle functionality
  * @param {string | HTMLElement} params.navbarElement - The navbar element to toggle
  * @param {Function} [params.onToggle] - Optional callback function called when navbar state changes
- * 
  * @description
- * This function sets up a navbar toggle system with the following features:
- * - Supports both string selectors and HTMLElement references
- * - Manages aria-expanded states for accessibility
- * - Handles optional overlay elements
- * - Supports data attributes for state management
- * - Automatically closes navbar when clicking outside
- * 
  * Required HTML structure:
  * ```html
  * <button data-nav-trigger data-toggle-nav="navbar-id">Toggle</button>
@@ -80,31 +72,42 @@ export const toggleNavbar = ({ navbarElement, onToggle }: { navbarElement: strin
 	const id = navbar.getAttribute("id")
 	const trigger = $(`[data-nav-trigger][data-toggle-nav=${id}]`);
 	const overlayEl = $(`[data-nav-overlay][data-navbar-id=${id}]`)
+	const toggleState = () => {
+		const state = navbar.dataset.state || "close";
+		const dataState = state === "open" ? "close" : "open"
+		navbar.setAttribute("data-state", dataState);
+		if (trigger) trigger.ariaExpanded = state === "open" ? "false" : "true"
+		if (overlayEl) {
+			overlayEl.ariaHidden = "true"
+			overlayEl.setAttribute("data-state", dataState)
+		}
+		onToggle?.({ isExpanded: dataState === "open" })
+	}
+	if (trigger) trigger.addEventListener("click", toggleState);
+	const closeNavbar = () => {
+		navbar.setAttribute("data-state", "close");
+		trigger?.setAttribute("aria-expanded", "false");
+		if (overlayEl) {
+			overlayEl.setAttribute("data-state", "close")
+		}
+		onToggle?.({ isExpanded: false })
+	}
+	navbar.addEventListener("click", closeNavbar);
+	if (overlayEl instanceof HTMLElement && !overlayEl.hasAttribute("data-static-overlay")) {
+		overlayEl.addEventListener("click", closeNavbar)
+	}
 
-	if (trigger instanceof HTMLButtonElement) {
-		const toggleState = () => {
-			const state = navbar.dataset.state || "close";
-			const dataState = state === "open" ? "close" : "open"
-			navbar.setAttribute("data-state", dataState);
-			trigger.ariaExpanded = state === "open" ? "false" : "true"
-			if (overlayEl) {
-				overlayEl.ariaHidden = "true"
-				overlayEl.setAttribute("data-state", dataState)
-			}
-			onToggle?.({ isExpanded: dataState === "open" })
-		}
-		trigger.addEventListener("click", toggleState);
-		const closeNavbar = () => {
-			navbar.setAttribute("data-state", "close");
-			trigger.setAttribute("aria-expanded", "false");
-			if (overlayEl) {
-				overlayEl.setAttribute("data-state", "close")
-			}
-			onToggle?.({ isExpanded: false })
-		}
-		navbar.addEventListener("click", closeNavbar);
+	const cleanup = () => {
 		if (overlayEl instanceof HTMLElement && !overlayEl.hasAttribute("data-static-overlay")) {
-			overlayEl.addEventListener("click", closeNavbar)
+			navbar.removeEventListener("click", closeNavbar);
+			if (trigger) trigger.removeEventListener("click", toggleState);
+			overlayEl.removeEventListener("click", closeNavbar)
 		}
+	}
+
+	return {
+		cleanup,
+		close: closeNavbar,
+		toggle: toggleState
 	}
 }

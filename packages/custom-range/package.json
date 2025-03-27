@@ -1,13 +1,13 @@
 {
   "name": "@flexilla/custom-range",
   "private": false,
-  "version": "2.0.9",
+  "version": "2.0.10",
   "type": "module",
   "description": "A lightweight JavaScript component to add range indicator to a custom range component",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/custom-range.umd.js",
+  "main": "./dist/custom-range.umd.cjs",
   "module": "./dist/custom-range.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/custom-range.umd.js"
+        "default": "./dist/custom-range.umd.cjs"
       }
     }
   },

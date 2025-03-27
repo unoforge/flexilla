@@ -1,13 +1,13 @@
 {
   "name": "@flexilla/accordion",
   "private": false,
-  "version": "2.1.1",
+  "version": "2.1.3",
   "type": "module",
   "description": "A versatile and interactive accordion component for creating collapsible sections in web applications, conserving space and improving user experience",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/accordion.umd.js",
+  "main": "./dist/accordion.umd.cjs",
   "module": "./dist/accordion.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/accordion.umd.js"
+        "default": "./dist/accordion.umd.cjs"
       }
     }
   },
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@flexilla/manager": "latest",
-    "@flexilla/utilities": "^2.1.0"
+    "@flexilla/utilities": "^2.1.1"
   },
   "devDependencies": {
     "typescript": "^5.2.2",

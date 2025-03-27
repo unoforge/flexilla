@@ -1,13 +1,13 @@
 {
   "name": "@flexilla/dropdown",
   "private": false,
-  "version": "2.0.8-2.0.9.0",
+  "version": "2.1.1",
   "type": "module",
   "description": "Utilities package for flexilla library",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/dropdown.umd.js",
+  "main": "./dist/dropdown.umd.cjs",
   "module": "./dist/dropdown.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/dropdown.umd.js"
+        "default": "./dist/dropdown.umd.cjs"
       }
     },
     "./dropdown.css": "./dist/dropdown.css"

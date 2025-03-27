@@ -1,13 +1,13 @@
 {
   "name": "@flexilla/dismissible",
   "private": false,
-  "version": "2.0.9",
+  "version": "2.0.10",
   "type": "module",
   "description": "A lightweight JavaScript component that automatically makes a component dismissible for easy user interaction.",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/dismissible.umd.js",
+  "main": "./dist/dismissible.umd.cjs",
   "module": "./dist/dismissible.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/dismissible.umd.js"
+        "default": "./dist/dismissible.umd.cjs"
       }
     }
   },
