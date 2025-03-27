@@ -108,8 +108,6 @@ export const afterTransition = ({
 };
 
 /**
- * Executes a callback after a CSS animation has completed on an element.
- * If no animation is present or the animation is invalid, the callback executes immediately.
  * @param {Object} params - The parameters object
  * @param {HTMLElement} params.element - The target HTML element
  * @param {Function} params.callback - The function to execute after the animation
