@@ -60,9 +60,11 @@ const initModal = (modalElement: HTMLElement, triggerButton: HTMLElement | null,
     modalContent.setAttribute("data-state", 'close');
 
     const closeModalEsc = (e: KeyboardEvent) => {
-        e.preventDefault()
-        if (e.key === "Escape" && !preventCloseModal_) {
-            hideModal();
+        if (e.key === "Escape") {
+            e.preventDefault()
+            if (!preventCloseModal_) {
+                hideModal();
+            }
         }
     };
 

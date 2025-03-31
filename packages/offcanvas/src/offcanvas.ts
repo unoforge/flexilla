@@ -79,9 +79,6 @@ class Offcanvas {
             this.offCanvasElement.setAttribute("data-fx-offcanvas", "")
     }
 
-    /**
-   * Close the Offcanvas when a click occurs outside of it.
-   */
     private closeWhenClickOutSide = (event: MouseEvent) => {
         const isOpen = this.offCanvasElement.getAttribute("data-state") === "open"
         const clickOutOutside = !this.offCanvasElement.contains(event.target as Node) && ![...this.offCanvasTriggers].includes(event.target as HTMLElement)
@@ -133,16 +130,14 @@ class Offcanvas {
         }
         document.addEventListener("keydown", this.closeWithEsc)
         this.options.onShow?.()
-        // Dispatch custom event when offcanvas is opened
         dispatchCustomEvent(this.offCanvasElement, "offcanvas-open", { offcanvasId: this.offCanvasElement.id })
     }
 
-    /**
-   * Close the Offcanvas when the "Escape" key is pressed.
-   */
     private closeWithEsc = (event: KeyboardEvent) => {
-        event.preventDefault()
-        if (event.key === "Escape") { this.closeOffCanvas() }
+        if (event.key === "Escape") { 
+            event.preventDefault()
+            this.closeOffCanvas()
+         }
     }
 
 
@@ -219,15 +214,20 @@ class Offcanvas {
         FlexillaManager.removeInstance("offcanvas", this.offCanvasElement)
     }
 
+    /**
+     * 
+     * @param selector - The selector for offcanvas elements to initialize.
+     * @example
+     * ```ts
+     * Offcanvas.autoInit('#sidebar');
+     * ```
+     */
     static autoInit = (selector: string = "[data-fx-offcanvas]") => {
         const offCanvasElements = $$(selector)
         for (const offCanvasElement of offCanvasElements) new Offcanvas(offCanvasElement)
     }
-
     /**
-     * Creates a new instance of Offcanvas with the given element and options.
      * This is an alternative to using the constructor directly.
-     * 
      * @param offcanvas - The offcanvas element selector or HTMLElement
      * @param options - Configuration options for the offcanvas
      * @returns A new Offcanvas instance

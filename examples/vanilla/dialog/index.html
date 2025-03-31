@@ -61,13 +61,17 @@
       }
     }
 
-    [data-modal-test-1css] [data-modal-content],[data-modal-test-2css] [data-modal-content]{
-      animation-fill-mode:both;
+    [data-modal-test-1css] [data-modal-content],
+    [data-modal-test-2css] [data-modal-content] {
+      animation-fill-mode: both;
     }
-    [data-modal-test-1css] [data-modal-content], [data-modal-test-2css] [data-modal-content]{
+
+    [data-modal-test-1css] [data-modal-content],
+    [data-modal-test-2css] [data-modal-content] {
       animation: slideIn 0.5s ease-in-out;
     }
-    [data-modal-test-2css][data-state=close] [data-modal-content]{
+
+    [data-modal-test-2css][data-state=close] [data-modal-content] {
       animation: slidOut 0.5s ease-in-out;
     }
   </style>
@@ -79,13 +83,14 @@
       <h1 class="text-xl font-semibold text-gray9 dark-text-white">
         Default Modal
       </h1>
-      <div class="p10 rd-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6 h96 flex gap-4 items-center justify-center">
+      <div
+        class="p10 rd-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6 h96 flex gap-4 items-center justify-center">
         <div>
           <button data-modal-target="modal-default" class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
             DefaultModal
           </button>
           <div data-fx-modal data-modal-test-1 aria-hidden="true" data-modal-id="modal-default"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl ease-linear duration-300 transition-all fx-close-op0 fx-close-invisible" 
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl ease-linear duration-300 transition-all fx-close-op0 fx-close-invisible"
             class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
             <dialog data-modal-content class="bg-white rd-lg overflow-hidden wfull 
                   max-w2xl flex flex-col ease-linear transition-all duration-300 absolute top-4">
@@ -119,7 +124,7 @@
             </dialog>
           </div>
           <div data-fx-modal data-modal-test-1b aria-hidden="true" data-modal-id="modal-default-2"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl" 
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
             class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
             <dialog data-modal-content class="bg-white rd-lg overflow-hidden wfull 
                   max-w2xl flex flex-col ease-linear transition-all duration-300 absolute top-4">
@@ -136,7 +141,10 @@
                 </button>
               </div>
               <div class="px-4 py-6">
-
+                <form action="">
+                  <input type="email" name="" id="" placeholder="OOps"
+                    class="px-4 py-2 border rounded-md border-gray-200">
+                </form>
               </div>
               <div class="border-t border-t-gray-100 dark:border-t-gray-900 p-4 flex items-center gap-x-3">
                 <button
@@ -170,7 +178,7 @@
             Animate On Enter
           </button>
           <div data-fx-modal data-modal-test-2 aria-hidden="true" data-modal-id="modal-alert"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl" 
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
             class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
             <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center ease-linear transition-all ">
@@ -200,7 +208,7 @@
             Animate enter & Exit
           </button>
           <div data-fx-modal data-modal-test-3 aria-hidden="true" data-modal-id="modal-alert1"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl" 
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
             class="inset-0  justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
             <dialog data-modal-content
               class="ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center ease-linear transition-all ">
@@ -244,8 +252,8 @@
           <button data-custom-trigger class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
             Open Modal
           </button>
-          <div data-fx-modal data-modal-prevent aria-hidden="true" 
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl" 
+          <div data-fx-modal data-modal-prevent aria-hidden="true"
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
             class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
             <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
@@ -279,7 +287,8 @@
           Stacked Modal
         </h1>
         <p text-gray7>
-          Allow modal layered on top of another modal. (<span rd-lg px1.5 py-px text-sm bg-gray2 b b-gray3 text-gray8>enableStackedModals</span> set to true, by Default it's false and stacked behavior disabled)
+          Allow modal layered on top of another modal. (<span rd-lg px1.5 py-px text-sm bg-gray2 b b-gray3
+            text-gray8>enableStackedModals</span> set to true, by Default it's false and stacked behavior disabled)
         </p>
       </div>
       <div
@@ -289,7 +298,7 @@
             Open Modal
           </button>
           <div data-fx-modal data-modal-with-stacked aria-hidden="true"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl" 
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
             class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
             <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
@@ -307,14 +316,15 @@
                   class="h9 text-sm flex items-center px5 rd-md bg-gray1 dark-bg-gray9 duration-300 hover-!bg-op60 text-gray8 dark-text-gray2">
                   No, Cancel
                 </button>
-                <button data-custom-trigger-stack class="h9 text-sm flex items-center px5 rd-md bg-red6 duration-200 hover-bg-op80 text-white">
+                <button data-custom-trigger-stack
+                  class="h9 text-sm flex items-center px5 rd-md bg-red6 duration-200 hover-bg-op80 text-white">
                   Yes, Delete
                 </button>
               </div>
             </dialog>
           </div>
           <div data-fx-modal data-modal-prevent-stack aria-hidden="true" data-modal-id="modal-prevent-close"
-            data-modal-overlay="ui-overlay bg-gray8/60" 
+            data-modal-overlay="ui-overlay bg-gray8/60"
             class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
             <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
@@ -329,14 +339,15 @@
                   class="h9 text-sm flex items-center px5 rd-md bg-gray1 dark-bg-gray9 duration-300 hover-!bg-op60 text-gray8 dark-text-gray2">
                   No, Cancel
                 </button>
-                <button data-trigger-third class="h9 text-sm flex items-center px5 rd-md bg-red6 duration-200 hover-bg-op80 text-white">
+                <button data-trigger-third
+                  class="h9 text-sm flex items-center px5 rd-md bg-red6 duration-200 hover-bg-op80 text-white">
                   Yes, Achieve
                 </button>
               </div>
             </dialog>
           </div>
           <div data-fx-modal data-modal-third aria-hidden="true" data-modal-id="modal-prevent-close"
-            data-modal-overlay="ui-overlay bg-gray8/60" 
+            data-modal-overlay="ui-overlay bg-gray8/60"
             class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
             <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
