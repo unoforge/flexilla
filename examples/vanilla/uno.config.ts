@@ -6,7 +6,7 @@ import {
     type Preset
   } from "unocss";
 
-import unoPreset from "./../../../unify-preset/packages/flexilla"
+import unoPreset from "./../../../../unify-preset/packages/flexilla"
   
   export default defineConfig({
     content: {
