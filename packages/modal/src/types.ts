@@ -15,7 +15,8 @@ export type ModalOptions = {
     overlayClass?: string;
     preventCloseModal?: boolean;
     allowBodyScroll?: boolean;
-    enableStackedModals?: boolean
+    enableStackedModals?: boolean;
+    dispatchEventToDocument?: boolean;
     beforeHide?:()=>{ cancelAction?: boolean;} |void;
     onShow?: () => void;
     onHide?: () => void;
