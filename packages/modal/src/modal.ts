@@ -16,7 +16,7 @@ import { buildOverlay, destroyOverlay } from "./modalOverlay";
  * ```
  */
 class Modal {
-    private modalElement: HTMLElement
+    private modalElement: HTMLDialogElement
     private modalId!: string
     private modalContent!: HTMLElement
     private triggerButton?: HTMLElement | null
@@ -42,9 +42,9 @@ class Modal {
      * @param options - Configuration options for the modal behavior
      * @param triggerElement - Optional trigger element or selector that opens the modal
      */
-    constructor(modal: string | HTMLElement, options: ModalOptions = {}, triggerElement?: string | HTMLElement) {
+    constructor(modal: string | HTMLDialogElement, options: ModalOptions = {}, triggerElement?: string | HTMLElement) {
         const modalElement = typeof modal === "string" ? $(modal) : modal
-        if (!(modalElement instanceof HTMLElement)) throw new Error("Modal element not found or invalid. Please provide a valid HTMLElement or selector.")
+        if (!(modalElement instanceof HTMLDialogElement)) throw new Error("Modal element not found or invalid. Please provide a valid HTMLDialogElement or selector.")
 
         this.modalElement = modalElement
         this.options = options
@@ -67,16 +67,21 @@ class Modal {
         const modalId = modalElement.dataset.modalId;
         this.modalId = `${modalId}`
 
-        const triggerButton = (typeof triggerElement === "string" ? $(triggerElement) : triggerElement) || $(`[data-modal-target='${modalId}']`);
+        const triggerButton = (typeof triggerElement === "string" ? $(triggerElement) : triggerElement) || $(`[data-modal-target='${modalId}']`) || $(`[data-modal-trigger][data-modal-id='${modalId}']`);
         this.triggerButton = triggerButton
+        this.dispatchEventToDocument = this.options.dispatchEventToDocument || true
 
         this.initModal(this.modalElement, this.options)
-        this.addEvents()
         if (this.state === "open") {
             this.initAsOpen = true
             this.showModal()
-        } else this.initAsOpen = false
-        this.dispatchEventToDocument = this.options.dispatchEventToDocument || true
+        } else {
+            this.initAsOpen = false
+            this.modalElement.blur()
+            this.modalContent.setAttribute("data-state", 'close');
+            this.modalElement.setAttribute("aria-hidden", "true");
+            this.modalElement.setAttribute("data-state", "close");
+        }
         FlexillaManager.register('modal', this.modalElement, this)
     }
 
@@ -90,7 +95,7 @@ class Modal {
                 const modalOverlay = $("[data-modal-overlay]", shownModal) as HTMLElement
                 modalOverlay.setAttribute("data-state", "close")
                 const modalContent_ = $("[data-modal-content]", shownModal)
-                toggleModalState(shownModal, modalContent_, "close");
+                toggleModalState(shownModal as HTMLDialogElement, modalContent_, "close");
                 document.dispatchEvent(new CustomEvent(`modal:${showId}:close`))
             }
         }
@@ -105,8 +110,8 @@ class Modal {
         }
     };
 
-    private initModal = (modalElement: HTMLElement, options: ModalOptions) => {
-        if (!(modalElement instanceof HTMLElement)) throw new Error("Modal Element must be a valid element");
+    private initModal = (modalElement: HTMLDialogElement, options: ModalOptions) => {
+        if (!(modalElement instanceof HTMLDialogElement)) throw new Error("Modal Element must be a valid HTMLDialog Element");
         const { allowBodyScroll, animateContent, preventCloseModal, overlayClass, enableStackedModals } = options;
         this.allowBodyScroll = (modalElement.hasAttribute("data-allow-body-scroll") && modalElement.getAttribute("data-allow-body-scroll") !== "false") || allowBodyScroll || false
         this.preventCloseModal = modalElement.hasAttribute("data-prevent-close-modal") && modalElement.getAttribute("data-prevent-close-modal") !== "false" || preventCloseModal || false
@@ -124,7 +129,9 @@ class Modal {
         this.animateContent = animateContent
         this.animationEnter = this.modalContent.dataset.enterAnimation || "";
         this.animationExit = this.modalContent.dataset.exitAnimation || "";
-        this.modalContent.setAttribute("data-state", 'close');
+
+        if (this.overlayElement) this.overlayElement.setAttribute("data-state", "close")
+        this.addEvents()
     };
 
     private closeModalOnX = (e: MouseEvent) => {
@@ -181,15 +188,31 @@ class Modal {
             this.isKeyDownEventRegistered = true;
         }
 
-        this.modalElement.focus();
-
+        this.modalContent.focus();
         if (!this.preventCloseModal) this.overlayElement.addEventListener("click", this.hideModal)
         this.options.onShow?.()
         this.options.onToggle?.({ isHidden: false })
+        this.modalElement.showModal()
     }
-    /**
-     * Hide the modal
-     */
+
+
+    private closeModal = () => {
+        this.modalElement.setAttribute("aria-hidden", "true");
+        this.modalElement.setAttribute("data-state", "close");
+        this.modalElement.blur();
+        setBodyScrollable(this.enableStackedModals || false, this.allowBodyScroll || false, this.modalElement)
+        if (!this.hasDefaultOverlay) destroyOverlay(this.overlayElement)
+        dispatchCustomEvent(this.modalElement, "modal-close", { modalId: this.modalElement.id })
+    }
+    private closeLastAction = () => {
+        if (this.isKeyDownEventRegistered) {
+            document.removeEventListener("keydown", this.closeModalEsc);
+            this.isKeyDownEventRegistered = false;
+        }
+        this.modalElement.blur()
+        this.options.onHide?.()
+        this.options.onToggle?.({ isHidden: true })
+    }
     hideModal = () => {
         let exitAction = false
         dispatchCustomEvent(this.modalElement, "before-hide", {
@@ -199,24 +222,8 @@ class Modal {
             }
         })
         const exitFromBeforeHide = this.options.beforeHide?.()?.cancelAction
-
         if (exitAction || exitFromBeforeHide) return
 
-        const closeModal = () => {
-            toggleModalState(this.modalElement, this.modalContent, "close");
-            setBodyScrollable(this.enableStackedModals || false, this.allowBodyScroll || false, this.modalElement)
-            if (!this.hasDefaultOverlay) destroyOverlay(this.overlayElement)
-            dispatchCustomEvent(this.modalElement, "modal-close", { modalId: this.modalElement.id })
-        }
-        const closeLastAction = () => {
-            if (this.isKeyDownEventRegistered) {
-                document.removeEventListener("keydown", this.closeModalEsc);
-                this.isKeyDownEventRegistered = false;
-            }
-            this.modalElement.blur();
-            this.options.onHide?.()
-            this.options.onToggle?.({ isHidden: true })
-        }
         const hasExitAnimation = (this.animateContent?.exitAnimation && this.animateContent.exitAnimation !== "") || (this.animationExit && this.animationExit !== "")
         this.overlayElement?.setAttribute("data-state", "close")
         this.modalContent.setAttribute("data-state", "close");
@@ -229,8 +236,11 @@ class Modal {
             element: this.modalContent,
             callback: () => {
                 if (hasExitAnimation) this.modalContent.style.removeProperty("--un-modal-animation");
-                closeModal()
-                closeLastAction()
+                this.closeModal()
+                this.closeLastAction()
+                this.modalElement.close('modal-closed')
+                if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+                if(this.triggerButton) this.triggerButton.blur()
             }
         })
     }
@@ -251,17 +261,28 @@ class Modal {
         if (this.dispatchEventToDocument) document.removeEventListener(`modal:${this.modalId}:close`, this.hideModal);
         FlexillaManager.removeInstance("modal", this.modalElement)
     }
+
+    setOptions = ({ state, allowBodyscroll }: { state?: "open" | "close", allowBodyscroll?: boolean }) => {
+        if (state) {
+            this.state = state
+        }
+        if (allowBodyscroll !== undefined) this.allowBodyScroll = allowBodyscroll
+        this.cleanup()
+        this.initModal(this.modalElement, this.options)
+        if (this.state === "open") this.showModal()
+        else if (this.state === "close") this.hideModal()
+    }
     /**
      * Automatically initializes all modal elements matching the provided selector
      */
     public static autoInit = (selector: string = "[data-fx-modal]"): void => {
         const modals = $$(selector)
-        for (const modal of modals) new Modal(modal)
+        for (const modal of modals) new Modal(modal as HTMLDialogElement)
     }
     /**
      * Creates and initializes a new Modal instance
      */
-    static init = (modal: string | HTMLElement, options: ModalOptions = {}, triggerElement?: string | HTMLElement): Modal => new Modal(modal, options, triggerElement)
+    static init = (modal: string | HTMLDialogElement, options: ModalOptions = {}, triggerElement?: string | HTMLElement): Modal => new Modal(modal, options, triggerElement)
 }
 
 export default Modal
