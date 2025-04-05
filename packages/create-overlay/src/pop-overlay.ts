@@ -6,10 +6,6 @@ import { updateOverlayState } from "./helpers"
 
 /**
  * CreateOverlay class for managing overlay/popup UI components
- * @class
- * @description Creates and manages an overlay/popup that can be triggered by click or hover events.
- * Handles positioning, showing/hiding, and various interaction behaviors.
- * 
  * @example
  * const overlay = new CreateOverlay({
  *   trigger: '#triggerButton',

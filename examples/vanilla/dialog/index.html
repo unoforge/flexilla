@@ -89,10 +89,10 @@
           <button data-modal-target="modal-default" class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
             DefaultModal
           </button>
-          <div data-fx-modal data-modal-test-1 aria-hidden="true" data-modal-id="modal-default"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl ease-linear duration-300 transition-all fx-close-op0 fx-close-invisible"
-            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
-            <dialog data-modal-content class="bg-white rd-lg overflow-hidden wfull 
+          <dialog data-fx-modal data-modal-test-1  data-modal-id="modal-default"
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-sm ease-linear duration-300 transition-all fx-close-op0 fx-close-invisible"
+            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 bg-transparent">
+            <div data-modal-content class="bg-white rd-lg overflow-hidden wfull 
                   max-w2xl flex flex-col ease-linear transition-all duration-300 absolute top-4">
               <div class="border-b border-b-gray-100 dark:border-b-gray-900 p-4 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -121,12 +121,12 @@
                   Cancel
                 </button>
               </div>
-            </dialog>
-          </div>
-          <div data-fx-modal data-modal-test-1b aria-hidden="true" data-modal-id="modal-default-2"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
-            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
-            <dialog data-modal-content class="bg-white rd-lg overflow-hidden wfull 
+            </div>
+          </dialog>
+          <dialog data-fx-modal data-modal-test-1b aria-hidden="true" data-modal-id="modal-default-2"
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-sm"
+            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 bg-transparent">
+            <div data-modal-content class="bg-white rd-lg overflow-hidden wfull 
                   max-w2xl flex flex-col ease-linear transition-all duration-300 absolute top-4">
               <div class="border-b border-b-gray-100 dark:border-b-gray-900 p-4 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -156,8 +156,8 @@
                   Cancel
                 </button>
               </div>
-            </dialog>
-          </div>
+            </div>
+          </dialog>
         </div>
       </div>
     </div>
@@ -177,10 +177,10 @@
           <button data-modal-target="modal-alert" class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
             Animate On Enter
           </button>
-          <div data-fx-modal data-modal-test-2 aria-hidden="true" data-modal-id="modal-alert"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
-            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
-            <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
+          <dialog data-fx-modal data-modal-test-2 aria-hidden="true" data-modal-id="modal-alert"
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-sm"
+            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 bg-transparent">
+            <div data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center ease-linear transition-all ">
               <div class="wmax p3 rd-full bg-red2 text-red6">
                 <span flex i-carbon-trash-can text-lg></span>
@@ -200,17 +200,17 @@
                   Yes, Delete
                 </button>
               </div>
-            </dialog>
-          </div>
+            </div>
+          </dialog>
         </div>
         <div>
           <button data-modal-target="modal-alert1" class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
             Animate enter & Exit
           </button>
-          <div data-fx-modal data-modal-test-3 aria-hidden="true" data-modal-id="modal-alert1"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
-            class="inset-0  justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
-            <dialog data-modal-content
+          <dialog data-fx-modal data-modal-test-3 aria-hidden="true" data-modal-id="modal-alert1"
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-sm"
+            class="inset-0  justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 bg-transparent">
+            <div data-modal-content
               class="ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center ease-linear transition-all ">
               <div class="wmax p3 rd-full bg-red2 text-red6">
                 <span flex i-carbon-trash-can text-lg></span>
@@ -230,8 +230,8 @@
                   Yes, Delete
                 </button>
               </div>
-            </dialog>
-          </div>
+            </div>
+          </dialog>
         </div>
       </div>
     </div>
@@ -252,10 +252,10 @@
           <button data-custom-trigger class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
             Open Modal
           </button>
-          <div data-fx-modal data-modal-prevent aria-hidden="true"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
-            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
-            <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
+          <dialog data-fx-modal data-modal-prevent aria-hidden="true"
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-sm"
+            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 bg-transparent">
+            <div data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
               <div class="wmax p3 rd-full bg-red2 text-red6">
                 <span flex i-carbon-trash-can text-lg></span>
@@ -275,8 +275,8 @@
                   Yes, Delete
                 </button>
               </div>
-            </dialog>
-          </div>
+            </div>
+          </dialog>
         </div>
       </div>
     </div>
@@ -297,10 +297,10 @@
           <button data-trigger-with-stacked class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
             Open Modal
           </button>
-          <div data-fx-modal data-modal-with-stacked aria-hidden="true"
-            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-3xl"
-            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
-            <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
+          <dialog data-fx-modal data-modal-with-stacked aria-hidden="true"
+            data-modal-overlay="ui-overlay bg-gray8/70 backdrop-filter backdrop-blur-sm"
+            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 bg-transparent">
+            <div data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
               <div class="wmax p3 rd-full bg-red2 text-red6">
                 <span flex i-carbon-trash-can text-lg></span>
@@ -321,12 +321,12 @@
                   Yes, Delete
                 </button>
               </div>
-            </dialog>
-          </div>
-          <div data-fx-modal data-modal-prevent-stack aria-hidden="true" data-modal-id="modal-prevent-close"
+            </div>
+          </dialog>
+          <dialog data-fx-modal data-modal-prevent-stack aria-hidden="true" data-modal-id="modal-prevent-close"
             data-modal-overlay="ui-overlay bg-gray8/60"
-            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
-            <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
+            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 bg-transparent">
+            <div data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
               <h2 class="font-semibold text-xl text-gray9 dark-text-white">
                 Hum, really?
@@ -344,12 +344,12 @@
                   Yes, Achieve
                 </button>
               </div>
-            </dialog>
-          </div>
-          <div data-fx-modal data-modal-third aria-hidden="true" data-modal-id="modal-prevent-close"
+            </div>
+          </dialog>
+          <dialog data-fx-modal data-modal-third aria-hidden="true" data-modal-id="modal-prevent-close"
             data-modal-overlay="ui-overlay bg-gray8/60"
-            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0">
-            <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
+            class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 bg-transparent">
+            <div data-modal-content data-enter-animation="fadeScale .4s linear"
               class="fx-open-ui-animated-modal-content relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
               <h2 class="font-semibold text-xl text-gray9 dark-text-white">
                 Oh, man. It's dangerous
@@ -366,8 +366,8 @@
                   Yes, I'm tired
                 </button>
               </div>
-            </dialog>
-          </div>
+            </div>
+          </dialog>
         </div>
       </div>
     </div>

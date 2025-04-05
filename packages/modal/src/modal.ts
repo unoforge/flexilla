@@ -267,8 +267,6 @@ class Modal {
             this.state = state
         }
         if (allowBodyscroll !== undefined) this.allowBodyScroll = allowBodyscroll
-        this.cleanup()
-        this.initModal(this.modalElement, this.options)
         if (this.state === "open") this.showModal()
         else if (this.state === "close") this.hideModal()
     }

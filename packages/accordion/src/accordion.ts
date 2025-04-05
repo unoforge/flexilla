@@ -6,14 +6,11 @@ import { FlexillaManager } from "@flexilla/manager"
 
 /**
  * Accordion component class for managing collapsible content sections.
- * Provides functionality for creating interactive accordion UI elements with single or multiple expandable sections.
- * 
  * @class
  * @example
  * ```typescript
- * // Create a single-section accordion
- * const accordion = new Accordion('#myAccordion');
- * 
+ * new Accordion('#myAccordion');
+ *
  * // Create a multi-section accordion with options
  * const multiAccordion = new Accordion('#multiAccordion', {
  *   accordionType: 'multiple',
@@ -31,7 +28,6 @@ export default class Accordion {
      * Creates an instance of Accordion
      * @param {string | HTMLElement} accordion - Selector string or HTMLElement for the accordion container
      * @param {AccordionOptions} [options={}] - Configuration options for the accordion
-     * @throws {Error} When accordion element is not found or selector is invalid
      */
     constructor(accordion: string | HTMLElement, options: AccordionOptions = {}) {
         this.accordionEl = typeof accordion === "string" ? $(accordion) as HTMLElement : accordion;
@@ -79,7 +75,16 @@ export default class Accordion {
         }
         this.accordionEl.addEventListener("keydown", handleKeyEvents);
         this.eventListeners.push({ element: this.accordionEl, type: "keydown", listener: handleKeyEvents as EventListener });
+
+        this.accordionEl.addEventListener('reload-accordion', this.reload)
+
         FlexillaManager.register("accordion", this.accordionEl, this)
+    }
+
+    reload = () => {
+        this.cleanup()
+        this.items = $$("[data-accordion-item]", this.accordionEl).filter((item: HTMLElement) => item.parentElement && item.parentElement === this.accordionEl);
+        this.initAccordion()
     }
 
 
@@ -218,8 +223,6 @@ export default class Accordion {
 
     /**
      * Cleans up the accordion instance by removing event listeners, data attributes, and references.
-     * This should be called when the accordion is no longer needed to prevent memory leaks.
-     * 
      * @public
      * @example
      * ```typescript
@@ -241,12 +244,11 @@ export default class Accordion {
                 element.removeEventListener(type, listener);
             }
         });
-        
+
         this.eventListeners = [];
-        FlexillaManager.removeInstance('accordion', this.accordionEl);
         this.items = [];
-        this.options = null as any;
-        this.accordionEl = null as any;
+        FlexillaManager.removeInstance('accordion', this.accordionEl);
+        this.accordionEl.removeEventListener('reload-accordion', this.reload)
     }
 
     /**
@@ -272,7 +274,6 @@ export default class Accordion {
      * @static
      * @param {string | HTMLElement} accordion - Selector string or HTMLElement for the accordion container
      * @param {AccordionOptions} [options={}] - Configuration options for the accordion
-     * @returns {Accordion} A new Accordion instance
      * @example
      * ```typescript
      * // Initialize with selector
