@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/dropdown",
   "private": false,
-  "version": "2.1.1",
+  "version": "2.1.2",
   "type": "module",
   "description": "Utilities package for flexilla library",
   "publishConfig": {
@@ -43,7 +43,7 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "dependencies": {
-    "@flexilla/create-overlay": "^0.0.0",
+    "@flexilla/create-overlay": "^0.1.0",
     "@flexilla/manager": "^0.0.0"
   },
   "keywords": [
