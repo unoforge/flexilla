@@ -1,10 +1,10 @@
 <button data-modal-target="modal-alertAnimated-both" class="bg-zinc8 text-white px4 py2 rd-lg text-sm">
     Open Modal
 </button>
-<div data-fx-modal data-modal-demo aria-hidden="true" data-modal-id="modal-alertAnimated-both"
+<dialog data-fx-modal data-modal-demo aria-hidden="true" data-modal-id="modal-alertAnimated-both"
     data-modal-overlay="ui-overlay bg-zinc8/70 backdrop-filter backdrop-blur-3xl" 
-    class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 z90">
-    <dialog data-modal-content
+    class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 z90 bg-transparent">
+    <div data-modal-content
       data-enter-animation="slideIn .4s linear"
       data-exit-animation="slideOut .2s linear"
       class="ui-animated-modal-content relative bg-white dark-bg-zinc950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
@@ -26,5 +26,5 @@
           Yes, Delete
         </button>
       </div>
-    </dialog>
-</div>
+    </div>
+</dialog>
