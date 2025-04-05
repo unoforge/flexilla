@@ -148,15 +148,15 @@ import { users } from "@data/demo-users";
   </div>
   <div data-mob-user class="grid wfull xl-hidden gap-4"></div>
 </div>
-<div
+<dialog
   data-fx-modal
   data-modal-invite
   data-modal-id="modal-message-def"
   data-modal-overlay="ui-overlay bg-zinc2/60 dark-bg-zinc8/50 backdrop-blur-lg"
-  class="justify-center items-start p4 fixed wscreen hscreen top-0 left-0 z90 hidden fx-open-flex"
+  class="justify-center items-start p4 fixed wscreen hscreen top-0 left-0 z90 hidden fx-open-flex bg-transparent"
   aria-hidden="true"
 >
-  <dialog
+  <div
     data-modal-content
     data-enter-animation="fadeInScale .4s linear"
     data-exit-animation="fadeOutScale .1s linear"
@@ -260,5 +260,5 @@ import { users } from "@data/demo-users";
         </div>
       </div>
     </div>
-  </dialog>
-</div>
+  </div>
+</dialog>

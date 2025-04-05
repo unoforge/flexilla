@@ -68,38 +68,33 @@ class Tabs {
     this.indicatorOptions = this.options.indicatorOptions || DEFAULT_INDICATOR;
     const { defaultValue, animationOnShow } = this.options;
     this.defaultTabValue = defaultValue || this.tabsElement.dataset.defaultValue || this.getDefActivePanelValue(this.panelsContainer) || "";
-
     this.showAnimation = animationOnShow || this.tabsElement.dataset.showAnimation || "";
-
     const tabListWrapper = $d("[data-tab-list-wrapper]", this.tabsElement) || this.tabsElement
     this.tabList = $d("[data-tab-list]", tabListWrapper) as HTMLElement;
     const panels = $$("[data-tab-panel]", this.panelsContainer);
     this.tabPanels = panels.filter((panel) => panel.parentElement === this.panelsContainer)
-    if (!(this.tabList instanceof HTMLElement)) {
-      throw new Error("TabList Element is required, tabList must have a data-tab-list attribute and be direct descendant of the tabs or must be wrapped inside another element with data-tab-list-wrapper");
-    }
-    const isValidTabPanels = this.tabPanels.every(element => element instanceof HTMLElement)
-    if (!isValidTabPanels) {
-      throw new Error("TabPanels Element are required, tabPanels must have a data-tab-panel attribute and be direct descendant of the tabs or the panels container (data-panels-container)");
-    }
-
+    this.validateTabElements(this.tabList, this.tabPanels);
     this.tabTriggers = $$("[data-tabs-trigger]", this.tabList);
-
     if (this.tabTriggers.length <= 0) {
       throw new Error("No trigger found, Tab component must have at least one trigger");
     }
-
     const defaultActiveTrigger = $("[data-tabs-trigger][data-state=active]", this.tabList)
-
     this.activeTabTrigger = $(`[data-tabs-trigger][data-target='${this.defaultTabValue}']`, this.tabList) || defaultActiveTrigger || this.tabTriggers[0];
-
     const { transformEasing, transformDuration, className } = this.indicatorOptions;
-
     this.indicatorClassName = className || this.tabsElement.getAttribute("data-indicator-class-name") || "";
     this.indicatorTransformEaseing = transformEasing || this.tabsElement.dataset.indicatorTransformEasing || TRANSFORM_EASING;
     this.indicatorTransformDuration = transformDuration || parseInt(this.tabsElement.dataset.indicatorTransformDuration || "") || TRANSFORM_DURATION;
     this.initTabs();
-    FlexillaManager.register('tabs', this.tabsElement, this)
+  }
+
+  private validateTabElements(tabList: HTMLElement | null, tabPanels: HTMLElement[]) {
+    if (!(tabList instanceof HTMLElement)) {
+      throw new Error("TabList Element is required, tabList must have a data-tab-list attribute and be direct descendant of the tabs or must be wrapped inside another element with data-tab-list-wrapper");
+    }
+    const isValidTabPanels = tabPanels.every(element => element instanceof HTMLElement)
+    if (!isValidTabPanels) {
+      throw new Error("TabPanels Element are required, tabPanels must have a data-tab-panel attribute and be direct descendant of the tabs or the panels container (data-panels-container)");
+    }
   }
 
   private getDefActivePanelValue = (panelsContainer: HTMLElement) => {
@@ -124,6 +119,10 @@ class Tabs {
         tabList: this.tabList
       }
     );
+
+    this.tabsElement.addEventListener("reload-tab", this.reload);
+
+    FlexillaManager.register('tabs', this.tabsElement, this)
   }
   private handleGlobalTabChanges = (triggerElement: HTMLElement) => {
     const isCurrent = triggerElement.ariaSelected === "true" || this.activeTabTrigger === triggerElement
@@ -183,15 +182,21 @@ class Tabs {
     for (const trigger of this.tabTriggers) {
       this.cleanupSingle(trigger)
     }
+    this.tabsElement.removeEventListener("reload-tab", this.reload);
     FlexillaManager.removeInstance('tabs', this.tabsElement)
     this.tabTriggers = [];
     this.tabPanels = [];
-    this.activeTabTrigger = null as any;
-    this.tabList = null as any;
-    this.panelsContainer = null as any;
-    this.tabsElement = null as any;
-    this.options = null as any;
-    this.indicatorOptions = null as any;
+  }
+
+  reload = () => {
+    this.cleanup()
+    const tabListWrapper = $d("[data-tab-list-wrapper]", this.tabsElement) || this.tabsElement
+    this.tabList = $d("[data-tab-list]", tabListWrapper) as HTMLElement;
+    const panels = $$("[data-tab-panel]", this.panelsContainer);
+    this.tabPanels = panels.filter((panel) => panel.parentElement === this.panelsContainer)
+    this.validateTabElements(this.tabList, this.tabPanels);
+    this.tabTriggers = $$("[data-tabs-trigger]", this.tabList);
+    this.initTabs()
   }
 
 

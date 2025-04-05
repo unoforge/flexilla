@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/popover",
   "private": false,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "description": "A lightweight and customizable Popover component for displaying additional information on hover over elements in web applications.",
   "publishConfig": {
@@ -44,7 +44,7 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "dependencies": {
-    "@flexilla/create-overlay": "^0.0.0",
+    "@flexilla/create-overlay": "^0.1.0",
     "@flexilla/manager": "^0.0.0"
   },
   "keywords": [

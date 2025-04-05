@@ -134,10 +134,10 @@ class Offcanvas {
     }
 
     private closeWithEsc = (event: KeyboardEvent) => {
-        if (event.key === "Escape") { 
+        if (event.key === "Escape") {
             event.preventDefault()
             this.closeOffCanvas()
-         }
+        }
     }
 
 
@@ -161,9 +161,6 @@ class Offcanvas {
 
     /**
      * Opens the offcanvas element.
-     * This method will trigger the beforeShow callback if provided,
-     * show the backdrop if configured, and finally trigger the onShow callback.
-     * 
      * @example
      * ```ts
      * const offcanvas = new Offcanvas('#sidebar');
@@ -187,6 +184,10 @@ class Offcanvas {
      */
     close() {
         this.closeOffCanvas()
+    }
+
+    setOptions = ({ allowBodyscroll }: { allowBodyscroll?: boolean }) => {
+        if (allowBodyscroll !== undefined) this.allowBodyScroll = allowBodyscroll
     }
 
     /**

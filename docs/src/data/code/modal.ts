@@ -15,10 +15,10 @@ export const modalCode: SourceData = {
 <button data-modal-target="modal-alert1" class="bg-zinc8 text-white px4 py2 rd-lg text-sm">
     Open Modal
 </button>
-<div data-fx-modal aria-hidden="true" data-modal-id="modal-alert1"
+<dialog data-fx-modal aria-hidden="true" data-modal-id="modal-alert1"
     data-modal-overlay="ui-overlay bg-zinc8/70 backdrop-filter backdrop-blur-3xl" 
-    class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 z-80">
-    <dialog data-modal-content
+    class="inset-0 justify-center items-start hidden fx-open-flex p4 fixed wscreen hscreen top-0 left-0 z-80 bg-transparent">
+    <div data-modal-content
       class="relative bg-white dark-bg-zinc950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center">
       <div class="wmax p3 rd-full bg-red2 text-red6">
         <span class="flex i-carbon-trash-can text-lg"></span>
@@ -38,8 +38,8 @@ export const modalCode: SourceData = {
           Yes, Delete
         </button>
       </div>
-    </dialog>
-</div>`,
+    </div>
+</dialog>`,
                 },
                 {
                     id: "tab2",
@@ -50,10 +50,10 @@ export const modalCode: SourceData = {
 <button data-modal-target="modal-alert1" class="bg-zinc-800 text-white px-4 py-2 rounded-lg text-sm">
   Open Modal
 </button>
-<div data-fx-modal data-modal-id="modal-alert1" aria-hidden="true" 
+<dialog data-fx-modal data-modal-id="modal-alert1" aria-hidden="true" 
   data-modal-overlay="ui-overlay bg-zinc-800/70 backdrop-filter backdrop-blur-3xl" 
-  class="inset-0 justify-center items-start hidden fx-open:flex p-4 fixed w-screen h-screen top-0 left-0 z-[80]">
-  <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
+  class="inset-0 justify-center items-start hidden fx-open:flex p-4 fixed w-screen h-screen top-0 left-0 z-[80] bg-transparent">
+  <div data-modal-content data-enter-animation="fadeScale .4s linear"
     class="relative bg-white dark:bg-zinc-950 rounded-lg overflow-hidden w-full max-w-xl p-8 flex flex-col gap-y-4 items-center">
     <div class="w-max p-3 rounded-full bg-red-200 text-red-600">
       <svg class="size-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -75,8 +75,8 @@ export const modalCode: SourceData = {
         Yes, Delete
       </button>
     </div>
-  </dialog>
-</div>`,
+  </div>
+</dialog>`,
                 },
             ],
         },

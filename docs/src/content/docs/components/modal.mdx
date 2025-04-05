@@ -38,7 +38,7 @@ yarn add @flexilla/modal
 ### Markup Structure
 
 - `modal-trigger`: Element that trigger the modal, with the `data-modal-target` the value must be the targeted modal.
-- `modal-element`: The modal element, must have a `id`
+- `modal-element`: A valid HTMLDialog Element The modal element, must have a `id`
 - `data-modal-content` : The modal content
 - `data-close-modal` : any element inside the `modal-element` to close the modal
 
@@ -49,12 +49,12 @@ Here is a basic example of how to structure your modal and trigger elements in H
 <!-- Trigger Button -->
 <button data-modal-target="myModal" aria-haspopup="dialog">Open Modal</button>
 <!-- Modal Structure -->
-<div data-modal-id="myModal" role="dialog" aria-hidden="true">
+<dialog data-modal-id="myModal" role="dialog" aria-hidden="true">
   <div data-modal-content class="modal-content">
     <button data-close-modal class="modal-close-btn" aria-label="Close Modal">X</button>
     <p>This is the modal content!</p>
   </div>
-</div>
+</dialog>
 ```
 
 To add overlay
@@ -62,16 +62,16 @@ To add overlay
 - Adding a overlay element
 
 ```html
-<div data-modal-id="myModal" id="myModal" role="dialog" aria-hidden="true">
+<dialog data-modal-id="myModal" id="myModal" role="dialog" aria-hidden="true">
     <div data-modal-overlay></div>
     ...
-</div>
+</dialog>
 ```
 
 - Let it being create by the library
 
 ```html
-<div id="myModal" role="dialog" aria-hidden="true" data-modal-overlay="overlay classes">
+<dialog id="myModal" role="dialog" aria-hidden="true" data-modal-overlay="overlay classes">
 ```
 
 ### Example
@@ -142,10 +142,10 @@ animateContent: {
 `setting in data-attribute`
 
 ```html
-<div ...>
-    <dialog data-modal-content data-enter-animation="fadeScale .4s linear" ...>
-    </dialog>
-</div>
+<dialog ...>
+    <div data-modal-content data-enter-animation="fadeScale .4s linear" ...>
+    </div>
+</dialog>
 ```
 
 2. Animate on enter and exit
@@ -166,12 +166,12 @@ animateContent:{
 `setting in data-attribute`
 
 ```html
-<div ...>
-    <dialog data-modal-content 
+<dialog ...>
+    <div data-modal-content 
       data-enter-animation="slideIn .4s linear"
       data-exit-animation="slideOut .2s linear"  ...>
-    </dialog>
-</div>
+    </div>
+</dialog>
 ```
 
 ### `overlayClass`

@@ -21,7 +21,7 @@ const options: ModalOptions = {
 }
 
 const modalTry = document.querySelector("[data-modal-test-1b]")
-if (modalTry instanceof HTMLElement) {
+if (modalTry instanceof HTMLDialogElement) {
     new Modal(modalTry)
     modalTry.addEventListener("modal-open", () => {
         alert("Modal Opened")
