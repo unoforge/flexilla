@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.5",
-    "lerna": "^8.1.9",
+    "lerna": "^8.2.2",
     "vite-plugin-dts": "^4.5.3"
   }
 }
