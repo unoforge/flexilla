@@ -45,7 +45,6 @@ class CreateOverlay {
      * @param {string | HTMLElement} params.trigger - The trigger element selector or HTMLElement
      * @param {string | HTMLElement} params.content - The content element selector or HTMLElement
      * @param {OverlayOptions} [params.options] - Configuration options for the overlay
-     * @throws {Error} When trigger or content elements are invalid
      */
     constructor({ trigger, content, options = {} }: { trigger: string | HTMLElement, content: string | HTMLElement, options?: OverlayOptions }) {
 
@@ -195,10 +194,26 @@ class CreateOverlay {
     setPopperOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
         this.popper.setOptions({
             placement,
-            offsetDistance
+            offsetDistance: offsetDistance || this.offsetDistance
         })
     }
 
+    /**
+     * Updates the popper's trigger reference Element and options
+     * The new set trigger will be used as reference for the popper
+     */
+    setPopperTrigger = (trigger: HTMLElement, options: { placement?: Placement, offsetDistance?: number }) => {
+        this.cleanup()
+        this.popper.setOptions({
+            placement: options.placement || this.placement,
+            offsetDistance: options.offsetDistance || this.offsetDistance
+        })
+        this.triggerElement = trigger;
+        this.triggerElement.addEventListener("click", this.toggleStateOnClick)
+        if (this.triggerStrategy === "hover") {
+            this.triggerElement.addEventListener("mouseenter", this.showOnMouseEnter)
+        }
+    }
     /**
      * Hides the overlay
      * Removes event listeners and triggers related callbacks
@@ -252,7 +267,7 @@ class CreateOverlay {
     /**
      * Cleans up event listeners and related callbacks
      */
-    cleanup = ()=>{
+    cleanup = () => {
         this.triggerElement.removeEventListener("click", this.toggleStateOnClick)
         if (this.triggerStrategy === "hover") {
             this.triggerElement.removeEventListener("mouseenter", this.showOnMouseEnter)

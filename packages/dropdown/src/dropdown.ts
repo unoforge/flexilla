@@ -152,11 +152,26 @@ class Dropdown {
     }
 
     /**
-     * Updates the dropdown's placement and offset settings
+     * Updates the dropdown's placement and offset settings and show it
      * @param options - The new placement and offset options
      */
     setShowOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
         this.OverlayInstance.setShowOptions({ placement, offsetDistance })
+    }
+     /**
+     * Updates the dropdown's placement and offset settings
+     * @param options - The new placement and offset options
+     */
+     setOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
+        this.OverlayInstance.setPopperOptions({ placement, offsetDistance })
+    }
+
+    /**
+     * Updates the dropdown trigger reference Element and options
+     * The new set trigger will be used as reference for the Dropdown
+     */
+    setPopperTrigger = (trigger: HTMLElement, options: { placement?: Placement, offsetDistance?: number }) => {
+        this.OverlayInstance.setPopperTrigger(trigger, options)
     }
 
     /**
