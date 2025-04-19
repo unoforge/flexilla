@@ -80,8 +80,26 @@ class Popover {
 
         FlexillaManager.register("popover", this.contentElement, this)
     }
+
+
     setShowOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
         this.PopoverInstance.setShowOptions({ placement, offsetDistance })
+    }
+
+    /**
+     * Updates the Popover's placement and offset settings
+     * @param options - The new placement and offset options
+     */
+    setOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
+        this.PopoverInstance.setPopperOptions({ placement, offsetDistance })
+    }
+
+    /**
+     * Updates the Popover trigger reference Element and options
+     * The new set trigger will be used as reference for the Popover
+    */
+    setPopperTrigger = (trigger: HTMLElement, options: { placement?: Placement, offsetDistance?: number }) => {
+        this.PopoverInstance.setPopperTrigger(trigger, options)
     }
 
     show = () => {
