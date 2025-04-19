@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/tailwind-plugin",
   "private": false,
-  "version": "0.0.11",
+  "version": "0.0.12",
   "type": "module",
   "description": "Variants for data attributes, and Custom utility classes for flexiwind",
   "publishConfig": {
