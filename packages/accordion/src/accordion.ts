@@ -1,6 +1,6 @@
 import type { AccordionOptions, AccordionType } from "./types";
 import { getAccordionItemMetadata } from "./util";
-import { $, $$, $d, dispatchCustomEvent } from "@flexilla/utilities";
+import { $, $$, $d, dispatchCustomEvent, observeChildrenChanges } from "@flexilla/utilities";
 import { initKeyEvents, expandCollapseElement } from "./helpers";
 import { FlexillaManager } from "@flexilla/manager"
 
@@ -23,6 +23,7 @@ export default class Accordion {
     private options!: AccordionOptions;
     private items!: HTMLElement[];
     private eventListeners: Array<{ element: HTMLElement; type: string; listener: EventListener }> = [];
+    private cleanupObserver: (() => void) | null = null;
 
     /**
      * Creates an instance of Accordion
@@ -76,9 +77,13 @@ export default class Accordion {
         this.accordionEl.addEventListener("keydown", handleKeyEvents);
         this.eventListeners.push({ element: this.accordionEl, type: "keydown", listener: handleKeyEvents as EventListener });
 
-        this.accordionEl.addEventListener('reload-accordion', this.reload)
-
         FlexillaManager.register("accordion", this.accordionEl, this)
+
+        this.cleanupObserver = observeChildrenChanges({
+            container: this.accordionEl,
+            attributeToWatch: 'data-accordion-item',
+            onChildAdded: this.reload
+        });
     }
 
     reload = () => {
@@ -86,8 +91,29 @@ export default class Accordion {
         this.items = $$("[data-accordion-item]", this.accordionEl).filter((item: HTMLElement) => item.parentElement && item.parentElement === this.accordionEl);
         this.initAccordion()
     }
+    destroy() {
+        if (!this.accordionEl) return;
+        this.items.forEach(item => {
+            if (item && item.hasAttribute('data-state')) {
+                item.removeAttribute('data-state');
+            }
+        });
 
+        this.eventListeners.forEach(({ element, type, listener }) => {
+            if (element && element.removeEventListener) {
+                element.removeEventListener(type, listener);
+            }
+        });
 
+        this.eventListeners = [];
+        this.items = [];
+        FlexillaManager.removeInstance('accordion', this.accordionEl);
+
+        if (this.cleanupObserver) {
+            this.cleanupObserver();
+            this.cleanupObserver = null;
+        }
+    }
 
     private setItemState(item: HTMLElement, state: "open" | "close", onInit?: boolean) {
         item.setAttribute("data-state", state);
@@ -203,7 +229,7 @@ export default class Accordion {
         * const accordion = new Accordion('#myAccordion');
         * accordion.hide('section1'); // Collapses the accordion item with value="section1"
         * ```
-        */
+    */
     public hide(id: string) {
         const item = $d(`[data-accordion-item][data-accordion-value="${id}"]`, this.accordionEl)
         if (!item) return;
@@ -245,10 +271,14 @@ export default class Accordion {
             }
         });
 
+        if (this.cleanupObserver) {
+            this.cleanupObserver();
+            this.cleanupObserver = null;
+        }
+
         this.eventListeners = [];
         this.items = [];
         FlexillaManager.removeInstance('accordion', this.accordionEl);
-        this.accordionEl.removeEventListener('reload-accordion', this.reload)
     }
 
     /**
