@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/tabs",
   "private": false,
-  "version": "2.1.1",
+  "version": "2.2.0",
   "type": "module",
   "description": "A versatile tabs component for organizing content in a tabbed interface, enhancing user navigation.",
   "publishConfig": {
