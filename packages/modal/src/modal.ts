@@ -19,7 +19,7 @@ class Modal {
     private modalElement: HTMLDialogElement
     private modalId!: string
     private modalContent!: HTMLElement
-    private triggerButton?: HTMLElement | null
+    private triggerButtons: HTMLElement[] = [] // Changed from single trigger to array
     private overlayElement!: HTMLElement | null
     private dispatchEventToDocument!: boolean
     private options: ModalOptions
@@ -40,9 +40,9 @@ class Modal {
      * Creates a new Modal instance
      * @param modal - The modal element or selector string to initialize
      * @param options - Configuration options for the modal behavior
-     * @param triggerElement - Optional trigger element or selector that opens the modal
+     * @param triggerElements - Optional trigger elements or selectors that open the modal
      */
-    constructor(modal: string | HTMLDialogElement, options: ModalOptions = {}, triggerElement?: string | HTMLElement) {
+    constructor(modal: string | HTMLDialogElement, options: ModalOptions = {}, triggerElements?: string | HTMLElement | (string)[]) {
         const modalElement = typeof modal === "string" ? $(modal) : modal
         if (!(modalElement instanceof HTMLDialogElement)) throw new Error("Modal element not found or invalid. Please provide a valid HTMLDialogElement or selector.")
 
@@ -67,8 +67,9 @@ class Modal {
         const modalId = modalElement.dataset.modalId;
         this.modalId = `${modalId}`
 
-        const triggerButton = (typeof triggerElement === "string" ? $(triggerElement) : triggerElement) || $(`[data-modal-target='${modalId}']`) || $(`[data-modal-trigger][data-modal-id='${modalId}']`);
-        this.triggerButton = triggerButton
+        // Handle multiple triggers
+        this.initializeTriggers(triggerElements, modalId);
+
         this.dispatchEventToDocument = this.options.dispatchEventToDocument || true
 
         this.initModal(this.modalElement, this.options)
@@ -112,6 +113,7 @@ class Modal {
 
     private initModal = (modalElement: HTMLDialogElement, options: ModalOptions) => {
         if (!(modalElement instanceof HTMLDialogElement)) throw new Error("Modal Element must be a valid HTMLDialog Element");
+        
         const { allowBodyScroll, animateContent, preventCloseModal, overlayClass, enableStackedModals } = options;
         this.allowBodyScroll = (modalElement.hasAttribute("data-allow-body-scroll") && modalElement.getAttribute("data-allow-body-scroll") !== "false") || allowBodyScroll || false
         this.preventCloseModal = modalElement.hasAttribute("data-prevent-close-modal") && modalElement.getAttribute("data-prevent-close-modal") !== "false" || preventCloseModal || false
@@ -139,8 +141,39 @@ class Modal {
         this.hideModal()
     }
 
+    private initializeTriggers(triggerElements?: string | HTMLElement | string[], modalId?: string) {
+        if (!triggerElements && modalId) {
+            // Look for default triggers if none provided
+            const defaultTriggers = $$(`[data-modal-target='${modalId}'], [data-modal-trigger][data-modal-id='${modalId}']`);
+            this.triggerButtons = defaultTriggers as HTMLElement[];
+            return;
+        }
+
+        if (!triggerElements) return;
+
+ 
+        const triggers = Array.isArray(triggerElements) ? triggerElements : [triggerElements];
+        
+        this.triggerButtons = triggers.map(trigger => {
+            if (typeof trigger === "string") {
+                const element = $(trigger);
+                if (!(element instanceof HTMLElement)) {
+                    throw new Error(`Trigger element not found: ${trigger}`);
+                }
+                return element;
+            }
+            if (!(trigger instanceof HTMLElement)) {
+                throw new Error("Invalid trigger element provided");
+            }
+            return trigger;
+        });
+    }
+
     private addEvents = () => {
-        if (this.triggerButton instanceof HTMLElement) this.triggerButton.addEventListener("click", this.showModal);
+        for (const triggerButton of this.triggerButtons) {
+            triggerButton.addEventListener("click", this.showModal);
+        }
+
         if (this.closeButtons.length > 0) {
             for (const closeButton of this.closeButtons) {
                 closeButton.addEventListener("click", this.closeModalOnX);
@@ -238,9 +271,8 @@ class Modal {
                 if (hasExitAnimation) this.modalContent.style.removeProperty("--un-modal-animation");
                 this.closeModal()
                 this.closeLastAction()
-                this.modalElement.close('modal-closed')
                 if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
-                if(this.triggerButton) this.triggerButton.blur()
+                this.modalElement.close('modal-closed')
             }
         })
     }
@@ -248,7 +280,11 @@ class Modal {
      * Cleanup modal Instance
     */
     cleanup = () => {
-        if (this.triggerButton instanceof HTMLElement) this.triggerButton.removeEventListener("click", this.showModal);
+        // Remove event listeners from all trigger buttons
+        for (const triggerButton of this.triggerButtons) {
+            triggerButton.removeEventListener("click", this.showModal);
+        }
+
         if (this.closeButtons.length > 0) {
             for (const closeButton of this.closeButtons) {
                 closeButton.removeEventListener("click", this.closeModalOnX);
@@ -280,7 +316,7 @@ class Modal {
     /**
      * Creates and initializes a new Modal instance
      */
-    static init = (modal: string | HTMLDialogElement, options: ModalOptions = {}, triggerElement?: string | HTMLElement): Modal => new Modal(modal, options, triggerElement)
+    static init = (modal: string | HTMLDialogElement, options: ModalOptions = {}, triggerElements?: string | HTMLElement | string[]): Modal => new Modal(modal, options, triggerElements)
 }
 
 export default Modal

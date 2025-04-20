@@ -12,6 +12,7 @@ const options: ModalOptions = {
     },
     beforeHide: () => {
         if (isFailed) {
+            alert("You can't close this modal this time")
             isFailed = false
             return { cancelAction: true }
         }
