@@ -1,4 +1,10 @@
-import { $, $$, $d, dispatchCustomEvent } from "@flexilla/utilities";
+import { 
+    $, 
+    $$, 
+    $d, 
+    dispatchCustomEvent,
+    observeChildrenChanges 
+} from "@flexilla/utilities";
 import type { IndicatorOptions, TabsOptions } from "./types";
 import { DEFAULT_INDICATOR, TRANSFORM_DURATION, TRANSFORM_EASING } from "./const";
 import { createIndicator } from "./indicator";
@@ -35,7 +41,8 @@ class Tabs {
   private indicatorClassName!: string;
   private indicatorTransformEaseing!: string;
   private indicatorTransformDuration!: number;
-  private panelsContainer!: HTMLElement
+  private panelsContainer!: HTMLElement;
+  private cleanupObserver: (() => void) | null = null;
 
   /**
    * Tabs Components
@@ -50,7 +57,6 @@ class Tabs {
    * @param {string} [options.defaultValue] - The initial active tab panel's ID.
    * @param {string} [options.animationOnShow] - Animation class to apply when showing tab panels.
    * @param {IndicatorOptions} [options.indicatorOptions] - Configuration for the tab indicator.
-   * @throws {Error} When invalid elements are provided or required elements are missing.
    */
   constructor(tabs: string | HTMLElement, options: TabsOptions = {}) {
     const tabsElement = typeof tabs === "string" ? $(tabs) : tabs
@@ -120,7 +126,12 @@ class Tabs {
       }
     );
 
-    this.tabsElement.addEventListener("reload-tab", this.reload);
+    // Initialize observer
+    this.cleanupObserver = observeChildrenChanges({
+      container: this.panelsContainer,
+      attributeToWatch: 'data-tab-panel',
+      onChildAdded: this.reload
+    });
 
     FlexillaManager.register('tabs', this.tabsElement, this)
   }
@@ -182,7 +193,13 @@ class Tabs {
     for (const trigger of this.tabTriggers) {
       this.cleanupSingle(trigger)
     }
-    this.tabsElement.removeEventListener("reload-tab", this.reload);
+    
+    // Clean up the observer
+    if (this.cleanupObserver) {
+      this.cleanupObserver();
+      this.cleanupObserver = null;
+    }
+    
     FlexillaManager.removeInstance('tabs', this.tabsElement)
     this.tabTriggers = [];
     this.tabPanels = [];
