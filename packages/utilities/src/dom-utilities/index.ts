@@ -140,4 +140,48 @@ export const afterAnimation = ({ element, callback, }: { element: HTMLElement; c
 export const dispatchCustomEvent = <T extends object>(element: HTMLElement, eventName: string, detail: T): void => {
 	const customEvent = new CustomEvent<T>(eventName, { detail });
 	element.dispatchEvent(customEvent);
-}
+};
+
+/**
+ * Creates a MutationObserver to watch for changes in child elements with specific attributes.
+ * 
+ * @param {Object} params - The parameters object
+ * @param {HTMLElement} params.container - The container element to observe
+ * @param {string} params.attributeToWatch - The data attribute to watch for (e.g., 'data-tab-panel')
+ * @param {() => void} params.onChildAdded - Callback function to execute when a matching child is added
+ * ```
+ */
+export const observeChildrenChanges = ({
+	container,
+	attributeToWatch,
+	onChildAdded
+}: {
+	container: HTMLElement;
+	attributeToWatch: string;
+	onChildAdded: () => void;
+}) => {
+	const observer = new MutationObserver((mutations) => {
+		for (const mutation of mutations) {
+			if (mutation.type === 'childList') {
+				const addedNodes = Array.from(mutation.addedNodes);
+				const hasNewElement = addedNodes.some(node => 
+					node instanceof HTMLElement && 
+					node.hasAttribute(attributeToWatch)
+				);
+				
+				if (hasNewElement) {
+					onChildAdded();
+					break;
+				}
+			}
+		}
+	});
+
+	observer.observe(container, {
+		childList: true,
+	});
+
+	return () => {
+		observer.disconnect();
+	};
+};

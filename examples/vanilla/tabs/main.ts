@@ -79,6 +79,7 @@ const addNewTab = (tabEl: HTMLElement) => {
         newPanel.className = 'hidden fx-active-flex ring-offset-zinc950 p20 focus-visible-outline-none focus-visible-ring-2 focus-visible-ring-red5 focus-visible-ring-offset-2 b b-zinc2 dark-b-zinc8 rd-md mt2';
         newPanel.textContent = `Tab ${id} Content`;
         panelsContainer.appendChild(newPanel);
+        // The observer will automatically trigger reload
     }
 
     id++;
@@ -88,10 +89,8 @@ const addNewTab = (tabEl: HTMLElement) => {
 const trigger = document.querySelector("[data-add-new-tab]") as HTMLButtonElement
 
 if (trigger) {
-    const tabComp =new Tabs(tab)
+    new Tabs(tab);
     trigger.addEventListener("click", () => {
-        addNewTab(tab)
-        // tabComp.reload()
-        tab.dispatchEvent(new CustomEvent('reload-tab'))
-    })
+        addNewTab(tab);
+    });
 }
