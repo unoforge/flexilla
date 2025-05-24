@@ -1,6 +1,6 @@
 ---
 title: Navbar toggle
-description: A usefull function to create easily an interactive navbar
+description: A useful function to easily create an interactive navbar.
 ---
 
 The `toggleNavbar` function creates a toggle mechanism specifically for navigational elements, with optional overlay functionality.
@@ -55,10 +55,7 @@ For the `toggleNavbar` function to work correctly, your HTML should have the fol
 
 1. It sets up a click event listener on a trigger element (identified by `data-nav-trigger` and `data-toggle-nav` attributes)
 2. When clicked, it toggles the `data-state` attribute of the navbar between "open" and "close"
-3. It updates the `data-expanded` attribute of the trigger element
+3. It updates the `aria-expanded` attribute of the trigger element
 5. If an overlay element exists (identified by `data-navbar-id`), it manages its visibility
 6. It sets up click events to close the navbar when clicking on the navbar itself or the overlay (if not static)
 7. It calls the `onToggle` callback (if provided) with the current toggle state
-
-
-## Example

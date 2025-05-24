@@ -36,7 +36,7 @@ yarn add @flexilla/popover
 
 ### Popover Structure
 
-- `popover-trigger`: Element that triggers the popover (e.g., on click or hover), with the `data-popover-trigger` and `data-popover-id` attributes.
+- `popover-trigger`: Element that triggers the popover (e.g., on click or hover), with the `data-popover-trigger` and `data-popover-target` attribute.
 - `popover-content`: The content of the popover, with the `id` attribute.
 
 ### Example
@@ -76,6 +76,29 @@ yarn add @flexilla/popover
 </TabCodeGroup>
 </PreviewTopCodeBottom>
 
+### Core Styling Requirements
+
+The content element (e.g., the `div` with `id="popover-example"`) requires specific CSS properties for correct positioning if you are not using the Flexilla UnoCSS preset or the Flexilla Tailwind CSS plugin (which provide a `ui-popper` utility class).
+
+If you are styling manually, ensure the following CSS is applied to your popover content element:
+
+```css
+.your-popover-content-class { /* Or apply directly to the ID #popover-example */
+  position: fixed;
+  top: var(--fx-popper-placement-y);
+  left: var(--fx-popper-placement-x);
+  /* Other styles like width, background, z-index, etc., as needed */
+}
+```
+
+**Explanation:**
+- `position: fixed;`: This is essential for positioning the element relative to the viewport.
+- `top: var(--fx-popper-placement-y);`: Flexilla calculates the vertical position and exposes it via this CSS custom property.
+- `left: var(--fx-popper-placement-x);`: Flexilla calculates the horizontal position and exposes it via this CSS custom property.
+
+If you are using the Flexilla UnoCSS preset or Tailwind plugin, adding the `ui-popper` class to your content element handles these requirements automatically. For example:
+`<div id="popover-example" class="ui-popper ...other-styles">...</div>`
+
 ### Initializing the Component
 
 To initialize the component, import `Popover` and create an instance:
@@ -110,10 +133,10 @@ type PopoverOptions = {
 ```
 
 <Callout type="note">
-Note: Some options can be passed throught data-* attributes
+Note: Some options can be passed through data-* attributes
 - defaultState : `data-default-state="Here the state"`
 - triggerStrategy : `data-trigger-strategy=""`
-Follow this for other too, exept for Callbacks and popper.
+Follow this for others too, except for Callbacks and popper.
 </Callout>
 
 ### Event Effect Options
@@ -217,9 +240,9 @@ You can use this to change the popover Element behavior with CSS (hide, show)
 
 ### `aria-expanded` Attribute
 
-The `aria-expanded` attribute indicate if the trigger is expanded or not, if expanded true then normal the data-state is open too.
+The `aria-expanded` attribute indicates if the trigger is expanded. If aria-expanded is true, then typically the data-state will also be open.
 
-You use it in CSS like to animate the indicator inside the trigger or something else
+You can use it in CSS, for example, to animate an indicator within the trigger.
 ```css
 .myPopover-trigger[aria-expanded=true] .icon-indicator{
   /* style here  */
@@ -231,7 +254,7 @@ You use it in CSS like to animate the indicator inside the trigger or something 
 
 ### `init(/*options*/)`
 
-You can use the Static method if you don't like to use `new Popover(/*options*/)` syntax
+You can use the static method if you don't like to use `new Popover(/*options*/)` syntax
 
 ```js
 Popover.init("#myPopover", {/* options */})

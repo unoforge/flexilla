@@ -4,6 +4,14 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/flexilla" target="_blank"><img src="https://img.shields.io/npm/v/flexilla?label=npm%20package" alt="NPM Version"></a>
+  <a href="https://github.com/unoforge/flexilla/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/unoforge/flexilla" alt="License"></a>
+  <a href="https://discord.gg/6VN6zTPZAy" target="_blank"><img src="https://img.shields.io/discord/1054019510290329620?label=discord" alt="Discord"></a>
+  <a href="https://www.npmjs.com/package/flexilla" target="_blank"><img src="https://img.shields.io/npm/dm/flexilla" alt="Monthly Downloads"></a>
+  <a href="https://github.com/unoforge/flexilla/commits/main" target="_blank"><img src="https://img.shields.io/github/last-commit/unoforge/flexilla" alt="Last Commit"></a>
+</p>
+
 # Flexilla
 
 Flexilla is an open-source library of unstyled, interactive UI components designed for building accessible, customizable user interfaces. Use Flexilla to add interactivity to your UI with ease.
@@ -17,7 +25,7 @@ Flexilla provides a collection of unstyled components that you can integrate int
 
 ## Contributing
 
-We welcome contributions! To get started, please review our [contributing guide](CONTRIBUTING.MD) before submitting a pull request.
+We welcome contributions! To get started, please review our [contributing guide](CONTRIBUTING.MD) and our [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a pull request.
 
 ## Maintainers
 

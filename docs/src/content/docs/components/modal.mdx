@@ -37,10 +37,10 @@ yarn add @flexilla/modal
 
 ### Markup Structure
 
-- `modal-trigger`: Element that trigger the modal, with the `data-modal-target` the value must be the targeted modal.
+- `modal-trigger`: Element that triggers the modal, with the `data-modal-target` the value must be the targeted modal.
 - `modal-element`: A valid HTMLDialog Element The modal element, must have a `id`
-- `data-modal-content` : The modal content
-- `data-close-modal` : any element inside the `modal-element` to close the modal
+- `data-modal-content`: The modal content
+- `data-close-modal`: any element inside the `modal-element` to close the modal
 
 
 Here is a basic example of how to structure your modal and trigger elements in HTML:
@@ -68,7 +68,7 @@ To add overlay
 </dialog>
 ```
 
-- Let it being create by the library
+- Let it be created by the library
 
 ```html
 <dialog id="myModal" role="dialog" aria-hidden="true" data-modal-overlay="overlay classes">
@@ -106,7 +106,7 @@ Define CSS animations for the modal content when showing and hiding the modal. Y
 - **Type**: `ModalContentAnimations`
 - **Example**:
 
-- **Requirement** : to make work you need to set this CSS to the modal content element
+- **Requirement**: For this to work, you need to set the following CSS on the modal content element:
 
 ```css
 /* do this if you want to add animation on enter and exit */
@@ -154,7 +154,7 @@ animateContent: {
 <ModalAnimatedBoth/>
 </PreviewBox>
 
-`Setting Option`
+`Setting in Options`
 
 ```ts
 animateContent:{
@@ -277,19 +277,19 @@ const modal = new Modal('#myModal', {
 
 ## Methods
 
-### `open()`
+### `showModal()`
 
 Programmatically opens the modal.
 
 ```js
-modal.open();
+modal.showModal();
 ```
 
-### `close()`
+### `hideModal()`
 
 Programmatically closes the modal.
 
 ```js
-modal.close();
+modal.hideModal();
 ```
 
