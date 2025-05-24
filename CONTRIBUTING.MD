@@ -30,9 +30,18 @@ Take a look at :
 
 #### Tools
 
+1. [Nx (https://nx.dev/)](https://nx.dev/)
 2. [Vite JS](https://vite.dev/)
 3. [Lerna](https://lerna.js.org/)
 
+
+## Testing Your Changes
+
+We value high-quality contributions. To ensure the stability and reliability of Flexilla, please follow these testing guidelines:
+
+*   **Test thoroughly:** Before submitting your changes, test them comprehensively to ensure they work as expected and don't introduce new issues.
+*   **Add or update tests:** If you're contributing a new feature or fixing a bug, please add new tests or update existing ones to cover your changes. This helps us maintain code quality and prevent regressions. (Even if a formal testing suite isn't fully established, this sets the expectation for future development).
+*   **Ensure existing tests pass:** Make sure all existing tests pass before submitting your pull request. This helps us catch any unintended side effects of your changes.
 
 ## commit-convention
 
