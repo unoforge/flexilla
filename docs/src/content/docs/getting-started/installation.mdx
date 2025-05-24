@@ -3,15 +3,13 @@ title: Installation
 description: This guide will show How to install Flexilla In your New or Existing Project
 ---
 
-## Quick setup
-
 This guide will help you get started with Flexilla
 
 ## Install via npm
 
 <Stepper>
 <Step>
-### Install the full Libary
+### Install the Full Library
 
 ```bash
 npm i @flexilla/flexilla
@@ -38,7 +36,7 @@ const tabs = new  Tabs("#my-tabs",{
 <Stepper>
 <Step>
 
-### Install the full Libary
+### Example: Install a Single Component
 
 ```bash
 npm i @flexilla/collapse
@@ -51,7 +49,7 @@ npm i @flexilla/collapse
 ```js
 import {Collapse} from "@flexilla/collapse"
 
-new Accordion("#my-collapse",{
+new Collapse("#my-collapse",{
     // options
 })
 ```
@@ -78,7 +76,7 @@ new Accordion("#myAccordion")
 </script>
 ```
 
-### Import a single Package
+### Import a Single Package
 
 ```html
 <script type="module">
@@ -100,7 +98,11 @@ new Accordion("#myAccordion")
 
 ## Styling
 
+Flexilla is headless and does not come with built-in styles. You will need to apply your own CSS or use a framework like Tailwind CSS or UnoCSS. See the dedicated styling guides for more information:
+- [CSS Styling](/docs/styling/css)
+- [UnoCSS Preset](/docs/styling/unocss)
+- [Tailwind CSS Plugin](/docs/styling/tailwind)
 
 ## Quick Start Examples
 
-Checkout these quick start examples to get a feel of Flexilla [here](https://github.com/unoforge/flexilla/tree/main/examples)
+Check out these quick start examples to get a feel of Flexilla [here](https://github.com/unoforge/flexilla/tree/main/examples)

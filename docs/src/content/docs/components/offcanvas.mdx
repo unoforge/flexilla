@@ -34,14 +34,11 @@ yarn add @flexilla/offcanvas
 
 ## Structure
 
-### HTML Markup
-
-
 ### Markup Structure
 
-- `offcanvas-trigger`: Element that trigger the Offcanvas, with `data-offcanvas-trigger` and `data-target` attributes, the value of `data-target` must be the targeted offcanvas.
-- `offcanvas-element`: The modal element, must have a `id`
-- `close-offcanvas-elements` : any element inside the `offcanvas-element` with `data-offcanvas-close` attribute
+- `offcanvas-trigger`: Element that triggers the Offcanvas, with `data-offcanvas-trigger` and `data-target` attributes, the value of `data-target` must be the targeted offcanvas.
+- `offcanvas-element`: The offcanvas element, must have an `id`
+- `close-offcanvas-elements`: any element inside the `offcanvas-element` with `data-offcanvas-close` attribute
 
 
 Here is a basic example of how to structure your offcanvas/SliderOver and trigger elements in HTML:
@@ -242,18 +239,18 @@ const offcanvas = new Offcanvas('#myOffcanvas', {
 
 ## Methods
 
-### `open()`
+### `show()`
 
 Programmatically opens the offcanvas.
 
 ```js
-offcanvas.open();
+offcanvas.show();
 ```
 
-### `close()`
+### `hide()`
 
 Programmatically closes the offcanvas.
 
 ```js
-offcanvas.close();
+offcanvas.hide();
 ```
