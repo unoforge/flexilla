@@ -1,5 +1,5 @@
 import { DropdownOptions } from "./types"
-import { CreateOverlay, type Placement } from "@flexilla/create-overlay"
+import { CreateOverlay, type Placement } from "flexipop/create-overlay"
 import { $$, $, keyboardNavigation, dispatchCustomEvent } from "@flexilla/utilities"
 import { FlexillaManager } from "@flexilla/manager"
 

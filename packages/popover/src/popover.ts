@@ -1,7 +1,6 @@
 import type { PopoverOptions } from "./types"
-import { type Placement } from 'flexipop'
+import { CreateOverlay, type Placement } from 'flexipop/create-overlay'
 import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
-import { CreateOverlay } from "@flexilla/create-overlay"
 import { FlexillaManager } from "@flexilla/manager"
 
 /**

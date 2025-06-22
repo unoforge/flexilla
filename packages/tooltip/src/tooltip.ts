@@ -1,4 +1,4 @@
-import { CreateOverlay, type Placement } from "@flexilla/create-overlay"
+import { CreateOverlay, type Placement } from "flexipop/create-overlay"
 import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
 import type { TooltipOptions } from "./types"
 import { FlexillaManager } from "@flexilla/manager"
