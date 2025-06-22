@@ -1,12 +1,13 @@
 {
   "name": "@flexilla/create-overlay",
   "private": false,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
-  "description": "Flexipop wrapper for Flexilla Overlay components (tooltip, popover, dropdown)",
+  "description": "[DEPRECATED] Flexipop wrapper for Flexilla Overlay components (tooltip, popover, dropdown). This package is now directly included in the flexipop library.",
   "publishConfig": {
     "access": "public"
   },
+  "deprecated": "This package is deprecated. The functionality is now directly included in the flexipop library.",
   "main": "./dist/create-overlay.js",
   "module": "./dist/create-overlay.js",
   "types": "./dist/create-overlay.d.ts",

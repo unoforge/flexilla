@@ -5,10 +5,9 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/flexilla" target="_blank"><img src="https://img.shields.io/npm/v/flexilla?label=npm%20package" alt="NPM Version"></a>
+  <a href="https://www.npmjs.com/package/@flexilla/flexilla" target="_blank"><img src="https://img.shields.io/npm/v/@flexilla/flexilla?label=npm%20package" alt="NPM Version"></a>
   <a href="https://github.com/unoforge/flexilla/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/unoforge/flexilla" alt="License"></a>
-  <a href="https://discord.gg/6VN6zTPZAy" target="_blank"><img src="https://img.shields.io/discord/1054019510290329620?label=discord" alt="Discord"></a>
-  <a href="https://www.npmjs.com/package/flexilla" target="_blank"><img src="https://img.shields.io/npm/dm/flexilla" alt="Monthly Downloads"></a>
+  <a href="https://www.npmjs.com/package/@flexilla/flexilla" target="_blank"><img src="https://img.shields.io/npm/dm/@flexilla/flexilla" alt="Monthly Downloads"></a>
   <a href="https://github.com/unoforge/flexilla/commits/main" target="_blank"><img src="https://img.shields.io/github/last-commit/unoforge/flexilla" alt="Last Commit"></a>
 </p>
 
