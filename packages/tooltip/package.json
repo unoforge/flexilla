@@ -43,8 +43,8 @@
     "vite-plugin-dts": "^4.5.3"
   },
   "dependencies": {
-    "@flexilla/create-overlay": "^0.2.0",
-    "@flexilla/manager": "^0.1.0"
+    "@flexilla/manager": "^0.1.0",
+    "flexipop": "^0.2.0"
   },
   "keywords": [
     "popper",
