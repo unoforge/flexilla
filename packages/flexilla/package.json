@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/flexilla",
   "private": false,
-  "version": "2.2.0",
+  "version": "2.2.1",
   "type": "module",
   "description": "A set of unstyled interactive components for building interactive, and customizable user interfaces. Open-Source",
   "publishConfig": {
@@ -47,12 +47,12 @@
     "@flexilla/collapse": "^2.1.4",
     "@flexilla/custom-range": "^2.0.11",
     "@flexilla/dismissible": "^2.0.11",
-    "@flexilla/dropdown": "^2.1.3",
+    "@flexilla/dropdown": "^2.2.0",
     "@flexilla/modal": "^2.2.0",
     "@flexilla/offcanvas": "^2.0.14",
     "@flexilla/popover": "^0.0.2",
     "@flexilla/tabs": "^2.2.0",
-    "@flexilla/tooltip": "^2.2.0"
+    "@flexilla/tooltip": "^2.3.0"
   },
   "devDependencies": {
     "typescript": "^5.8.3",
