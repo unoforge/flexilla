@@ -50,7 +50,7 @@
     "@flexilla/dropdown": "^2.2.0",
     "@flexilla/modal": "^2.2.0",
     "@flexilla/offcanvas": "^2.0.14",
-    "@flexilla/popover": "^0.0.2",
+    "@flexilla/popover": "^0.3.0",
     "@flexilla/tabs": "^2.2.0",
     "@flexilla/tooltip": "^2.3.0"
   },
