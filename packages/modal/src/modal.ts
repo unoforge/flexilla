@@ -1,9 +1,12 @@
 
-import { ModalContentAnimations, ModalOptions } from "./types";
+import {  ModalContentAnimations, ModalOptions } from "./types";
 import { setBodyScrollable, toggleModalState } from "./helpers";
 import { $, $$, afterAnimation, dispatchCustomEvent } from "@flexilla/utilities";
 import { FlexillaManager } from "@flexilla/manager"
 import { buildOverlay, destroyOverlay } from "./modalOverlay";
+import { domTeleporter } from "@flexilla/utilities"
+
+
 
 /**
  * Modal Component - A flexible and customizable modal dialog implementation
@@ -35,6 +38,11 @@ class Modal {
     private overlayClassName!: string[] | ""
     private allowBodyScroll?: boolean
     private initAsOpen?: boolean
+    private teleporter!: {
+        append: () => void;
+        remove: () => void;
+        restore: () => void;
+    }
 
     /**
      * Creates a new Modal instance
@@ -67,6 +75,9 @@ class Modal {
         const modalId = modalElement.dataset.modalId;
         this.modalId = `${modalId}`
 
+        this.teleporter = domTeleporter(this.modalElement, document.body, "move")
+
+
         // Handle multiple triggers
         this.initializeTriggers(triggerElements, modalId);
 
@@ -83,8 +94,15 @@ class Modal {
             this.modalElement.setAttribute("aria-hidden", "true");
             this.modalElement.setAttribute("data-state", "close");
         }
+
+        this.moveElOnInit()
         FlexillaManager.register('modal', this.modalElement, this)
     }
+
+    private moveElOnInit = () => {
+        this.teleporter.append()
+    }
+
 
     private closeAll = (currentModal: HTMLElement) => {
         if (this.enableStackedModals) return
@@ -113,7 +131,7 @@ class Modal {
 
     private initModal = (modalElement: HTMLDialogElement, options: ModalOptions) => {
         if (!(modalElement instanceof HTMLDialogElement)) throw new Error("Modal Element must be a valid HTMLDialog Element");
-        
+
         const { allowBodyScroll, animateContent, preventCloseModal, overlayClass, enableStackedModals } = options;
         this.allowBodyScroll = (modalElement.hasAttribute("data-allow-body-scroll") && modalElement.getAttribute("data-allow-body-scroll") !== "false") || allowBodyScroll || false
         this.preventCloseModal = modalElement.hasAttribute("data-prevent-close-modal") && modalElement.getAttribute("data-prevent-close-modal") !== "false" || preventCloseModal || false
@@ -151,9 +169,9 @@ class Modal {
 
         if (!triggerElements) return;
 
- 
+
         const triggers = Array.isArray(triggerElements) ? triggerElements : [triggerElements];
-        
+
         this.triggerButtons = triggers.map(trigger => {
             if (typeof trigger === "string") {
                 const element = $(trigger);
