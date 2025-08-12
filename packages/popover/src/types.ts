@@ -1,5 +1,15 @@
 import { OverlayOptions } from "@flexilla/create-overlay"
 
+export type ExperimentaOptions = {
+    /** Whether to teleport the dropdown content to the body or not
+     * @default false
+     */
+    teleport: boolean,
+    /** Whether to move the dropdown content to the body and remove it in DOM when not used anymore or not
+     * @default "detachable"
+     */
+    teleportMode?: "move" | "detachable",
+}
 /**
  * Configuration options for controlling event-based behaviors
  */
@@ -13,4 +23,6 @@ export type EventEffect = {
 /**
  * Configuration options for the Popover component
  */
-export type PopoverOptions = OverlayOptions
+export type PopoverOptions = OverlayOptions & {
+    experimental?: ExperimentaOptions
+}

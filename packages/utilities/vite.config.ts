@@ -13,7 +13,8 @@ export default defineConfig({
         toggler: resolve(__dirname, 'src/toggler/index.ts'),
         selector: resolve(__dirname, 'src/selector/index.ts'),
         'dom-utilities': resolve(__dirname, 'src/dom-utilities/index.ts'),
-        'scroll-to-top': resolve(__dirname, 'src/scroll-to-top.ts')
+        'scroll-to-top': resolve(__dirname, 'src/scroll-to-top.ts'),
+        'dom-teleport': resolve(__dirname, 'src/dom-teleport.ts'),
       },
       name: '@flexilla/utilities',
       formats: ["es","cjs"]

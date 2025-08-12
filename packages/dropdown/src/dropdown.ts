@@ -1,7 +1,17 @@
-import { DropdownOptions } from "./types"
+import { DropdownOptions, ExperimentaOptions } from "./types"
 import { CreateOverlay, type Placement } from "flexipop/create-overlay"
+
 import { $$, $, keyboardNavigation, dispatchCustomEvent } from "@flexilla/utilities"
 import { FlexillaManager } from "@flexilla/manager"
+import { domTeleporter } from "@flexilla/utilities"
+
+
+
+
+const defaultExperimentalOptions: ExperimentaOptions = {
+    teleport: true,
+    teleportMode: "move"
+}
 
 /**
  * A class that creates and manages dropdown functionality with popover positioning.
@@ -28,12 +38,14 @@ class Dropdown {
     private triggerElement!: HTMLElement
     private contentElement: HTMLElement
 
+    private items: HTMLElement[] = []
     private options!: DropdownOptions
     private OverlayInstance!: CreateOverlay
     private navigationKeys!: {
         make: () => void;
         destroy: () => void;
     }
+    private keyObserver!: MutationObserver
 
     private triggerStrategy!: "click" | "hover"
     private placement!: Placement
@@ -41,6 +53,15 @@ class Dropdown {
     private preventFromCloseOutside!: boolean
     private preventFromCloseInside!: boolean
     private defaultState!: "open" | "close"
+    private experimentalOptions!: ExperimentaOptions
+    private teleporter!: {
+        append: () => void;
+        remove: () => void;
+        restore: () => void;
+    }
+
+
+
 
     /**
      * Creates a new Dropdown instance
@@ -79,6 +100,9 @@ class Dropdown {
         this.preventFromCloseInside = this.options.preventCloseFromInside || this.contentElement.hasAttribute("data-prevent-close-inside") || false
         this.defaultState = this.options.defaultState || this.contentElement.dataset.defaultState as "close" | "open" || "close";
 
+        this.experimentalOptions = Object.assign({}, defaultExperimentalOptions, options.experimental)
+
+        this.teleporter = domTeleporter(this.contentElement, document.body, this.experimentalOptions.teleportMode)
 
         this.OverlayInstance = new CreateOverlay({
             trigger: this.triggerElement,
@@ -101,20 +125,70 @@ class Dropdown {
             }
         })
 
+
+        this.moveElOnInit()
+
+        this.items = $$("a:not([disabled]), button:not([disabled])", this.contentElement) as HTMLElement[]
+
         this.navigationKeys = keyboardNavigation({
             containerElement: this.contentElement,
-            targetChildren: "a:not([disabled]), button:not([disabled])",
-            direction: "up-down"
+            targetChildren: this.items,
+            direction: "up-down",
         })
 
+        this.observeEl()
+
         FlexillaManager.register('dropdown', this.contentElement, this)
+    }
+
+    private observeEl = () => {
+        this.keyObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') {
+                    const state = (mutation.target as HTMLElement).getAttribute('aria-expanded')
+                    if (state === "true") this.navigationKeys.destroy()
+                    else this.navigationKeys.make()
+                }
+            }
+        })
+
+        for (const item of this.items) {
+            if (item.hasAttribute("data-dropdown-trigger")) {
+                this.keyObserver.observe(item, {
+                    attributes: true,
+                    attributeFilter: ['aria-expanded']
+                });
+            }
+        }
     }
 
     private onToggle = ({ isHidden }: { isHidden?: boolean }) => {
         this.options.onToggle?.({ isHidden })
     }
 
+
+    private moveElOnInit = () => {
+        if (this.experimentalOptions.teleport) {
+            if (this.experimentalOptions.teleportMode === "detachable")
+                this.teleporter.remove()
+            else this.teleporter.append()
+        }
+    }
+
+    private moveEl = () => {
+        if (this.experimentalOptions.teleport && this.experimentalOptions.teleportMode === "detachable") {
+            this.teleporter.remove()
+        }
+    }
+
+    private restoreEl = () => {
+        if (this.experimentalOptions.teleport && this.experimentalOptions.teleportMode === "detachable") {
+            this.teleporter.append()
+        }
+    }
+
     private beforeShow = () => {
+        this.restoreEl()
         this.contentElement.focus()
         this.navigationKeys.make()
     }
@@ -135,6 +209,7 @@ class Dropdown {
             isHidden: true
         })
         this.options.onHide?.()
+        this.moveEl()
     }
 
     /**
@@ -158,11 +233,11 @@ class Dropdown {
     setShowOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
         this.OverlayInstance.setShowOptions({ placement, offsetDistance })
     }
-     /**
-     * Updates the dropdown's placement and offset settings
-     * @param options - The new placement and offset options
-     */
-     setOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
+    /**
+    * Updates the dropdown's placement and offset settings
+    * @param options - The new placement and offset options
+    */
+    setOptions = ({ placement, offsetDistance }: { placement: Placement, offsetDistance?: number }) => {
         this.OverlayInstance.setPopperOptions({ placement, offsetDistance })
     }
 
@@ -174,10 +249,18 @@ class Dropdown {
         this.OverlayInstance.setPopperTrigger(trigger, options)
     }
 
+    private disconnectObserver = () => {
+        if (this.keyObserver) {
+            this.keyObserver.disconnect();
+        }
+    }
+
+
     /**
      * Removes all event listeners
      */
     cleanup = () => {
+        this.disconnectObserver()
         this.OverlayInstance.cleanup()
         FlexillaManager.removeInstance('dropdown', this.contentElement)
     }
