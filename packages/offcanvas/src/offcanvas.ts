@@ -1,9 +1,12 @@
 
-import type { OffcanvasOptions } from "./types"
+import type {  OffcanvasOptions } from "./types"
 import { closeAllOpenedOffcanvas, toggleOffCanvasState } from "./helpers"
 import { appendBefore, $$, $, dispatchCustomEvent } from "@flexilla/utilities"
 import { createOverlay, destroyOverlay } from "./offCanvasOverlay"
 import { FlexillaManager } from "@flexilla/manager"
+import { domTeleporter } from "@flexilla/utilities"
+
+
 /**
  * Class representing an Offcanvas element.
  * An Offcanvas is a sidebar component that can slide in from the edges of the viewport.
@@ -30,6 +33,11 @@ class Offcanvas {
     private staticBackdrop!: boolean
     private backdrop!: string
     private options!: OffcanvasOptions
+    private teleporter!: {
+        append: () => void;
+        remove: () => void;
+        restore: () => void;
+    }
 
     /**
      * Creates an instance of Offcanvas.
@@ -59,6 +67,9 @@ class Offcanvas {
 
         this.options = options
         const { staticBackdrop, allowBodyScroll, backdrop: overlay } = this.options
+
+
+
         this.offCanvasElement = offCanvasElement
         this.setupAttributes()
         this.staticBackdrop = staticBackdrop || (offCanvasElement.hasAttribute("data-static-backdrop") && offCanvasElement.dataset.staticBackdrop !== "false") || false
@@ -67,8 +78,18 @@ class Offcanvas {
         this.offCanvasTriggers = this.findOffCanvasElements("[data-offcanvas-trigger]", false, offCanvasId);
         this.offCanvasCloseBtns = this.findOffCanvasElements("[data-offcanvas-close]", true, offCanvasId, this.offCanvasElement);
         this.backdrop = overlay || this.offCanvasElement.dataset.offcanvasBackdrop || ""
+
+        this.teleporter = domTeleporter(this.offCanvasElement, document.body, "move")
+
+
         this.setupOffcanvas()
+
+        this.moveElOnInit()
         FlexillaManager.register("offcanvas", this.offCanvasElement, this)
+    }
+
+    private moveElOnInit = () => {
+        this.teleporter.append()
     }
 
     private findOffCanvasElements(selector: string, hasChildren: boolean, offCanvasId: string | null, parent?: HTMLElement) {
