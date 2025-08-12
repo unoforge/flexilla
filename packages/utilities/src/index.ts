@@ -10,3 +10,4 @@ export {
     observeChildrenChanges 
 } from "./dom-utilities"
 export { initScrollToTop } from "./scroll-to-top"
+export { domTeleporter } from "./dom-teleport"
