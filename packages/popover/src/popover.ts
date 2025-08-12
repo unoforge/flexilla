@@ -1,7 +1,15 @@
-import type { PopoverOptions } from "./types"
+import type { ExperimentaOptions, PopoverOptions } from "./types"
 import { CreateOverlay, type Placement } from 'flexipop/create-overlay'
 import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
 import { FlexillaManager } from "@flexilla/manager"
+import { domTeleporter } from "@flexilla/utilities"
+
+
+const defaultExperimentalOptions: ExperimentaOptions = {
+    teleport: true,
+    teleportMode: "move"
+}
+
 
 /**
  * Creates a new popover instance with the specified trigger and content elements.
@@ -21,6 +29,12 @@ class Popover {
     private preventFromCloseOutside!: boolean
     private preventFromCloseInside!: boolean
     private defaultState!: "open" | "close"
+    private experimentalOptions!: ExperimentaOptions
+    private teleporter!: {
+        append: () => void;
+        remove: () => void;
+        restore: () => void;
+    }
 
     /**
      * Creates a new Popover instance.
@@ -54,6 +68,11 @@ class Popover {
         this.preventFromCloseOutside = this.options.preventFromCloseOutside || content.hasAttribute("data-prevent-close-outside") || false
         this.preventFromCloseInside = this.options.preventCloseFromInside || content.hasAttribute("data-prevent-close-inside") || false
         this.defaultState = this.options.defaultState || content.dataset.defaultState as "close" | "open" || "close";
+        this.experimentalOptions = Object.assign({}, defaultExperimentalOptions, options.experimental)
+
+
+        this.teleporter = domTeleporter(this.contentElement, document.body, this.experimentalOptions.teleportMode)
+
 
         this.PopoverInstance = new CreateOverlay({
             trigger: this.triggerElement,
@@ -65,8 +84,9 @@ class Popover {
                 preventFromCloseOutside: this.preventFromCloseOutside,
                 preventCloseFromInside: this.preventFromCloseInside,
                 defaultState: this.defaultState,
-                onShow: this.options.onShow,
-                onHide: this.options.onHide,
+                beforeShow: this.beforeShow,
+                onShow: this.onShow,
+                onHide: this.onHide,
                 onToggle: ({ isHidden }) => {
                     this.options.onToggle?.({ isHidden })
                     dispatchCustomEvent(this.contentElement, "popover-toggle", {
@@ -77,7 +97,50 @@ class Popover {
             }
         })
 
+
+        this.moveElOnInit()
         FlexillaManager.register("popover", this.contentElement, this)
+    }
+
+
+    private moveElOnInit = () => {
+        if (this.experimentalOptions.teleport) {
+            if (this.experimentalOptions.teleportMode === "detachable")
+                this.teleporter.remove()
+            else this.teleporter.append()
+        }
+    }
+
+    private moveEl = () => {
+        if (this.experimentalOptions.teleport && this.experimentalOptions.teleportMode === "detachable") {
+            this.teleporter.remove()
+        }
+    }
+
+    private restoreEl = () => {
+        if (this.experimentalOptions.teleport && this.experimentalOptions.teleportMode === "detachable") {
+            this.teleporter.append()
+        }
+    }
+
+
+    private beforeShow = () => {
+        this.restoreEl()
+
+    }
+    private onHide = () => {
+        this.options.onHide?.()
+        this.moveEl()
+        dispatchCustomEvent(this.contentElement, "popover-hide", {
+            isHidden: true
+        })
+    }
+
+    private onShow = () => {
+        this.options.onShow?.()
+        dispatchCustomEvent(this.contentElement, "popover-show", {
+            isHidden: false
+        })
     }
 
 
@@ -103,15 +166,9 @@ class Popover {
 
     show = () => {
         this.PopoverInstance.show()
-        dispatchCustomEvent(this.contentElement, "popover-show", {
-            isHidden: false
-        })
     }
     hide = () => {
         this.PopoverInstance.hide()
-        dispatchCustomEvent(this.contentElement, "popover-hide", {
-            isHidden: true
-        })
     }
 
     /**

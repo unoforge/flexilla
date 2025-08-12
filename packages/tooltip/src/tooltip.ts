@@ -1,7 +1,16 @@
 import { CreateOverlay, type Placement } from "flexipop/create-overlay"
 import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
-import type { TooltipOptions } from "./types"
+import type { ExperimentaOptions, TooltipOptions } from "./types"
 import { FlexillaManager } from "@flexilla/manager"
+import { domTeleporter } from "@flexilla/utilities"
+
+
+const defaultExperimentalOptions: ExperimentaOptions = {
+    teleport: true,
+    teleportMode: "move"
+}
+
+
 
 /**
  * Creates and manages a tooltip component with customizable trigger and content elements.
@@ -21,6 +30,12 @@ class Tooltip {
     private preventFromCloseOutside!: boolean
     private preventFromCloseInside!: boolean
     private defaultState!: "open" | "close"
+    private experimentalOptions!: ExperimentaOptions
+    private teleporter!: {
+        append: () => void;
+        remove: () => void;
+        restore: () => void;
+    }
 
     /**
      * Creates a new Tooltip instance.
@@ -53,6 +68,8 @@ class Tooltip {
         this.preventFromCloseOutside = this.options.preventFromCloseOutside || content.hasAttribute("data-prevent-close-outside") || false
         this.preventFromCloseInside = this.options.preventCloseFromInside || content.hasAttribute("data-prevent-close-inside") || false
         this.defaultState = this.options.defaultState || content.dataset.defaultState as "close" | "open" || "close";
+        this.experimentalOptions = Object.assign({}, defaultExperimentalOptions, options.experimental)
+        this.teleporter = domTeleporter(this.contentElement, document.body, this.experimentalOptions.teleportMode)
 
         this.PopoverInstance = new CreateOverlay({
             trigger: this.triggerElement,
@@ -64,10 +81,14 @@ class Tooltip {
                 preventFromCloseOutside: this.preventFromCloseOutside,
                 preventCloseFromInside: this.preventFromCloseInside,
                 defaultState: this.defaultState,
-                onShow: this.options.onShow,
-                onHide: this.options.onHide,
+                beforeShow: this.beforeShow,
+                onShow: this.onShow,
+                onHide: this.onHide,
                 onToggle: ({ isHidden }) => {
                     this.options.onToggle?.({ isHidden })
+                    dispatchCustomEvent(this.contentElement, "popover-toggle", {
+                        isHidden: isHidden
+                    })
                 },
                 popper: {
                     eventEffect: {
@@ -78,7 +99,51 @@ class Tooltip {
             }
         })
 
+        this.moveElOnInit()
         FlexillaManager.register('tooltip', this.contentElement, this)
+    }
+
+
+
+
+    private moveElOnInit = () => {
+        if (this.experimentalOptions.teleport) {
+            if (this.experimentalOptions.teleportMode === "detachable")
+                this.teleporter.remove()
+            else this.teleporter.append()
+        }
+    }
+
+    private moveEl = () => {
+        if (this.experimentalOptions.teleport && this.experimentalOptions.teleportMode === "detachable") {
+            this.teleporter.remove()
+        }
+    }
+
+    private restoreEl = () => {
+        if (this.experimentalOptions.teleport && this.experimentalOptions.teleportMode === "detachable") {
+            this.teleporter.append()
+        }
+    }
+
+
+    private beforeShow = () => {
+        this.restoreEl()
+
+    }
+    private onHide = () => {
+        this.options.onHide?.()
+        this.moveEl()
+        dispatchCustomEvent(this.contentElement, "tooltip-hide", {
+            isHidden: true
+        })
+    }
+
+    private onShow = () => {
+        this.options.onShow?.()
+        dispatchCustomEvent(this.contentElement, "tooltip-show", {
+            isHidden: false
+        })
     }
 
     /**
@@ -97,9 +162,6 @@ class Tooltip {
      */
     show = () => {
         this.PopoverInstance.show()
-        dispatchCustomEvent(this.triggerElement, "tooltip-show", {
-            isHidden: false
-        })
     }
 
     /**
@@ -108,9 +170,6 @@ class Tooltip {
      */
     hide = () => {
         this.PopoverInstance.hide()
-        dispatchCustomEvent(this.triggerElement, "tooltip-hide", {
-            isHidden: true
-        })
     }
 
     /**

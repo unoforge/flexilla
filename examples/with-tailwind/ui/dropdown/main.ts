@@ -1,4 +1,4 @@
-import { Dropdown } from "@flexilla/dropdown"
+import { Dropdown } from "./../../../../packages/dropdown/src/index"
 import "./../../main"
 
 new Dropdown("[data-drop-down-1]")
@@ -20,3 +20,8 @@ new Dropdown("[data-drop-down-6]",
         preventFromCloseOutside: true
     }
 )
+
+new Dropdown("[data-sub-demo]", {
+    triggerStrategy: "hover",
+    placement: "right-start"
+})

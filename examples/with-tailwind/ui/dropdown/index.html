@@ -49,8 +49,39 @@
               class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
               Item 4
             </a>
+            <button data-dropdown-trigger data-dropdown-id="sub-demo"
+              class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+              Okay test
+          </button>
           </div>
         </div>
+        <div role="list" data-sub-demo data-placement="bottom" id="sub-demo" data-fx-popper class="ui-popper z-20 w-56 border border-zinc-800 bg-zinc-900/80 text-zinc-50 backdrop-filter 
+            backdrop-blur-xl rounded-lg flex flex-col overflow-hidden opacity-0 invisible fx-open:opacity-100 fx-open:visible">
+            <div role="listitem">
+              <a href="#"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+            </div>
+            <div role="listitem">
+              <a href="/"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+            </div>
+            <div role="listitem">
+              <a href="#"
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+            </div>
+            <div role="listitem">
+              <a href=""
+                class="focus:outline focus:bg-zinc-900/90 outline-none focus:outline-blue-500 ease-linear flex hover-bg-zinc-800/80 p-2 rounded-md">
+                Item 1
+              </a>
+            </div>
+          </div>
         <div class="relative">
           <button data-dropdown-trigger data-dropdown-id="dropdown-2"
             class="border border-zinc-800 hover:bg-zinc-950 bg-zinc-900 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-x2 [&[aria-expanded=true]>span]-rotate-180">

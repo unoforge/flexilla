@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@flexilla/manager": "^0.1.0",
-    "flexipop": "^0.2.0"
+    "flexipop": "^0.3.0"
   },
   "keywords": [
     "dropdown",
