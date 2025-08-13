@@ -62,12 +62,12 @@ class Tooltip {
         }
         this.triggerElement = $(`[data-tooltip-trigger][data-tooltip-id=${content.getAttribute("id")}]`) as HTMLElement
         this.options = options
-        this.triggerStrategy = this.options.triggerStrategy || content.dataset.triggerStrategy as "click" | "hover" || "hover"
-        this.placement = this.options.placement || content.dataset.placement as Placement || "bottom-middle"
-        this.offsetDistance = this.options.offsetDistance || parseInt(`${content.dataset.offsetDistance}`) | 6
-        this.preventFromCloseOutside = this.options.preventFromCloseOutside || content.hasAttribute("data-prevent-close-outside") || false
-        this.preventFromCloseInside = this.options.preventCloseFromInside || content.hasAttribute("data-prevent-close-inside") || false
-        this.defaultState = this.options.defaultState || content.dataset.defaultState as "close" | "open" || "close";
+        this.triggerStrategy = content.dataset.triggerStrategy as "click" | "hover" || this.options.triggerStrategy || "hover"
+        this.placement = content.dataset.placement as Placement || this.options.placement || "bottom-middle"
+        this.offsetDistance = parseInt(`${content.dataset.offsetDistance}`) ?? (this.options.offsetDistance ?? 6)
+        this.preventFromCloseOutside = content.hasAttribute("data-prevent-close-outside") ?? (this.options.preventFromCloseOutside ?? false)
+        this.preventFromCloseInside = content.hasAttribute("data-prevent-close-inside") ?? (this.options.preventCloseFromInside ?? false)
+        this.defaultState = content.dataset.defaultState as "close" | "open" ?? (this.options.defaultState ?? "close");
         this.experimentalOptions = Object.assign({}, defaultExperimentalOptions, options.experimental)
         this.teleporter = domTeleporter(this.contentElement, document.body, this.experimentalOptions.teleportMode)
 
