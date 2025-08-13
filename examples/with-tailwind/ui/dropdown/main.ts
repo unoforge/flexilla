@@ -1,7 +1,9 @@
-import { Dropdown } from "./../../../../packages/dropdown/src/index"
+import { Dropdown } from "./../../../../packages/dropdown/"
 import "./../../main"
 
-new Dropdown("[data-drop-down-1]")
+new Dropdown("[data-drop-down-1]",{
+    preventCloseFromInside:true
+})
 new Dropdown("[data-drop-down-2]")
 new Dropdown(
     "[data-drop-down-3]",
@@ -22,6 +24,6 @@ new Dropdown("[data-drop-down-6]",
 )
 
 new Dropdown("[data-sub-demo]", {
-    triggerStrategy: "hover",
+    // triggerStrategy: "hover",
     placement: "right-start"
 })
