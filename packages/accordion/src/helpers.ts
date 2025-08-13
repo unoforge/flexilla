@@ -2,26 +2,49 @@ import { expandElement, collapseElement, initCollapsible } from "./../../collaps
 import { $d, $$ } from "@flexilla/utilities/selector"
 
 const getAdjacentTrigger = (currentTrigger: HTMLElement, goUp: boolean, accordionElement: HTMLElement) => {
-    const allAccordionItems = $$("[data-accordion-item]", accordionElement)
-    const accordionItems = allAccordionItems.filter((item) => item.parentElement === accordionElement);
-    const currentTriggerIndex = Array.from(accordionItems).indexOf(currentTrigger.closest('[data-accordion-item]')!);
-    const nextIndex = goUp ? currentTriggerIndex - 1 : currentTriggerIndex + 1;
-    const nextTrigger = $d("[data-accordion-trigger]", accordionItems[nextIndex]) as HTMLElement
+    // Get all direct children [data-accordion-item] of accordionElement
+    const accordionItems = $$(`:scope > [data-accordion-item]`, accordionElement) as HTMLElement[];
 
-    return nextTrigger ?? (goUp ? $d("[data-accordion-trigger]", accordionItems[accordionItems.length - 1]) : $d("[data-accordion-trigger]", accordionItems[0]))
-}
+    // Find the current accordion item (direct parent of the trigger)
+    const currentItem = currentTrigger.parentElement;
+    if (!accordionItems.includes(currentItem as HTMLElement)) return null; // Not a valid direct child item
+
+    const currentIndex = accordionItems.indexOf(currentItem as HTMLElement);
+    const nextIndex = goUp ? currentIndex - 1 : currentIndex + 1;
+
+    // Determine the next item, looping to last/first if out of bounds
+    const nextItem =
+        accordionItems[nextIndex] ??
+        (goUp ? accordionItems[accordionItems.length - 1] : accordionItems[0]);
+
+    // Select trigger that is a direct child of the next item
+    const nextTrigger = $d(`:scope > [data-accordion-trigger]`, nextItem);
+    return nextTrigger instanceof HTMLElement ? nextTrigger : null;
+};
 
 const initKeyEvents = (event: KeyboardEvent, accordionElement: HTMLElement) => {
-    const focusedTrigger = document.activeElement;
-    if (!(focusedTrigger instanceof HTMLElement)) return
+    if (!(document.activeElement instanceof HTMLElement)) return;
 
-    const isTriggerFocused = focusedTrigger.matches('[data-accordion-trigger]');
-    if (isTriggerFocused && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
-        event.preventDefault(); // Prevent default scrolling behavior
-        const nextTrigger = getAdjacentTrigger(focusedTrigger, event.key === 'ArrowUp', accordionElement);
-        nextTrigger.focus();
+    const focusedTrigger = document.activeElement;
+
+    // Ensure it's the right trigger in the correct structure
+    const parentItem = focusedTrigger.parentElement;
+    if (
+        !focusedTrigger.matches('[data-accordion-trigger]') ||
+        !parentItem?.matches('[data-accordion-item]') ||
+        parentItem.parentElement !== accordionElement
+    ) {
+        return;
     }
-}
+
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault(); // Prevent default scrolling
+        const nextTrigger = getAdjacentTrigger(focusedTrigger, event.key === 'ArrowUp', accordionElement);
+        if (nextTrigger) {
+            nextTrigger.focus();
+        }
+    }
+};
 
 const changeTriggerState = (trigger: HTMLElement, state: "open" | "close") => {
     trigger.ariaExpanded = state === "open" ? "true" : "false";
