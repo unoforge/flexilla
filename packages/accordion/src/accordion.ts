@@ -25,6 +25,8 @@ export default class Accordion {
     private eventListeners: Array<{ element: HTMLElement; type: string; listener: EventListener }> = [];
     private cleanupObserver: (() => void) | null = null;
 
+
+
     /**
      * Creates an instance of Accordion
      * @param {string | HTMLElement} accordion - Selector string or HTMLElement for the accordion container
@@ -71,11 +73,9 @@ export default class Accordion {
             }
         }
         this.addEventListeners();
-        const handleKeyEvents = (e: KeyboardEvent) => {
-            initKeyEvents(e, this.accordionEl)
-        }
-        this.accordionEl.addEventListener("keydown", handleKeyEvents);
-        this.eventListeners.push({ element: this.accordionEl, type: "keydown", listener: handleKeyEvents as EventListener });
+
+        this.accordionEl.addEventListener("keydown", this.handleKeyEvents);
+        this.eventListeners.push({ element: this.accordionEl, type: "keydown", listener: this.handleKeyEvents as EventListener });
 
         FlexillaManager.register("accordion", this.accordionEl, this)
 
@@ -84,6 +84,10 @@ export default class Accordion {
             attributeToWatch: 'data-accordion-item',
             onChildAdded: this.reload
         });
+    }
+
+    private handleKeyEvents = (e: KeyboardEvent) => {
+        initKeyEvents(e, this.accordionEl)
     }
 
     reload = () => {
