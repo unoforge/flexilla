@@ -11,14 +11,13 @@ const setAllTriggerToFalse = (activeTrigger: HTMLElement, tabTriggers: HTMLEleme
   }
 };
 
-const setNestedTabsIndicatorCorrectly = ({ indicatorTransformDuration, indicatorTransformEaseing, indicator, triggerElement, tabList }: {  indicatorTransformDuration: number, indicatorTransformEaseing: string, indicator: HTMLSpanElement, triggerElement: HTMLElement, tabList: HTMLElement }) => {
+const setNestedTabsIndicatorCorrectly = ({ indicatorTransformDuration, indicatorTransformEaseing, indicator, triggerElement }: {  indicatorTransformDuration: number, indicatorTransformEaseing: string, indicator: HTMLSpanElement, triggerElement: HTMLElement }) => {
   if (!(indicator instanceof HTMLSpanElement) || !(triggerElement instanceof HTMLElement)) return
   moveIndicator({
     triggerElement,
     indicator_: indicator,
     transformDuration: indicatorTransformDuration,
     transformEasing: indicatorTransformEaseing,
-    tabList
   });
 }
 
@@ -51,14 +50,11 @@ export const activeTab = ({ triggerElement, tabTriggers, tabsPanelContainer, sho
   }
 
   const indicator = $("[data-tab-indicator]", tabList) as HTMLSpanElement
-
-
   moveIndicator({
     triggerElement,
     indicator_: indicator,
     transformDuration: indicatorTransformDuration,
     transformEasing: indicatorTransformEaseing,
-    tabList
   });
 
   const childTab = $d("[data-fx-tabs]", toSelectTab)
@@ -73,8 +69,7 @@ export const activeTab = ({ triggerElement, tabTriggers, tabsPanelContainer, sho
         indicatorTransformDuration: indicatorTransformDuration,
         indicatorTransformEaseing: indicatorTransformEaseing,
         indicator: childIndicator,
-        triggerElement: triggerElement,
-        tabList: childTabList
+        triggerElement: triggerElement
       })
     }
   }

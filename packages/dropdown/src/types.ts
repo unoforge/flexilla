@@ -11,7 +11,7 @@ type EventEffect = {
 export type SupportPositionSubItem = "left" | "right" | "left-start" | "left-end" | "right-start" | "right-end"
 
 
-export type ExperimentaOptions = {
+export type ExperimentalOptions = {
     /** Whether to teleport the dropdown content to the body or not
      * @default false
      */
@@ -56,6 +56,6 @@ export type DropdownOptions = {
      */
     onToggle?: ({ isHidden }: { isHidden?: boolean }) => void,
 
-    experimental?: ExperimentaOptions
+    experimental?: ExperimentalOptions
 
 }

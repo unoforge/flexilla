@@ -1,4 +1,4 @@
-import { DropdownOptions, ExperimentaOptions } from "./types"
+import { DropdownOptions, ExperimentalOptions } from "./types"
 import { CreateOverlay, type Placement } from "flexipop/create-overlay"
 
 import { $$, $, keyboardNavigation, dispatchCustomEvent } from "@flexilla/utilities"
@@ -8,7 +8,7 @@ import { domTeleporter } from "@flexilla/utilities"
 
 
 
-const defaultExperimentalOptions: ExperimentaOptions = {
+const defaultExperimentalOptions: ExperimentalOptions = {
     teleport: true,
     teleportMode: "move"
 }
@@ -46,6 +46,7 @@ class Dropdown {
         destroy: () => void;
     }
     private keyObserver!: MutationObserver
+    private subtriggerObserver!: MutationObserver
 
     private triggerStrategy!: "click" | "hover"
     private placement!: Placement
@@ -53,7 +54,7 @@ class Dropdown {
     private preventFromCloseOutside!: boolean
     private preventFromCloseInside!: boolean
     private defaultState!: "open" | "close"
-    private experimentalOptions!: ExperimentaOptions
+    private experimentalOptions!: ExperimentalOptions
     private teleporter!: {
         append: () => void;
         remove: () => void;
@@ -93,13 +94,12 @@ class Dropdown {
         }
 
         this.options = options
-        this.triggerStrategy = this.options.triggerStrategy || this.contentElement.dataset.triggerStrategy as "click" | "hover" || "click"
-        this.placement = this.options.placement || this.contentElement.dataset.placement as Placement || "bottom-start"
-        this.offsetDistance = this.options.offsetDistance || parseInt(`${this.contentElement.dataset.offsetDistance}`) | 6
-        this.preventFromCloseOutside = this.options.preventFromCloseOutside || this.contentElement.hasAttribute("data-prevent-close-outside") || false
-        this.preventFromCloseInside = this.options.preventCloseFromInside || this.contentElement.hasAttribute("data-prevent-close-inside") || false
-        this.defaultState = this.options.defaultState || this.contentElement.dataset.defaultState as "close" | "open" || "close";
-
+        this.triggerStrategy = this.contentElement.dataset.triggerStrategy as "click" | "hover" || this.options.triggerStrategy || "click"
+        this.placement = this.contentElement.dataset.placement as Placement || this.options.placement || "bottom-start"
+        this.offsetDistance = parseInt(`${this.contentElement.dataset.offsetDistance}`) || this.options.offsetDistance || 6
+        this.preventFromCloseOutside = this.contentElement.hasAttribute("data-prevent-close-outside") || this.options.preventFromCloseOutside || false
+        this.preventFromCloseInside = this.contentElement.hasAttribute("data-prevent-close-inside") || this.options.preventCloseFromInside || false
+        this.defaultState = this.contentElement.dataset.defaultState as "close" | "open" || this.options.defaultState || "close";
         this.experimentalOptions = Object.assign({}, defaultExperimentalOptions, options.experimental)
 
         this.teleporter = domTeleporter(this.contentElement, document.body, this.experimentalOptions.teleportMode)
@@ -115,7 +115,14 @@ class Dropdown {
                 preventCloseFromInside: this.preventFromCloseInside,
                 defaultState: this.defaultState,
                 beforeShow: this.beforeShow,
-                beforeHide: this.beforeHide,
+                beforeHide: () => {
+                    const droptriggersOpen = $$("[data-dropdown-trigger][aria-expanded=true]", this.contentElement)
+
+                    if (droptriggersOpen.length >= 1) {
+                        return { cancelAction: true }
+                    }
+                    this.beforeHide()
+                },
                 onShow: this.onShow,
                 onHide: this.onHide,
                 onToggle: ({ isHidden }) => {
@@ -136,30 +143,55 @@ class Dropdown {
             direction: "up-down",
         })
 
-        this.observeEl()
+
 
         FlexillaManager.register('dropdown', this.contentElement, this)
     }
 
+    private updateSubtriggerAttr = (trigger: HTMLElement, action: "add" | "remove") => {
+        if (action === "add") {
+            trigger.setAttribute("data-current-subtrigger", "")
+            trigger.setAttribute("data-focus", "active")
+        } else {
+            trigger.removeAttribute("data-current-subtrigger")
+            trigger.removeAttribute("data-focus")
+        }
+    }
+    private updateObserverFor =(observer:MutationObserver)=>{
+        const subtriggers = $$("[data-dropdown-trigger]", this.contentElement)
+
+        for (const item of subtriggers) {
+            observer.observe(item, {
+                attributes: true,
+                attributeFilter: ['aria-expanded']
+            });
+        }
+    }
     private observeEl = () => {
         this.keyObserver = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') {
                     const state = (mutation.target as HTMLElement).getAttribute('aria-expanded')
                     if (state === "true") this.navigationKeys.destroy()
-                    else this.navigationKeys.make()
+                    else if (this.contentElement.dataset.state === "open") this.navigationKeys.make()
                 }
             }
         })
+        this.updateObserverFor(this.keyObserver)
+    }
 
-        for (const item of this.items) {
-            if (item.hasAttribute("data-dropdown-trigger")) {
-                this.keyObserver.observe(item, {
-                    attributes: true,
-                    attributeFilter: ['aria-expanded']
-                });
+
+    private observeSubtriggers = () => {
+        this.subtriggerObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') {
+                    const trigger = mutation.target as HTMLElement
+                    const state = trigger.getAttribute('aria-expanded')
+                    this.updateSubtriggerAttr(trigger, state === "true" ? "add" : "remove")
+                }
             }
-        }
+        })
+        this.updateObserverFor(this.subtriggerObserver)
     }
 
     private onToggle = ({ isHidden }: { isHidden?: boolean }) => {
@@ -191,11 +223,63 @@ class Dropdown {
         this.restoreEl()
         this.contentElement.focus()
         this.navigationKeys.make()
+        this.addArrowEvent()
     }
 
     private beforeHide = () => {
         this.contentElement.blur()
         this.navigationKeys.destroy()
+        this.removeArrowEvent()
+    }
+
+    private showHideOnArrow = (ev: KeyboardEvent) => {
+        ev.preventDefault()
+        const key = ev.key;
+        const current = document.activeElement as HTMLElement;
+
+        if (current?.hasAttribute("data-dropdown-trigger")) {
+            switch (key) {
+                case 'ArrowRight':
+                    if (current.getAttribute("aria-expanded") !== "true") {
+                        (current as HTMLElement).click()
+                        this.updateSubtriggerAttr(current, "add")
+                    }
+                    break;
+                case 'ArrowLeft':
+                    if (current.getAttribute("aria-expanded") === "true") {
+                        (current as HTMLElement).click()
+                        this.updateSubtriggerAttr(current, "remove")
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+
+        }
+
+        if (this.triggerElement.hasAttribute("data-current-subtrigger")) {
+            switch (key) {
+                case 'ArrowLeft':
+                    this.triggerElement.click()
+                    this.triggerElement.focus()
+                    this.updateSubtriggerAttr(this.triggerElement as HTMLElement, "remove")
+                    break;
+                default:
+                    return;
+            }
+        }
+
+
+    }
+
+
+    private addArrowEvent = () => {
+        document.addEventListener('keydown', this.showHideOnArrow);
+    }
+
+    private removeArrowEvent = () => {
+        document.removeEventListener('keydown', this.showHideOnArrow);
     }
 
     private onShow = () => {
@@ -203,6 +287,8 @@ class Dropdown {
             isHidden: false
         })
         this.options.onShow?.()
+        this.observeEl()
+        this.observeSubtriggers()
     }
     private onHide = () => {
         dispatchCustomEvent(this.contentElement, "dropdown-hide", {
@@ -210,21 +296,21 @@ class Dropdown {
         })
         this.options.onHide?.()
         this.moveEl()
+        if (this.triggerElement.hasAttribute("data-current-subtrigger")) {
+            this.updateSubtriggerAttr(this.triggerElement, "remove")
+        }
+        this.disconnectObserver()
     }
 
     /**
      * Shows the dropdown
      */
-    show = () => {
-        this.OverlayInstance.show()
-    }
+    show = () => this.OverlayInstance.show()
 
     /**
      * Hides the dropdown
      */
-    hide = () => {
-        this.OverlayInstance.hide()
-    }
+    hide = () => this.OverlayInstance.hide()
 
     /**
      * Updates the dropdown's placement and offset settings and show it
@@ -253,7 +339,11 @@ class Dropdown {
         if (this.keyObserver) {
             this.keyObserver.disconnect();
         }
+        if (this.subtriggerObserver) {
+            this.subtriggerObserver.disconnect()
+        }
     }
+
 
 
     /**

@@ -39,14 +39,13 @@ export const createIndicator = ({
 export const moveIndicator = ({
     triggerElement,
     indicator_,
-    transformDuration = 300,
+    transformDuration = 200,
     transformEasing = 'ease'
 }: {
     triggerElement: HTMLElement,
     indicator_: HTMLSpanElement | undefined,
     transformDuration?: number,
     transformEasing?: string,
-    tabList: HTMLElement
 }) => {
 
     if (!(indicator_ instanceof HTMLElement)) return;
