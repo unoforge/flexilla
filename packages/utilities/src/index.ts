@@ -7,7 +7,8 @@ export {
     afterTransition, 
     dispatchCustomEvent, 
     afterAnimation,
-    observeChildrenChanges 
+    observeChildrenChanges ,
+    waitForFxComponents
 } from "./dom-utilities"
 export { initScrollToTop } from "./scroll-to-top"
 export { domTeleporter } from "./dom-teleport"

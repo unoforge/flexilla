@@ -22,7 +22,7 @@ export class InstancesManager {
 
     static register(componentName: string, element: HTMLElement, instance: any) {
         this.initGlobalRegistry();
-        
+
         if (!window.$flexillaInstances[componentName]) {
             window.$flexillaInstances[componentName] = [];
         }
@@ -50,5 +50,13 @@ export class InstancesManager {
         window.$flexillaInstances[componentName] = window.$flexillaInstances[componentName].filter(
             item => item.element !== element
         );
+    }
+
+    static setup(element: HTMLElement) {
+        element.setAttribute("data-fx-component", "fx")
+    }
+
+    static initialized(element: HTMLElement) {
+        element.setAttribute("data-component-initialized", "initialized")
     }
 }
