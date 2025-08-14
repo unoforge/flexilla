@@ -1,7 +1,7 @@
 
-import {  ModalContentAnimations, ModalOptions } from "./types";
+import { ModalContentAnimations, ModalOptions } from "./types";
 import { setBodyScrollable, toggleModalState } from "./helpers";
-import { $, $$, afterAnimation, dispatchCustomEvent } from "@flexilla/utilities";
+import { $, $$, afterAnimation, dispatchCustomEvent, waitForFxComponents } from "@flexilla/utilities";
 import { FlexillaManager } from "@flexilla/manager"
 import { buildOverlay, destroyOverlay } from "./modalOverlay";
 import { domTeleporter } from "@flexilla/utilities"
@@ -71,6 +71,7 @@ class Modal {
         if (!(modalContent instanceof HTMLElement)) {
             throw new Error("Modal content element not found or invalid. Please provide a valid HTMLElement or selector.")
         }
+        FlexillaManager.setup(this.modalElement)
         this.modalContent = modalContent
         const modalId = modalElement.dataset.modalId;
         this.modalId = `${modalId}`
@@ -97,10 +98,13 @@ class Modal {
 
         this.moveElOnInit()
         FlexillaManager.register('modal', this.modalElement, this)
+        FlexillaManager.initialized(this.modalElement)
     }
 
     private moveElOnInit = () => {
-        this.teleporter.append()
+        waitForFxComponents(() => {
+            this.teleporter.append()
+        })
     }
 
 

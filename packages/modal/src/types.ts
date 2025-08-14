@@ -6,12 +6,7 @@ export type ModalContentAnimations = {
     exitAnimation?: string;
 };
 
-export type ExperimentaOptions = {
-    /** Whether to teleport the dropdown content to the body or not
-     * @default false
-     */
-    teleport: boolean,
-}
+
 
 /**
  * Defines options for modal behavior.
@@ -27,6 +22,5 @@ export type ModalOptions = {
     beforeHide?:()=>{ cancelAction?: boolean;} |void;
     onShow?: () => void;
     onHide?: () => void;
-    onToggle?: ({ isHidden }: { isHidden: boolean }) => void,
-    experimental?: ExperimentaOptions,
+    onToggle?: ({ isHidden }: { isHidden: boolean }) => void
 };
