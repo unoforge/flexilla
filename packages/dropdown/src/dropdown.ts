@@ -1,7 +1,7 @@
 import { DropdownOptions, ExperimentalOptions } from "./types"
 import { CreateOverlay, type Placement } from "flexipop/create-overlay"
 
-import { $$, $, keyboardNavigation, dispatchCustomEvent } from "@flexilla/utilities"
+import { $$, $, keyboardNavigation, dispatchCustomEvent, waitForFxComponents } from "@flexilla/utilities"
 import { FlexillaManager } from "@flexilla/manager"
 import { domTeleporter } from "@flexilla/utilities"
 
@@ -61,9 +61,6 @@ class Dropdown {
         restore: () => void;
     }
 
-
-
-
     /**
      * Creates a new Dropdown instance
      * @param dropdown - The dropdown content element or selector
@@ -87,6 +84,7 @@ class Dropdown {
         if (existingInstance) {
             return existingInstance;
         }
+        FlexillaManager.setup(this.contentElement)
         const triggerSelector = `[data-dropdown-trigger][data-dropdown-id=${this.contentElement.id}]`
         this.triggerElement = $(triggerSelector) as HTMLElement
         if (!(this.triggerElement instanceof HTMLElement)) {
@@ -146,6 +144,7 @@ class Dropdown {
 
 
         FlexillaManager.register('dropdown', this.contentElement, this)
+        FlexillaManager.initialized(this.contentElement)
     }
 
     private updateSubtriggerAttr = (trigger: HTMLElement, action: "add" | "remove") => {
@@ -157,7 +156,7 @@ class Dropdown {
             trigger.removeAttribute("data-focus")
         }
     }
-    private updateObserverFor =(observer:MutationObserver)=>{
+    private updateObserverFor = (observer: MutationObserver) => {
         const subtriggers = $$("[data-dropdown-trigger]", this.contentElement)
 
         for (const item of subtriggers) {
@@ -201,9 +200,11 @@ class Dropdown {
 
     private moveElOnInit = () => {
         if (this.experimentalOptions.teleport) {
-            if (this.experimentalOptions.teleportMode === "detachable")
-                this.teleporter.remove()
-            else this.teleporter.append()
+            waitForFxComponents(() => {
+                if (this.experimentalOptions.teleportMode === "detachable")
+                    this.teleporter.remove()
+                else this.teleporter.append()
+            })
         }
     }
 

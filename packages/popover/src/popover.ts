@@ -1,6 +1,6 @@
 import type { ExperimentaOptions, PopoverOptions } from "./types"
 import { CreateOverlay, type Placement } from 'flexipop/create-overlay'
-import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
+import { $, $$, dispatchCustomEvent, waitForFxComponents } from "@flexilla/utilities"
 import { FlexillaManager } from "@flexilla/manager"
 import { domTeleporter } from "@flexilla/utilities"
 
@@ -60,6 +60,7 @@ class Popover {
         if (existingInstance) {
             return existingInstance;
         }
+        FlexillaManager.setup(this.contentElement)
         this.triggerElement = $(`[data-popover-trigger][data-popover-id=${content.getAttribute("id")}]`) as HTMLElement
         this.options = options
         this.triggerStrategy = content.dataset.triggerStrategy as "click" | "hover" ?? (this.options.triggerStrategy ?? "click")
@@ -100,14 +101,17 @@ class Popover {
 
         this.moveElOnInit()
         FlexillaManager.register("popover", this.contentElement, this)
+        FlexillaManager.initialized(this.contentElement)
     }
 
 
     private moveElOnInit = () => {
         if (this.experimentalOptions.teleport) {
-            if (this.experimentalOptions.teleportMode === "detachable")
-                this.teleporter.remove()
-            else this.teleporter.append()
+            waitForFxComponents(() => {
+                if (this.experimentalOptions.teleportMode === "detachable")
+                    this.teleporter.remove()
+                else this.teleporter.append()
+            })
         }
     }
 

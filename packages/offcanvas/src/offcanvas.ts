@@ -1,10 +1,9 @@
 
-import type {  OffcanvasOptions } from "./types"
+import type { OffcanvasOptions } from "./types"
 import { closeAllOpenedOffcanvas, toggleOffCanvasState } from "./helpers"
-import { appendBefore, $$, $, dispatchCustomEvent } from "@flexilla/utilities"
+import { appendBefore, $$, $, dispatchCustomEvent, domTeleporter, waitForFxComponents } from "@flexilla/utilities"
 import { createOverlay, destroyOverlay } from "./offCanvasOverlay"
 import { FlexillaManager } from "@flexilla/manager"
-import { domTeleporter } from "@flexilla/utilities"
 
 
 /**
@@ -65,6 +64,7 @@ class Offcanvas {
             return existingInstance;
         }
 
+        FlexillaManager.setup(this.offCanvasElement)
         this.options = options
         const { staticBackdrop, allowBodyScroll, backdrop: overlay } = this.options
 
@@ -86,10 +86,11 @@ class Offcanvas {
 
         this.moveElOnInit()
         FlexillaManager.register("offcanvas", this.offCanvasElement, this)
+        FlexillaManager.initialized(this.offCanvasElement)
     }
 
     private moveElOnInit = () => {
-        this.teleporter.append()
+        waitForFxComponents(() => this.teleporter.append())
     }
 
     private findOffCanvasElements(selector: string, hasChildren: boolean, offCanvasId: string | null, parent?: HTMLElement) {

@@ -1,5 +1,5 @@
 import { CreateOverlay, type Placement } from "flexipop/create-overlay"
-import { $, $$, dispatchCustomEvent } from "@flexilla/utilities"
+import { $, $$, dispatchCustomEvent, waitForFxComponents } from "@flexilla/utilities"
 import type { ExperimentaOptions, TooltipOptions } from "./types"
 import { FlexillaManager } from "@flexilla/manager"
 import { domTeleporter } from "@flexilla/utilities"
@@ -60,6 +60,7 @@ class Tooltip {
         if (existingInstance) {
             return existingInstance;
         }
+        FlexillaManager.setup(this.contentElement)
         this.triggerElement = $(`[data-tooltip-trigger][data-tooltip-id=${content.getAttribute("id")}]`) as HTMLElement
         this.options = options
         this.triggerStrategy = content.dataset.triggerStrategy as "click" | "hover" || this.options.triggerStrategy || "hover"
@@ -101,6 +102,7 @@ class Tooltip {
 
         this.moveElOnInit()
         FlexillaManager.register('tooltip', this.contentElement, this)
+        FlexillaManager.initialized(this.contentElement)
     }
 
 
@@ -108,9 +110,11 @@ class Tooltip {
 
     private moveElOnInit = () => {
         if (this.experimentalOptions.teleport) {
-            if (this.experimentalOptions.teleportMode === "detachable")
-                this.teleporter.remove()
-            else this.teleporter.append()
+            waitForFxComponents(() => {
+                if (this.experimentalOptions.teleportMode === "detachable")
+                    this.teleporter.remove()
+                else this.teleporter.append()
+            })
         }
     }
 
