@@ -185,3 +185,23 @@ export const observeChildrenChanges = ({
 		observer.disconnect();
 	};
 };
+
+
+/**
+ * Wait until all [data-fx-component] elements are initialized.
+ * Calls the callback once ready.
+ * Non-blocking — runs in the background until condition is met.
+ */
+export function waitForFxComponents(callback: () => void) {
+    const check = () => {
+        const pending = document.querySelector(
+            "[data-fx-component]:not([data-component-initialized])"
+        );
+        if (!pending) {
+            callback();
+        } else {
+            requestAnimationFrame(check);
+        }
+    };
+    check();
+}
