@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/offcanvas",
   "private": false,
-  "version": "2.1.1",
+  "version": "2.1.2",
   "type": "module",
   "description": "An offcanvas component for creating responsive and off-screen navigation panels in web applications.",
   "publishConfig": {
@@ -63,6 +63,6 @@
   "license": "MIT",
   "author": "johnkat-mj",
   "dependencies": {
-    "@flexilla/manager": "^0.1.0"
+    "@flexilla/manager": "^0.2.0"
   }
 }

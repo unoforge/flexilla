@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/dropdown",
   "private": false,
-  "version": "2.2.3",
+  "version": "2.2.4",
   "type": "module",
   "description": "Utilities package for flexilla library",
   "publishConfig": {
@@ -43,7 +43,7 @@
     "vite-plugin-dts": "^4.5.3"
   },
   "dependencies": {
-    "@flexilla/manager": "^0.1.0",
+    "@flexilla/manager": "^0.2.0",
     "flexipop": "^0.3.0"
   },
   "keywords": [

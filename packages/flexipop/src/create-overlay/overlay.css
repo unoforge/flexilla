@@ -1,0 +1,10 @@
+[data-fx-overlay] {
+    visibility: hidden;
+    position  : fixed;
+    left      : var(--fx-popper-placement-x, 0px);
+    top       : var(--fx-popper-placement-y, 0px);
+}
+
+[data-fx-overlay][data-state="open"] {
+    visibility: visible;
+}

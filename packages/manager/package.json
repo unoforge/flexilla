@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/manager",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Utility that help manage Flexilla Components Instances",
   "publishConfig": {
