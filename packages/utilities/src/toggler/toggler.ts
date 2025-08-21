@@ -27,29 +27,38 @@ import type { TogglerOptions } from "./types";
  */
 export const actionToggler = (options: TogglerOptions) => {
 	const { trigger, targets, onToggle } = options;
-	const triggerElement = $getEl(trigger);
-	let initialStateSetled = false;
+	const triggerElement = trigger ? $getEl(trigger) : null;
 
-	const init = () => {
+	let isInitial = true;
+
+	const applyState = (state: "initial" | "to") => {
 		for (const target of targets) {
 			const targetElement = $getEl(target.element);
-			setAttributes(targetElement, target.attributes.initial);
-			initialStateSetled = true
+			setAttributes(targetElement, target.attributes[state]);
 		}
-	}
-	init()
-	triggerElement.addEventListener("click", () => {
-		for (const target of targets) {
-			const targetElement = $getEl(target.element);
-			const newAttributes = !initialStateSetled ? target.attributes.initial : target.attributes.to;
-			setAttributes(targetElement, newAttributes);
-		}
+		isInitial = state === "initial";
+		if (triggerElement) triggerElement.ariaExpanded = isInitial ? "false" : "true"
+		onToggle?.({ isExpanded: !isInitial });
+	};
 
-		initialStateSetled = !initialStateSetled;
-		onToggle?.({ isExpanded: !initialStateSetled });
-		triggerElement.ariaExpanded = initialStateSetled ? "false" : "true";
-	});
+	applyState("initial");
+	const setToggle = () => applyState(isInitial ? "to" : "initial");
+
+	triggerElement?.addEventListener("click", setToggle);
+
+	return {
+		toInitial: () => applyState("initial"),
+		toAction: () => applyState("to"),
+		toggle: () => applyState(isInitial ? "to" : "initial"),
+		get state() {
+			return isInitial ? "initial" : "to";
+		},
+		destroy: () => {
+			triggerElement?.removeEventListener("click", setToggle)
+		}
+	};
 };
+
 
 /**
  * Creates a toggleable navbar with accessibility support and optional overlay.
@@ -72,25 +81,18 @@ export const toggleNavbar = ({ navbarElement, onToggle }: { navbarElement: strin
 	const id = navbar.getAttribute("id")
 	const trigger = $(`[data-nav-trigger][data-toggle-nav=${id}]`);
 	const overlayEl = $(`[data-nav-overlay][data-navbar-id=${id}]`)
-	const toggleState = () => {
-		const state = navbar.dataset.state || "close";
-		const dataState = state === "open" ? "close" : "open"
-		navbar.setAttribute("data-state", dataState);
-		if (trigger) trigger.ariaExpanded = state === "open" ? "false" : "true"
-		if (overlayEl) {
-			overlayEl.ariaHidden = "true"
-			overlayEl.setAttribute("data-state", dataState)
-		}
-		onToggle?.({ isExpanded: dataState === "open" })
+	let targets = [{ element: navbar, attributes: { initial: { 'data-state': 'close' }, to: { 'data-state': 'open' } } }]
+	
+	if (overlayEl) {
+		targets = [...targets, {
+			element: overlayEl,
+			attributes: { initial: { 'data-state': 'close' }, to: { 'data-state': 'open' } }
+		}]
 	}
-	if (trigger) trigger.addEventListener("click", toggleState);
+	const navAction = actionToggler({ trigger, targets, onToggle })
+
 	const closeNavbar = () => {
-		navbar.setAttribute("data-state", "close");
-		trigger?.setAttribute("aria-expanded", "false");
-		if (overlayEl) {
-			overlayEl.setAttribute("data-state", "close")
-		}
-		onToggle?.({ isExpanded: false })
+		navAction.toInitial()
 	}
 	navbar.addEventListener("click", closeNavbar);
 	if (overlayEl instanceof HTMLElement && !overlayEl.hasAttribute("data-static-overlay")) {
@@ -98,9 +100,9 @@ export const toggleNavbar = ({ navbarElement, onToggle }: { navbarElement: strin
 	}
 
 	const cleanup = () => {
+		navbar.removeEventListener("click", closeNavbar);
+		navAction.destroy()
 		if (overlayEl instanceof HTMLElement && !overlayEl.hasAttribute("data-static-overlay")) {
-			navbar.removeEventListener("click", closeNavbar);
-			if (trigger) trigger.removeEventListener("click", toggleState);
 			overlayEl.removeEventListener("click", closeNavbar)
 		}
 	}
@@ -108,6 +110,6 @@ export const toggleNavbar = ({ navbarElement, onToggle }: { navbarElement: strin
 	return {
 		cleanup,
 		close: closeNavbar,
-		toggle: toggleState
+		toggle: navAction.toggle
 	}
 }
