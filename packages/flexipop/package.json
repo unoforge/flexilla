@@ -1,7 +1,7 @@
 {
   "name": "flexipop",
   "private": false,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -63,6 +63,6 @@
   "license": "MIT",
   "author": "johnkat-mj",
   "dependencies": {
-    "@flexilla/utilities": "^2.4.1"
+    "@flexilla/utilities": "^2.4.2"
   }
 }

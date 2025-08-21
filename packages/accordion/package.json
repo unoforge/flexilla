@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/accordion",
   "private": false,
-  "version": "2.2.3",
+  "version": "2.2.4",
   "type": "module",
   "description": "A versatile and interactive accordion component for creating collapsible sections in web applications, conserving space and improving user experience",
   "publishConfig": {
@@ -37,12 +37,12 @@
   },
   "dependencies": {
     "@flexilla/manager": "latest",
-    "@flexilla/utilities": "^2.4.1"
+    "@flexilla/utilities": "^2.4.2"
   },
   "devDependencies": {
     "typescript": "^5.8.3",
-    "vite": "^6.3.2",
-    "vite-plugin-dts": "^4.5.3"
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
   },
   "keywords": [
     "accordion",

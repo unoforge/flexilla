@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/collapsible",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "A utility for creating collapsible sections in web applications, conserving space and improving user experience.",
   "publishConfig": {
@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "typescript": "^5.8.3",
-    "vite": "^6.3.2",
-    "vite-plugin-dts": "^4.5.3"
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
   },
   "dependencies": {
     "@flexilla/utilities": "latest"

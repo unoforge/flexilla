@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/custom-range",
   "private": false,
-  "version": "2.0.12",
+  "version": "2.0.13",
   "type": "module",
   "description": "A lightweight JavaScript component to add range indicator to a custom range component",
   "publishConfig": {
@@ -38,8 +38,8 @@
   },
   "devDependencies": {
     "typescript": "^5.8.3",
-    "vite": "^6.3.2",
-    "vite-plugin-dts": "^4.5.3"
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
   },
   "keywords": [
     "custom-range",
@@ -60,6 +60,6 @@
   "license": "MIT",
   "author": "johnkat-mj",
   "dependencies": {
-    "@flexilla/manager": "^0.2.0"
+    "@flexilla/manager": "^0.2.1"
   }
 }
