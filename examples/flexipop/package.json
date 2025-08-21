@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "flexipop": "0.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "unocss": "^0.62.4",
+    "vite": "^5.4.1"
+  }
+}
