@@ -1,0 +1,5 @@
+[data-fx-popper] {
+    position: fixed;
+    left    : var(--fx-popper-placement-x, 0px);
+    top     : var(--fx-popper-placement-y, 0px);
+}

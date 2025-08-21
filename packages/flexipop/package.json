@@ -1,0 +1,68 @@
+{
+  "name": "flexipop",
+  "private": false,
+  "version": "0.3.0",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/flexipop.cjs",
+  "module": "./dist/flexipop.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/flexipop.js",
+      "require": "./dist/flexipop.cjs"
+    },
+    "./create-overlay": {
+      "import": "./dist/create-overlay.js",
+      "require": "./dist/create-overlay.cjs"
+    },
+    "./flexipop.css": "./dist/flexipop.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@vitest/ui": "^3.1.4",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.1.4"
+  },
+  "keywords": [
+    "flexipop",
+    "flexilla popper",
+    "popper",
+    "dropdown",
+    "positioning engine",
+    "popover",
+    "tooltip",
+    "flexilla",
+    "positioning"
+  ],
+  "homepage": "https://github.com/unoforge/flexilla/tree/main/packages/flexipop",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unify-ui-dev/flexipop/tree/main/packages/flexipop"
+  },
+  "bugs": {
+    "url": "https://github.com/unify-ui-dev/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "johnkat-mj",
+  "dependencies": {
+    "@flexilla/utilities": "^2.4.1"
+  }
+}
