@@ -1,0 +1,68 @@
+{
+  "name": "@flexilla/pin-input",
+  "private": false,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "A lightweight JavaScript component for creating PIN and OTP input fields with validation and keyboard navigation support.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/pin-input.umd.cjs",
+  "module": "./dist/pin-input.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/pin-input.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/pin-input.umd.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json",
+    "!vite.config.ts",
+    "!.gitignore",
+    "!tsconfig.json"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@flexilla/utilities": "latest",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "keywords": [
+    "pin-input",
+    "otp-input",
+    "verification-code",
+    "js",
+    "ts",
+    "component",
+    "interactive",
+    "input-field",
+    "flexilla"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unoforge/flexilla"
+  },
+  "bugs": {
+    "url": "https://github.com/unoforge/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "johnkat-mj",
+  "dependencies": {
+    "@flexilla/manager": "^0.2.1"
+  }
+}
