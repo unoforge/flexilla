@@ -59,6 +59,8 @@ class Offcanvas {
 
         const offCanvasElement = typeof offcanvas === "string" ? $(offcanvas) : offcanvas
         if (!(offCanvasElement instanceof HTMLElement)) throw new Error("Invalid Offcanvas, the provided Element is not a valid HTMLElement")
+        
+        this.offCanvasElement = offCanvasElement
         const existingInstance = FlexillaManager.getInstance("offcanvas", offCanvasElement);
         if (existingInstance) {
             return existingInstance;
@@ -70,7 +72,6 @@ class Offcanvas {
 
 
 
-        this.offCanvasElement = offCanvasElement
         this.setupAttributes()
         this.staticBackdrop = staticBackdrop || (offCanvasElement.hasAttribute("data-static-backdrop") && offCanvasElement.dataset.staticBackdrop !== "false") || false
         this.allowBodyScroll = allowBodyScroll || (offCanvasElement.hasAttribute("data-allow-body-scroll") && offCanvasElement.dataset.allowBodyScroll !== "false") || false
