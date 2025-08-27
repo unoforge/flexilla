@@ -14,11 +14,11 @@
   </style>
 </head>
 
-<body class="pt14 bg-white dark-bg-zinc950">
+<body class="pt14 bg-white dark:bg-zinc-950">
   <section class="max-w3xl mxauto space-y-16 relative z20 pb20">
     <div class="space-y-6">
       <div space-y-1>
-        <h1 class="text-xl font-semibold text-zinc9 dark-text-white">
+        <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
             Popover
         </h1>
         <p text-zinc7>
@@ -26,12 +26,12 @@
         </p>
     </div>
       <div
-        class="p10 rd-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6 h96 flex gap-4 items-center justify-center">
+        class="p10 rounded-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6 h96 flex gap-4 items-center justify-center">
         <div data-us-parent class="relative">
-          <button data-popover-trigger data-popover-id="popover-example" class="bg-neutral8 text-white px4 py2 rd-lg text-sm">
+          <button data-popover-trigger data-popover-id="popover-example" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
             Show PopOver
           </button>
-          <div data-fx-popper data-popover-content id="popover-example" class="ui-popper invisible op0 fx-open-visible fx-open-op100 w64 z20 p6 bg-zinc1 dark-bg-zinc9/50 rd-md h48">
+          <div data-fx-popper data-popover-content id="popover-example" class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-64 z-20 p-6 bg-zinc-100 dark:bg-zinc-900/50 rounded-md h-48">
             this is content
           </div>
         </div>

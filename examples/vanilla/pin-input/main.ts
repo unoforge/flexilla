@@ -1,4 +1,4 @@
-import "../../main"
+import "./../main.ts"
 import {PinInput} from "@flexilla/pin-input"
 
 
