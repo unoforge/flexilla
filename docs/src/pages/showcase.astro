@@ -27,7 +27,7 @@ import CardShow from "@components/showcase/CardShow.astro";
       {
         showcase_.map((item) => (
           <div class="space-y-6 mx-auto max-w6xl">
-            <h2 class="text-lg font-semibold text-zinc9 dark-text-white">{item.section}</h2>
+            <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">{item.section}</h2>
             <div class="grid sm-grid-cols-2 lg-grid-cols-3 gap-6">
               {item.items.map((case_) => (
                 <CardShow {...case_} />

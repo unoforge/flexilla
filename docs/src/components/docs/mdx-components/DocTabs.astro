@@ -11,13 +11,13 @@ const { values, autoHeight } = Astro.props;
 <div
   data-tab-fx-site
   data-fx-tabs
-  data-indicator-class-name="ui-tabs-indicator before-absolute before-bottom-0 before-content-empty before-h0.5 before-rd-full before-inset-x-0 before-bg-zinc8 dark-before-bg-white"
+  data-indicator-class-name="ui-tabs-indicator before-absolute before-bottom-0 before-content-empty before-h0.5 before-rounded-full before-inset-x-0 before-bg-zinc-800 dark-before-bg-white"
   class="my4 first-mt0 last-mb0 grid"
 >
   <ul
     role="tablist"
     data-tab-list
-    class="flex items-center gap-x3 b-b b-b-zinc6/30 dark-b-b-zinc5/20 relative"
+    class="flex items-center gap-x-3 b-b b-b-zinc6/30 dark-b-b-zinc5/20 relative"
   >
     {
       values.map((value) => (
@@ -29,7 +29,7 @@ const { values, autoHeight } = Astro.props;
             role="tab"
             aria-controls={value}
             aria-label={`${value}`}
-            class="flex cursor-pointer disabled-cursor-not-allowed disabled-op80 px4 pt1.5 pb2.5 fx-active-text-zinc9 dark-fx-active-text-white outline-none"
+            class="flex cursor-pointer disabled:cursor-not-allowed disabled:opacity-80 px4 pt1.5 pb2.5 fx-active:text-zinc9 dark:fx-active:text-white outline-none"
           >
             {value}
           </a>

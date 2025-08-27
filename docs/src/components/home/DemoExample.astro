@@ -7,18 +7,18 @@ import { users } from "@data/demo-users";
 
 <div
   data-demo-box
-  class="wfull lg-max-w44rem xl-max-w3xl mx-auto relative xl-px0 hidden sm-grid pt18 px5 sm-px10"
+  class="w-full lg-max-w44rem xl-max-w3xl mx-auto relative xl-px0 hidden sm-grid pt18 px5 sm-px10"
 >
   <div
     data-user-demo-desktop
-    class="wfull flex flex-col-reverse sm-flex-row sm-justify-between sm-items-center mb6 relative gap4"
+    class="w-full flex flex-col-reverse sm-flex-row sm-justify-between sm-items-center mb6 relative gap4"
   >
-    <form action="#someaction" class="wfull sm-wmax">
+    <form action="#someaction" class="w-full sm-wmax">
       <div class="relative wfull">
         <input
           type="search"
           placeholder="Start tapping..."
-          class="px3 py1.5 wfull rd-md bg-white dark-bg-neutral950 b b-zinc2/80 dark-b-zinc8/80 focus-b-transparent focus-outline focus-outline-2 focus-outline-zinc3 dark-focus-outline-zinc7 placeholder-text-zinc4 dark-placeholder-text-zinc6 text-zinc7 dark-text-zinc3 ring-0 ring-inset focus-ring-transparent focus-outline-offset-0"
+          class="px-3 py-1.5 w-full rounded-md bg-white dark-bg-neutral950 b b-zinc2/80 dark-b-zinc8/80 focus-b-transparent focus-outline focus-outline-2 focus-outline-zinc3 dark-focus-outline-zinc7 placeholder-text-zinc4 dark-placeholder-text-zinc-600 text-zinc-700 dark:text-zinc-300 ring-0 ring-inset focus-ring-transparent focus-outline-offset-0"
         />
         <span
           aria-hidden="true"
@@ -56,13 +56,13 @@ import { users } from "@data/demo-users";
         id="export-dropdown"
         data-fx-dropdown
         data-placement="bottom-end"
-        class="ui-popper op0 invisible transition-opacity duration-200 fx-open-op100 fx-open-visible b b-zinc2/80 dark-b-zinc8/80 bg-zinc1/80 dark-bg-zinc9/80 backdrop-blur-xl p2.5 rd-xl w54 z40"
+        class="ui-popper opacity-0 invisible transition-opacity duration-200 fx-open:opacity-100 fx-open:visible b b-zinc2/80 dark-b-zinc8/80 bg-zinc1/80 dark-bg-zinc-900/80 backdrop-blur-xl p2.5 rd-xl w54 z40"
       >
-        <ul class="wfull children-flex text-sm text-zinc7 dark-text-zinc3">
+        <ul class="w-full children-flex text-sm text-zinc-700 dark:text-zinc-300">
           <li>
             <button
               aria-label="button action"
-              class="flex wfull items-center gap-x3 px4 py2 hover-bg-zinc2/60 dark-hover-bg-zinc8/60 outline-transparent rd-lg focus-bg-zinc2/90 dark-focus-bg-zinc8/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
+              class="flex w-full items-center gap-x-3 px-4 py-2 hover-bg-zinc2/60 dark-hover-bg-zinc-800/60 outline-transparent rounded-lg focus-bg-zinc2/90 dark-focus-bg-zinc-800/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
             >
               <span aria-hidden="true" class="flex i-carbon-csv"></span>
               <span class="line-clamp-1">Export to CSV</span>
@@ -71,7 +71,7 @@ import { users } from "@data/demo-users";
           <li>
             <button
               aria-label="button action"
-              class="flex wfull items-center gap-x3 px4 py2 hover-bg-zinc2/60 dark-hover-bg-zinc8/60 outline-transparent rd-lg focus-bg-zinc2/90 dark-focus-bg-zinc8/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
+              class="flex w-full items-center gap-x-3 px-4 py-2 hover-bg-zinc2/60 dark-hover-bg-zinc-800/60 outline-transparent rounded-lg focus-bg-zinc2/90 dark-focus-bg-zinc-800/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
             >
               <span aria-hidden="true" class="flex i-carbon-json"></span>
               <span class="line-clamp-1">Export to JSON</span>
@@ -104,16 +104,16 @@ import { users } from "@data/demo-users";
     </div>
   </div>
   <div
-    class="b rd-xl b-zinc2/80 dark-b-zinc8/80 bg-white dark-bg-zinc950 relative wfull"
+    class="b rd-xl b-zinc2/80 dark-b-zinc8/80 bg-white dark:bg-zinc-950 relative wfull"
   >
     <div
-      class="h12 rd-t-xl flex items-center justify-between px3 bg-zinc1/80 dark-bg-zinc9/80 text-sm text-zinc6 dark-text-zinc4"
+      class="h12 rd-t-xl flex items-center justify-between px3 bg-zinc1/80 dark-bg-zinc-900/80 text-sm text-zinc-600 dark-text-zinc4"
     >
       <div class="flex items-center gap-x4">
         <div class="min-wmax flex group">
           <label
             for="check-id"
-            class="relative flex items-center justify-center size-4 rd-md b b-zinc2/80 dark-b-zinc8/80 has-checked-bg-zinc8 dark-has-checked-bg-white"
+            class="relative flex items-center justify-center size-4 rounded-md b b-zinc2/80 dark-b-zinc8/80 has-checked-bg-zinc-800 dark-has-checked-bg-white"
           >
             <input
               type="checkbox"
@@ -142,25 +142,25 @@ import { users } from "@data/demo-users";
         </Button>
       </div>
     </div>
-    <div class="wfull divide-y divide-zinc2/80 dark-divide-zinc8/80 grid">
+    <div class="w-full divide-y divide-zinc2/80 dark-divide-zinc8/80 grid">
       {users.map((user) => <DemoRow {...user} />)}
     </div>
   </div>
-  <div data-mob-user class="grid wfull xl-hidden gap-4"></div>
+  <div data-mob-user class="grid w-full xl-hidden gap-4"></div>
 </div>
 <dialog
   data-fx-modal
   data-modal-invite
   data-modal-id="modal-message-def"
-  data-modal-overlay="ui-overlay bg-zinc2/60 dark-bg-zinc8/50 backdrop-blur-lg"
-  class="justify-center items-start p4 fixed wscreen hscreen top-0 left-0 z90 hidden fx-open-flex bg-transparent"
+  data-modal-overlay="ui-overlay bg-zinc2/60 dark-bg-zinc-800/50 backdrop-blur-lg"
+  class="justify-center items-start p-4 fixed w-screen h-screen top-0 left-0 z90 hidden fx-open:flex bg-transparent"
   aria-hidden="true"
 >
   <div
     data-modal-content
     data-enter-animation="fadeInScale .4s linear"
     data-exit-animation="fadeOutScale .1s linear"
-    class="relative ui-animated-modal-content bg-white dark-bg-zinc950 rd-lg overflow-hidden wfull max-w600px p8 flex flex-col gap-y4 items-center ease-linear transition-all"
+    class="relative ui-animated-modal-content bg-white dark:bg-zinc-950 rounded-lg overflow-hidden w-full max-w600px p-8 flex flex-col gap-y-4 items-center ease-linear transition-all"
   >
     <Button
       data-close-modal
@@ -171,27 +171,27 @@ import { users } from "@data/demo-users";
     >
       <span
         aria-hidden="true"
-        class="flex i-carbon-close text-xl text-zinc7 dark-text-zinc3"></span>
+        class="flex i-carbon-close text-xl text-zinc-700 dark:text-zinc-300"></span>
     </Button>
     <div
-      class="wmax p3 rd-full bg-zinc2 dark-bg-zinc8 text-zinc8 dark-text-zinc2 mt4"
+      class="w-max p3 rounded-full bg-zinc-200 dark-bg-zinc-800 text-zinc8 dark-text-zinc2 mt4"
     >
       <span aria-hidden="true" class="flex i-carbon-chat text-md"></span>
     </div>
-    <h2 class="font-semibold text-zinc9 dark-text-white">
+    <h2 class="font-semibold text-zinc-900 dark:text-white">
       Invite a member to UnifyUI Dev Team
     </h2>
-    <div class="pt8 wfull flex flex-col space-y-4">
+    <div class="pt8 w-full flex flex-col space-y-4">
       <form action="#action" class="wfull">
-        <label for="user_n" class="text-sm text-zinc6 dark-text-zinc4"
+        <label for="user_n" class="text-sm text-zinc-600 dark-text-zinc4"
           >Search by username, full name or email address</label
         >
-        <div class="flex relative wfull hmax">
+        <div class="flex relative w-full hmax">
           <input
             type="text"
             name="user_n"
             id="user_n"
-            class="flex-1 py2 px5 rd-lg bg-zinc1/80 dark-bg-zinc9/80 text-zinc7 dark-text-zinc3 text-sm b b-zinc2/80 dark-b-zinc8/80 outline-transparent focus-outline focus-outline-zinc3/80 dark-focus-outline-zinc7/80"
+            class="flex-1 py2 px5 rounded-lg bg-zinc1/80 dark-bg-zinc-900/80 text-zinc-700 dark:text-zinc-300 text-sm b b-zinc2/80 dark-b-zinc8/80 outline-transparent focus-outline focus-outline-zinc3/80 dark-focus-outline-zinc7/80"
           />
           <Button
             size={"sm"}
@@ -222,10 +222,10 @@ import { users } from "@data/demo-users";
         <div
           data-dismissible-demo
           data-action="remove-from-dom"
-          class="rd-lg ppx bg-gradient-to-tl from-blue4 to-indigo7 dark-from-purple6 dark-to-indigo5"
+          class="rounded-lg ppx bg-gradient-to-tl from-blue4 to-indigo7 dark-from-purple6 dark-to-indigo5"
         >
           <div
-            class="wfull bg-white dark-bg-zinc950 p3 rd-7px flex items-center gap-x4"
+            class="w-full bg-white dark:bg-zinc-950 p3 rd-7px flex items-center gap-x4"
           >
             <div
               class="flex flex-1 flex-col text-sm text-zinc8 dark-text-zinc2"
@@ -238,11 +238,11 @@ import { users } from "@data/demo-users";
                   class="text-blue6 dark-text-blue5">SAML single sign-on</a
                 >
               </div>
-              <span class="text-sm text-zinc6 dark-text-zinc4"
+              <span class="text-sm text-zinc-600 dark-text-zinc4"
                 >Try it in a 30-day trial of GitHub Enterprise.</span
               >
             </div>
-            <div class="flex items-center gap-x3 wmax">
+            <div class="flex items-center gap-x-3 wmax">
               <Link
                 href="#link"
                 variant={"gradient"}

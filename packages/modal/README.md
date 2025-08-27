@@ -54,15 +54,15 @@ Here's a simple example of how to use the Modal component:
 
 ```html
 <div>
-  <button data-modal-target="modal-alert" class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
+  <button data-modal-target="modal-alert" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
     Animate On Enter
   </button>
   <div data-modal-test-2 aria-hidden="true" data-modal-id="modal-alert"
     data-modal-overlay="bg-gray8/70 backdrop-filter backdrop-blur-3xl" data-state="close"
-    class="hidden justify-center items-start p4 fixed wscreen hscreen top-0 left-0">
+    class="hidden justify-center items-start p-4 fixed w-screen h-screen top-0 left-0">
     <dialog data-modal-content data-enter-animation="fadeScale .4s linear"
-      class="relative bg-white dark-bg-gray950 rd-lg overflow-hidden wfull max-wxl p8 flex flex-col gap-y4 items-center ease-linear transition-all">
-      <div class="wmax p3 rd-full bg-red2 text-red6">
+      class="relative bg-white dark-bg-gray950 rounded-lg overflow-hidden w-full max-w-xl p-8 flex flex-col gap-y-4 items-center ease-linear transition-all">
+      <div class="w-max p-3 rounded-full bg-red-200 text-red-600">
         <span flex i-carbon-trash-can text-lg></span>
       </div>
       <h2 class="font-semibold text-xl text-gray9 dark-text-white">
@@ -71,12 +71,12 @@ Here's a simple example of how to use the Modal component:
       <p class="text-gray7 dark-text-gray3">
         Are you sure you want to delete this event?
       </p>
-      <div class="flex justify-center gap-x3 pt4">
+      <div class="flex justify-center gap-x-3 pt-4">
         <button data-close-modal
-          class="h9 text-sm flex items-center px5 rd-md bg-gray1 dark-bg-gray9 duration-300 hover-!bg-op60 text-gray8 dark-text-gray2">
+          class="h-9 text-sm flex items-center px5 rounded-md bg-gray1 dark-bg-gray9 duration-300 hover-!bg-op60 text-gray8 dark-text-gray2">
           No, Cancel
         </button>
-        <button class="h9 text-sm flex items-center px5 rd-md bg-red6 duration-200 hover-bg-op80 text-white">
+        <button class="h-9 text-sm flex items-center px-5 rounded-md bg-red-600 duration-200 hover:bg-red-600/80 text-white">
           Yes, Delete
         </button>
       </div>

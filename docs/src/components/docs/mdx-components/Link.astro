@@ -9,7 +9,7 @@ const href_ = href as string;
 {
   (href_ && href_.startsWith("/")) || (href_ && href_.startsWith("#")) ? (
     <a href={href} aria-label={!label || label === "" ? `Link to ${href}` : label} class="underline1 underline-1 wmax underline-offset-3 underline-dashed inline-flex
-      gap-x2 px1 py0.5 rd-lg text-emerald7 dark-text-emerald5 hover-text-zinc9 dark-hover-text-white whitespace-normal break-words">
+      gap-x2 px1 py0.5 rounded-lg text-emerald7 dark-text-emerald5 hover-text-zinc9 dark-hover-text-white whitespace-normal break-words">
       <slot />
     </a>
   ) : (

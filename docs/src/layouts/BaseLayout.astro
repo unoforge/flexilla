@@ -49,23 +49,9 @@ const { seo } = Astro.props;
         });
       }
     </script>
-    <!-- Google tag (gtag.js) -->
-    <!-- <script is:inline
-      type="text/partytown"
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-4041S1SLCY"></script>
-    <script is:inline type="text/partytown">
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-4041S1SLCY");
-    </script> -->
   </head>
   <body
-    class="overflow-x-hidden overflow-y-auto lg-overflow-y-auto bg-white dark-bg-zinc950 text-zinc7 dark-text-zinc3"
+    class="overflow-x-hidden overflow-y-auto lg-overflow-y-auto bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300"
   >
     <slot />
   </body>

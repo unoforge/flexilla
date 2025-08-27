@@ -84,7 +84,7 @@ const getSocialIcon = (social:string)=>{
 ---
 
 <div
-  class="p5 sm-p6 md-p8 lg-p10 rd-xl b b-zinc2/90 dark-b-zinc8/40 bg-white dark-bg-zinc950"
+  class="p5 sm-p6 md-p8 lg-p10 rd-xl b b-zinc2/90 dark-b-zinc8/40 bg-white dark:bg-zinc-950"
 >
   <div class="grid grid-cols-2 md-grid-cols-4 gap-x6 gap-y10 md-gap-x10">
     <div class="space-y-6 col-span-2 lg-col-span-1">
@@ -97,10 +97,10 @@ const getSocialIcon = (social:string)=>{
       footerItems.map((footerItem) =>
         footerItem.label === "Community" ? (
           <div class="space-y-6">
-            <h2 class="text-zinc9 dark-text-white font-semibold">
+            <h2 class="text-zinc-900 dark:text-white font-semibold">
               {footerItem.label}
             </h2>
-            <ul class="text-zinc6 dark-text-zinc4 text-sm gap2 lg-gap3 flex flex-wrap lg-flex-col -mx2.5 lg-mx0">
+            <ul class="text-zinc-600 dark-text-zinc4 text-sm gap2 lg-gap3 flex flex-wrap lg-flex-col -mx2.5 lg-mx0">
               {footerItem.items.map((item) => (
                 <li>
                   <a
@@ -111,7 +111,7 @@ const getSocialIcon = (social:string)=>{
                       class={
                         `
                         ease-linear duration-200 lg-transition-color hover-text-zinc9 dark-hover-text-zinc1
-                        rd-lg lg-rd-0 transition flex hover-bg-zinc2/90 dark-hover-bg-zinc9/90 p2.5 lg-p0 lg-hover-bg-transparent lg-dark-hover-bg-transparent
+                        rounded-lg lg-rd-0 transition flex hover-bg-zinc2/90 dark-hover-bg-zinc9/90 p2.5 lg-p0 lg-hover-bg-transparent lg-dark-hover-bg-transparent
                         `
                       }
                     >
@@ -128,10 +128,10 @@ const getSocialIcon = (social:string)=>{
           </div>
         ) : (
           <div class="space-y-6">
-            <h2 class="text-zinc9 dark-text-white font-semibold">
+            <h2 class="text-zinc-900 dark:text-white font-semibold">
               {footerItem.label}
             </h2>
-            <ul class="text-zinc6 dark-text-zinc4 text-sm space-y-3">
+            <ul class="text-zinc-600 dark-text-zinc4 text-sm space-y-3">
               {footerItem.items.map((item) => (
                 <li>
                   {item.isExternal ? (
@@ -162,7 +162,7 @@ const getSocialIcon = (social:string)=>{
     }
   </div>
   <div
-    class="text-center b-t b-t-zinc2/90 dark-b-t-zinc8/60 pt6 mt6 text-zinc6 dark-text-zinc4 text-sm"
+    class="text-center b-t b-t-zinc2/90 dark-b-t-zinc8/60 pt6 mt6 text-zinc-600 dark-text-zinc4 text-sm"
   >
     <p>
       &copy; 2023-{new Date().getFullYear()}
@@ -170,7 +170,7 @@ const getSocialIcon = (social:string)=>{
         href="https://unifyui-dev.vercel.app"
         aria-label="Link to UnifyUIDev Website"
         target="_blank"
-        class="text-zinc9 dark-text-white font-medium underline underline-offset-4"
+        class="text-zinc-900 dark:text-white font-medium underline underline-offset-4"
         >UnifyUI Dev</a
       >. All rights reserved.
     </p>

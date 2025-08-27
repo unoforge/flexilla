@@ -19,7 +19,7 @@ const { value, active, noBorder, noBg } = Astro.props;
   data-state={`${active ? "active" : "inactive"}`}
   data-no-bg={noBg}
   data-no-border={noBorder}
-  class="hidden fx-active-flex active-outline-zinc8/50 focus-outline-zinc8/50 flex-1"
+  class="hidden fx-active:flex active-outline-zinc8/50 focus-outline-zinc8/50 flex-1"
 >
   <slot />
 </section>

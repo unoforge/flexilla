@@ -17,10 +17,10 @@ const { label, items, activeItem } = Astro.props;
 ---
 
 <div class="flex flex-col space-y-3 text-sm wfull">
-  <h2 text-zinc6 dark-text-zinc4 text-sm>
+  <h2 text-zinc-600 dark-text-zinc4 text-sm>
     {label}
   </h2>
-  <ul class="flex flex-col space-y-1 text-zinc7 dark-text-zinc3 wfull">
+  <ul class="flex flex-col space-y-1 text-zinc-700 dark:text-zinc-300 wfull">
     {items.map((item) => !item.hideFromSidebar ? <SidebarItem activeItem={activeItem} {...item} />:null)}
   </ul>
 </div>

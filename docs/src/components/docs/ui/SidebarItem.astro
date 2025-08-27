@@ -13,11 +13,11 @@ const { icon, text, href, draft, activeItem } = Astro.props;
 const isActive = href === `/docs/${activeItem}`
 ---
 
-<li class="wfull pr2.5">
+<li class="w-full pr2.5">
   <a
     href={href}
-    class={`flex items-center gap-x3 py1 wfull
-        ${isActive ? "text-zinc9 dark-text-white font-500" : "hover-text-zinc9 dark-hover-text-white"}
+    class={`flex items-center gap-x-3 py1 wfull
+        ${isActive ? "text-zinc-900 dark:text-white font-500" : "hover-text-zinc9 dark-hover-text-white"}
         ${draft ? "pointer-events-none op80 select-none" : ""}
         `}
   >
@@ -31,13 +31,13 @@ const isActive = href === `/docs/${activeItem}`
           height={40}
         />
       ) : (
-        <span aria-hidden="true" class={` ${icon} ${icon.includes("uno") && !isActive ? "text-zinc6 dark-text-zinc4" :""} flex text-lg`} />
+        <span aria-hidden="true" class={` ${icon} ${icon.includes("uno") && !isActive ? "text-zinc-600 dark-text-zinc4" :""} flex text-lg`} />
       )
     }
     <span class="flex-1">{text}</span>
     {
       draft ? (
-        <span class="flex self-end px1 pypx b b-zinc2/70 dark-b-zinc8/7 bg-zinc1/80 dark-bg-zinc9/80 text-zinc8 dark-text-zinc2 rd-full">
+        <span class="flex self-end px1 pypx b b-zinc2/70 dark-b-zinc8/7 bg-zinc1/80 dark-bg-zinc-900/80 text-zinc8 dark-text-zinc2 rounded-full">
           draft
         </span>
       ) : null

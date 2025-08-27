@@ -27,17 +27,17 @@ const getIcon = (iconName: string) => {
   data-fx-tabs
   data-use-indicator
   data-code-block
-  data-indicator-class-name="rd-lg bg-zinc1/50 dark-bg-zinc-9/50 b b-zinc6/30 dark-b-zinc5/20 before-absolute before-content-empty before-hpx before-inset-x-4 before-bg-gradient-to-l before-from-transparent before-via-zinc-4 dark-before-via-zinc7 before-to-transparent after-absolute after-bottom-0 after-content-empty after-hpx after-inset-x-4 after-bg-gradient-to-l after-from-transparent after-via-zinc-4 dark-after-via-zinc7"
+  data-indicator-class-name="rounded-lg bg-zinc1/50 dark-bg-zinc-9/50 b b-zinc6/30 dark-b-zinc5/20 before-absolute before-content-empty before-hpx before-inset-x-4 before-bg-gradient-to-l before-from-transparent before-via-zinc-4 dark-before-via-zinc7 before-to-transparent after-absolute after-bottom-0 after-content-empty after-hpx after-inset-x-4 after-bg-gradient-to-l after-from-transparent after-via-zinc-4 dark-after-via-zinc7"
   class="h98 flex flex-col w-full !b-0 !b-transparent"
 >
   <div
     data-tab-list
-    class="bg-white dark-bg-zinc950 flex items-center justify-between relative b-y b-zinc2/90 dark-b-zinc8/60
-    text-sm text-zinc7 dark-text-zinc3 h12 flex justify-between items-center"
+    class="bg-white dark:bg-zinc-950 flex items-center justify-between relative b-y b-zinc2/90 dark-b-zinc8/60
+    text-sm text-zinc-700 dark:text-zinc-300 h12 flex justify-between items-center"
   >
     <div
       data-scrollbar-hidden
-      class="flex-1 hfull pl-1.5 flex items-center gap-x3 relative z20 text-zinc7 dark-text-zinc3"
+      class="flex-1 hfull pl-1.5 flex items-center gap-x-3 relative z20 text-zinc-700 dark:text-zinc-300"
     >
       {
         values.map((triggerValue) => (
@@ -45,7 +45,7 @@ const getIcon = (iconName: string) => {
             data-tabs-trigger
             data-target={triggerValue.value}
             aria-label={`Go to tab ${triggerValue.value}`}
-            class="flex items-center gap-x2 disabled-cursor-not-allowed disabled-op80 px3.5 py2 data-[state=active]-text-zinc9 dark-data-[state=active]-text-white focus-outline-none"
+            class="flex items-center gap-x2 disabled:cursor-not-allowed disabled:opacity-80 px3.5 py2 data-[state=active]-text-zinc9 dark-data-[state=active]-text-white focus-outline-none"
           >
             {triggerValue.icon && triggerValue.icon !== "" ? (
               <span

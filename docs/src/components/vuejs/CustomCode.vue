@@ -33,7 +33,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-    <div v-if="isLoading" class="p2 wfull flex justify-center items-center">
+    <div v-if="isLoading" class="p2 w-full flex justify-center items-center">
         <span aria-hidden="true" class="flex i-carbon-rotate-180 animate-spin"></span>
     </div>
     <figure v-html="finalCodeHtml" data-code-snippet role="region" aria-label="codeblock region" class="grid px4 pb6"/>

@@ -35,7 +35,7 @@ const {
   <div class="min-wmax flex group">
     <label
       for={`checkUser${id}`}
-      class="relative flex items-center justify-center size-4 rd-md b b-zinc2/80 dark-b-zinc8/80 has-checked-bg-zinc8 dark-has-checked-bg-white"
+      class="relative flex items-center justify-center size-4 rounded-md b b-zinc2/80 dark-b-zinc8/80 has-checked-bg-zinc-800 dark-has-checked-bg-white"
     >
       <input
         type="checkbox"
@@ -58,7 +58,7 @@ const {
         width={140}
         height={140}
         alt={`Avatar de ${user_name}`}
-        class="size-10 rd-full object-cover"
+        class="size-10 rounded-full object-cover"
       />
       <div class="flex flex-col">
         <div
@@ -86,10 +86,10 @@ const {
             data-offset-distance="0"
             data-trigger-strategy="hover"
             data-prevent-close-inside
-            class="ui-popper op0 invisible transition-opacity duration-200 fx-open-op100 fx-open-visible b b-zinc2/80 dark-b-zinc8/80 bg-zinc1/90 dark-bg-zinc9/90 backdrop-blur-xl rd-xl w70 sm-w84 z50 overflow-hidden"
+            class="ui-popper opacity-0 invisible transition-opacity duration-200 fx-open:opacity-100 fx-open:visible b b-zinc2/80 dark-b-zinc8/80 bg-zinc1/90 dark-bg-zinc9/90 backdrop-blur-xl rd-xl w70 sm-w84 z50 overflow-hidden"
           >
             <div
-              class="flex items-center gap-x2 px4 py1.5 b-b b-b-zinc2/80 dark-b-b-zinc8/80 text-xs sm-text-sm text-zinc7 dark-text-zinc3"
+              class="flex items-center gap-x2 px4 py1.5 b-b b-b-zinc2/80 dark-b-b-zinc8/80 text-xs sm-text-sm text-zinc-700 dark:text-zinc-300"
             >
               <span aria-hidden="true" class="flex i-carbon-chat text-xs"
               ></span>
@@ -102,7 +102,7 @@ const {
                   alt={`avatar de ${user_name}`}
                   width={140}
                   height={140}
-                  class="size-13 rd-full object-cover"
+                  class="size-13 rounded-full object-cover"
                 />
                 <Link
                   href={profile_link}
@@ -117,20 +117,20 @@ const {
                 </Link>
               </div>
               <div class="flex flex-wrap items-center gap-3">
-                <span class="text-zinc9 dark-text-white">{user_name}</span>
-                <span class="text-zinc6 dark-text-zinc4 text-xs sm-text-sm"
+                <span class="text-zinc-900 dark:text-white">{user_name}</span>
+                <span class="text-zinc-600 dark-text-zinc4 text-xs sm-text-sm"
                   >{mail}</span
                 >
               </div>
               <p class="text-sm text-zinc8 dark-text-zinc2 font-200">
                 {description}
               </p>
-              <ul class="text-zinc6 dark-text-zinc4 text-sm">
-                <li class="flex items-center gap-x3">
+              <ul class="text-zinc-600 dark-text-zinc4 text-sm">
+                <li class="flex items-center gap-x-3">
                   <span class="flex i-carbon-location"></span>
                   Lubumbashi - Rd Congo
                 </li>
-                <li class="flex items-center gap-x3">
+                <li class="flex items-center gap-x-3">
                   <span class="flex i-carbon-events"></span>
                   <div>
                     Member of <a
@@ -148,11 +148,11 @@ const {
             </div>
           </div>
         </div>
-        <span class="text-xs sm-text-sm text-zinc6 dark-text-zinc4">{mail}</span>
+        <span class="text-xs sm-text-sm text-zinc-600 dark-text-zinc4">{mail}</span>
       </div>
     </div>
     <div
-      class="flex sm-justify-end items-center gap-x3 text-sm text-zinc6 dark-text-zinc4"
+      class="flex sm-justify-end items-center gap-x-3 text-sm text-zinc-600 dark-text-zinc4"
     >
       <span class="flex items-center gap-x1">
         {
@@ -186,13 +186,13 @@ const {
           id={`dropdown-more-options-${id}`}
           data-fx-dropdown
           data-placement="bottom-middle"
-          class="ui-popper op0 invisible transition-opacity duration-200 fx-open-op100 fx-open-visible b b-zinc2/80 dark-b-zinc8/80 bg-zinc1/80 dark-bg-zinc9/80 backdrop-blur-xl p2.5 rd-xl w54 z40"
+          class="ui-popper opacity-0 invisible transition-opacity duration-200 fx-open:opacity-100 fx-open:visible b b-zinc2/80 dark-b-zinc8/80 bg-zinc1/80 dark-bg-zinc-900/80 backdrop-blur-xl p2.5 rd-xl w54 z40"
         >
-          <ul class="wfull children-flex text-sm text-zinc7 dark-text-zinc3">
+          <ul class="w-full children-flex text-sm text-zinc-700 dark:text-zinc-300">
             <li>
               <button
                 aria-label="button action"
-                class="flex wfull items-center gap-x3 px4 py2 hover-bg-zinc2/60 dark-hover-bg-zinc8/60 outline-transparent rd-lg focus-bg-zinc2/90 dark-focus-bg-zinc8/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
+                class="flex w-full items-center gap-x-3 px-4 py-2 hover-bg-zinc2/60 dark-hover-bg-zinc-800/60 outline-transparent rounded-lg focus-bg-zinc2/90 dark-focus-bg-zinc-800/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
               >
                 <span aria-hidden="true" class="flex i-carbon-managed-solutions"
                 ></span>
@@ -202,7 +202,7 @@ const {
             <li>
               <button
                 aria-label="button action"
-                class="flex wfull items-center gap-x3 px4 py2 hover-bg-zinc2/60 dark-hover-bg-zinc8/60 outline-transparent rd-lg focus-bg-zinc2/90 dark-focus-bg-zinc8/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
+                class="flex w-full items-center gap-x-3 px-4 py-2 hover-bg-zinc2/60 dark-hover-bg-zinc-800/60 outline-transparent rounded-lg focus-bg-zinc2/90 dark-focus-bg-zinc-800/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
               >
                 <span aria-hidden="true" class="flex i-carbon-user-role"></span>
                 <span class="line-clamp-1">Change Role</span>
@@ -211,7 +211,7 @@ const {
             <li>
               <button
                 aria-label="button action"
-                class="flex wfull items-center gap-x3 px4 py2 hover-bg-zinc2/60 dark-hover-bg-zinc8/60 outline-transparent rd-lg focus-bg-zinc2/90 dark-focus-bg-zinc8/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
+                class="flex w-full items-center gap-x-3 px-4 py-2 hover-bg-zinc2/60 dark-hover-bg-zinc-800/60 outline-transparent rounded-lg focus-bg-zinc2/90 dark-focus-bg-zinc-800/90 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
               >
                 <span aria-hidden="true" class="flex i-carbon-person"></span>
                 <span class="truncate flex">Convert to outside...</span>
@@ -220,7 +220,7 @@ const {
             <li>
               <button
                 aria-label="button action"
-                class="text-red6 dark-text-red5 flex wfull items-center gap-x3 px4 py2 hover-bg-zinc2/60 dark-hover-bg-zinc8/60 outline-transparent rd-lg focus-bg-red2/9 dark-focus-bg-red8/9 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
+                class="text-red-600 dark-text-red5 flex w-full items-center gap-x-3 px-4 py-2 hover-bg-zinc2/60 dark-hover-bg-zinc-800/60 outline-transparent rounded-lg focus-bg-red2/9 dark-focus-bg-red8/9 focus-outline focus-outline-zinc4 dark-focus-outline-zinc6"
               >
                 <span aria-hidden="true" class="flex i-carbon-trash-can"></span>
                 <span class="truncate flex">Remove from ...</span>

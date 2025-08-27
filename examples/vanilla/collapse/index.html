@@ -11,23 +11,23 @@
   </style>
 </head>
 
-<body class="bg-white dark-bg-zinc950">
+<body class="bg-white dark:bg-zinc-950">
   <section class="mx-auto space-y-16 max-w2xl py20">
     <div class="space-y-6">
-      <h1 class="text-xl font-semibold text-zinc9 dark-text-white">
+      <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
         Collapse
       </h1>
-      <div class="p10 rd-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6">
+      <div class="p10 rounded-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6">
         <div class="flex flex-col gap3">
           <div class="flex wmax">
             <button data-collapse-trigger data-target="collapse1"
-              class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
+              class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
               Trigger Collapse
             </button>
           </div>
           <div data-collapsible-1 id="collapse1" data-state="open"
-            class="transition-[height] duration-300 ease-linear overflow-hidden w-full h-0 fx-open-h-auto">
-            <div class="rd-md w-full bg-zinc1/5 dark-bg-zinc9/5 b b-zinc2/30 dark-b-zinc8/20 p4 inline-flex overflow-hidden">
+            class="transition-[height] duration-300 ease-linear overflow-hidden w-full h-0 fx-open:h-auto">
+            <div class="rounded-md w-full bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 p-4 inline-flex overflow-hidden">
               <p class="text-gray7 dark-text-gray3">
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam, dolorum, incidunt facilis quasi
                 non ea mollitia odio, iure adipisci
@@ -38,22 +38,22 @@
       </div>
     </div>
     <div class="space-y-6">
-      <h1 class="text-xl font-semibold text-zinc9 dark-text-white">
+      <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
         Trigger Multiple Collapse
       </h1>
-      <div class="p10 rd-lg bg-gradient-to-bl from-zinc6 via-neutral4 to-zinc6">
+      <div class="p10 rounded-lg bg-gradient-to-bl from-zinc6 via-neutral4 to-zinc6">
         <div class="flex flex-col gap3">
           <div class="flex wmax">
             <button data-collapse-trigger data-target="collapse4 collapse5"
-              class="bg-neutral8 text-white px-4 py-2 rounded-lg text-sm">
+              class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
               Trigger Two Collapse
             </button>
           </div>
           <div class="grid sm-grid-cols-2 gap-4">
             <div data-collapsible-4 id="collapse4"
-              class="transition-[height] duration-300 ease-linear overflow-hidden w-full h-0 fx-open-h-auto">
+              class="transition-[height] duration-300 ease-linear overflow-hidden w-full h-0 fx-open:h-auto">
               <div
-                class=" rd-md w-full bg-zinc1/5 dark-bg-zinc9/5 b b-zinc2/30 dark-b-zinc8/20 p4 text-zinc7 dark-text-zinc3">
+                class=" rounded-md w-full bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 p-4 text-zinc-700 dark:text-zinc-300">
                 <p class="inline-flex">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam, dolorum, incidunt facilis quasi
                   non ea mollitia odio, iure adipisci
@@ -61,8 +61,8 @@
               </div>
             </div>
             <div data-collapsible-5 id="collapse5"
-              class="transition-[height] duration-300 ease-linear overflow-hidden w-full h-0 fx-open-h-auto">
-              <div class="rd-md w-full bg-zinc1/5 dark-bg-zinc9/5 b b-zinc2/30 dark-b-zinc8/20 p4 text-zinc7 dark-text-zinc3">
+              class="transition-[height] duration-300 ease-linear overflow-hidden w-full h-0 fx-open:h-auto">
+              <div class="rounded-md w-full bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 p-4 text-zinc-700 dark:text-zinc-300">
                 <p class="text-gray7 dark-text-gray3">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laboriosam, dolorum, incidunt facilis quasi
                   non ea mollitia odio, iure adipisci

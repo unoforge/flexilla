@@ -22,7 +22,7 @@ export function BtnQuickCopy() {
   return (
     <button className={`${cn(
       'bg-gradient-to-t from-zinc50 to-zinc1 dark-from-zinc950/80 dark-to-zinc9 b b-zinc2/80 dark-b-zinc8/90',
-      'flex items-center gap-x3 relative text-sm',
+      'flex items-center gap-x-3 relative text-sm',
       'h11 px6 rd-xl'
     )}`}
       aria-label='copy code'

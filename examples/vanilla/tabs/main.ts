@@ -23,7 +23,7 @@ new Tabs("[data-with-indicator]")
 new Tabs("[data-tab-animated-key]",
     {
         indicatorOptions: {
-            className: "ui-tabs-indicator rd bg-zinc2 dark-bg-zinc8 absolute top-0 left-0",
+            className: "ui-tabs-indicator rd bg-zinc-200 dark-bg-zinc-800 absolute top-0 left-0",
         },
     }
 )
@@ -33,7 +33,7 @@ new Tabs("[data-vertical-tab]")
 new Tabs("[data-vertical-tab-2]",
     {
         indicatorOptions: {
-            className: "ui-tabs-indicator rd bg-zinc2 dark-bg-zinc8 absolute top-0 left-0"
+            className: "ui-tabs-indicator rd bg-zinc-200 dark-bg-zinc-800 absolute top-0 left-0"
         }
     }
 )
@@ -41,7 +41,7 @@ new Tabs("[data-vertical-tab-2]",
 new Tabs('[data-tab-default-indicator]',
     {
         indicatorOptions: {
-            className: "ui-tabs-indicator rd bg-zinc2 dark-bg-zinc8 absolute top-0 left-0"
+            className: "ui-tabs-indicator rd bg-zinc-200 dark-bg-zinc-800 absolute top-0 left-0"
         },
     }
 )
@@ -62,7 +62,7 @@ const addNewTab = (tabEl: HTMLElement) => {
         newTabLink.setAttribute('data-tabs-trigger', '');
         newTabLink.setAttribute('data-target', `tab${id}`);
         newTabLink.tabIndex = 0;
-        newTabLink.className = 'px4 py2 rd text-zinc7 dark-text-zinc3 disabled-cursor-not-allowed disabled-op80 fx-active-bg-zinc2 dark-fx-active-bg-zinc8 outline outline-1 outline-transparent focus-outline-blue5 dark-focus-outline-blue4';
+        newTabLink.className = 'px-4 py-2 rounded text-zinc-700 dark:text-zinc-300 disabled:cursor-not-allowed disabled:opacity-80 fx-active:bg-zinc-200 dark:fx-active:bg-zinc-800 outline outline-1 outline-transparent focus:outline-blue-500 dark:focus:outline-blue-400';
         newTabLink.textContent = `Tabs${id}`;
         newTabItem.appendChild(newTabLink);
         tabList.appendChild(newTabItem);
@@ -76,7 +76,7 @@ const addNewTab = (tabEl: HTMLElement) => {
         newPanel.setAttribute('data-tab-panel', '');
         newPanel.setAttribute('id', `tab${id}`);
         newPanel.setAttribute('aria-labelledby', `tab${id}`);
-        newPanel.className = 'hidden fx-active-flex ring-offset-zinc950 p20 focus-visible-outline-none focus-visible-ring-2 focus-visible-ring-red5 focus-visible-ring-offset-2 b b-zinc2 dark-b-zinc8 rd-md mt2';
+        newPanel.className = 'hidden fx-active:flex ring-offset-zinc-950 p-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 border border-zinc-200 dark:border-zinc-800 rounded-md mt-2';
         newPanel.textContent = `Tab ${id} Content`;
         panelsContainer.appendChild(newPanel);
         // The observer will automatically trigger reload

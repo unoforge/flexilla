@@ -3,42 +3,42 @@ import { faqs } from "@data/faq";
 ---
 
 <section class="py24">
-  <div class={"sm-px10 max-w68rem wfull mxauto relative"}>
+  <div class={"sm-px10 max-w68rem w-full mxauto relative"}>
     <div
       class="bg-zinc1/20 dark-bg-zinc9/20 b b-zinc2/40 dark-b-zinc8/30 rd-xl p5 sm-p6 md-p8 lg-p10 space-y-16 relative overflow-auto"
     >
       <span
         aria-hidden="true"
-        class="absolute top-0 right-0 bg-gradient-to-tr from-zinc2 to-zinc3 dark-from-zinc8 dark-to-zinc8 rd-full size-18 blur-2xl"
+        class="absolute top-0 right-0 bg-gradient-to-tr from-zinc2 to-zinc3 dark-from-zinc8 dark-to-zinc8 rounded-full size-18 blur-2xl"
       ></span>
       <h2
-        class="font-semibold text-3xl sm-text-4xl text-zinc9 dark-text-white mx-auto max-wxl text-center"
+        class="font-semibold text-3xl sm-text-4xl text-zinc-900 dark:text-white mx-auto max-wxl text-center"
       >
         Frequently Asked Questions
       </h2>
       <div
         data-accordion-example
-        class="max-w2xl wfull mx-auto children-rd-lg children-bg-gradient-to-t children-from-zinc50 children-to-zinc1 dark-children-from-zinc950/80 dark-children-to-zinc9 children-b children-b-zinc2/40 dark-children-b-zinc8/40 space-y-3"
+        class="max-w2xl w-full mx-auto children-rounded-lg children-bg-gradient-to-t children-from-zinc50 children-to-zinc1 dark-children-from-zinc950/80 dark-children-to-zinc9 children-b children-b-zinc2/40 dark-children-b-zinc8/40 space-y-3"
       >
         {
           faqs.map((faq) => (
             <div data-accordion-value={faq.value} data-accordion-item>
               <button
                 data-accordion-trigger
-                class="flex wfull items-center justify-between font-semibold text-zinc9 dark-text-white px5 py2.5 outline-transparent focus-outline focus-outline-zinc2/70 dark-focus-outline-zinc8/70 rd-lg [&[aria-expanded=true]>[data-icon-ind]]-rotate-135"
+                class="flex w-full items-center justify-between font-semibold text-zinc-900 dark:text-white px5 py2.5 outline-transparent focus-outline focus-outline-zinc2/70 dark-focus-outline-zinc8/70 rounded-lg [&[aria-expanded=true]>[data-icon-ind]]-rotate-135"
               >
                 <span class="flex-1 flex items-start">{faq.title}</span>
                 <span
                   data-icon-ind
                   aria-hidden="true"
-                  class="i-carbon-add flex ease-linear duration-200 text-zinc9 dark-text-white"
+                  class="i-carbon-add flex ease-linear duration-200 text-zinc-900 dark:text-white"
                 />
               </button>
               <div
                 data-accordion-content
                 class={`h0 ease-linear duration-300  overflow-hidden`}
               >
-                <p class="py3 px5 text-zinc7 dark-text-zinc3">
+                <p class="py3 px5 text-zinc-700 dark:text-zinc-300">
                   {faq.description}
                 </p>
               </div>

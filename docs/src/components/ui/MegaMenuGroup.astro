@@ -16,7 +16,7 @@ const { label, items } = Astro.props;
 
 <div class="space-y-6">
   <h2
-    class="text-sm md-text-base font-medium text-zinc9 dark-text-white"
+    class="text-sm md-text-base font-medium text-zinc-900 dark:text-white"
     aria-label="Use with UnoCSS"
   >
     {label}
@@ -29,7 +29,7 @@ const { label, items } = Astro.props;
             aria-label={`Link to ${item.text}`}
             data-link-mega-drop
             href={item.href}
-            class="hover-text-zinc9 dark-hover-text-white flex items-start gap-x3"
+            class="hover-text-zinc9 dark-hover-text-white flex items-start gap-x-3"
           >
             {item.icon.includes(".svg") ? (
               <img
@@ -42,7 +42,7 @@ const { label, items } = Astro.props;
             ) : (
               <span
                 aria-hidden="true"
-                class="flex items-center justify-center size-10 max-hmax min-w10 rd-lg bg-zinc2/70 dark-bg-zinc8/70"
+                class="flex items-center justify-center size-10 max-hmax min-w10 rounded-lg bg-zinc2/70 dark-bg-zinc-800/70"
               >
                 <span class={`flex ${item.icon}`} />
               </span>
@@ -51,7 +51,7 @@ const { label, items } = Astro.props;
               <span class="flex-1 flex items-center gap-x1 text-zinc8 dark-text-zinc2">
                 {item.text}
                 {item.draft ? (
-                  <span class="flex text-xs self-end px1.5 rd-full pypx b b-zinc2/70 dark-b-zinc8/7 bg-zinc2/80 dark-bg-zinc8/80 text-zinc8 dark-text-zinc2">
+                  <span class="flex text-xs self-end px1.5 rounded-full pypx b b-zinc2/70 dark-b-zinc8/7 bg-zinc2/80 dark-bg-zinc-800/80 text-zinc8 dark-text-zinc2">
                     soon
                   </span>
                 ) : null}
@@ -59,11 +59,11 @@ const { label, items } = Astro.props;
                   <span
                     data-icon-external
                     aria-hidden="true"
-                    class="flex text-xs i-carbon-arrow-up-right translate-y-1 -translate-x-2 invisible op0 ease-linear duration-200"
+                    class="flex text-xs i-carbon-arrow-up-right translate-y-1 -translate-x-2 invisible opacity-0 ease-linear duration-200"
                   />
                 ) : null}
               </span>
-              <p class="text-xs md-text-sm text-zinc6 dark-text-zinc4">
+              <p class="text-xs md-text-sm text-zinc-600 dark-text-zinc4">
                 {item.description}
               </p>
             </div>
