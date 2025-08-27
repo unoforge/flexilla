@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/pin-input",
   "private": false,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "description": "A lightweight JavaScript component for creating PIN and OTP input fields with validation and keyboard navigation support.",
   "publishConfig": {
