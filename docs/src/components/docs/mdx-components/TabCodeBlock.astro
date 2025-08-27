@@ -36,14 +36,14 @@ export const getIcon = (iconName: string) => {
 >
   <div
     data-tab-list-wrapper
-    class="rd-t-xl bg-white dark-bg-zinc950 flex items-center justify-between relative b b-zinc2/90 dark-b-zinc8/60
-    text-sm text-zinc7 dark-text-zinc3 h12"
+    class="rd-t-xl bg-white dark:bg-zinc-950 flex items-center justify-between relative b b-zinc2/90 dark-b-zinc8/60
+    text-sm text-zinc-700 dark:text-zinc-300 h12"
   >
     <ul
       data-tab-list
       role="tablist"
       data-scrollbar-hidden
-      class="flex-1 hfull pl-1.5 flex items-center gap-x3 relative z20 text-zinc7 dark-text-zinc3"
+      class="flex-1 hfull pl-1.5 flex items-center gap-x-3 relative z20 text-zinc-700 dark:text-zinc-300"
     >
       {
         values.map((trigger) => (
@@ -55,7 +55,7 @@ export const getIcon = (iconName: string) => {
               role="tab"
               aria-controls={trigger.value}
               aria-label={`${trigger.value}`}
-              class="relative flex items-center gap-x1 disabled-cursor-not-allowed disabled-op80 px3.5 py2 outline-none doc-tab-trigger doc-tab-indicator doc-tab-indicator-1"
+              class="relative flex items-center gap-x1 disabled:cursor-not-allowed disabled:opacity-80 px3.5 py2 outline-none doc-tab-trigger doc-tab-indicator doc-tab-indicator-1"
             >
               {trigger.icon && trigger.icon !== "" ? (
                 getIcon(trigger.icon)?.startsWith("/icons/") ? (

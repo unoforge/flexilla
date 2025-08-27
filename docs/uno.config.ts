@@ -10,9 +10,9 @@ import {flexillaPreset} from "@unifydev/flexilla"
 
 export default defineConfig({
   shortcuts:{
-    "doc-tab-trigger":"rd-lg fx-active-text-zinc9 dark-fx-active-text-white fx-active-bg-zinc1/50 dark-fx-active-bg-zinc-9/50 b b-transparent fx-active-b-zinc6/30 dark-fx-active-b-zinc5/20",
-    "doc-tab-indicator":"before-absolute before-content-empty before-bottom-0 before-inset-x-4 before-hpx before-bg-gradient-to-l before-from-transparent before-via-zinc-4 dark-before-via-zinc7 before-to-transparent before--translate-x-4 fx-active-before-translate-x-0 before-duration-300 before-ease-linear before-transition before-invisible fx-active-before-visible",
-    "doc-tab-indicator-1":"after-absolute after-content-empty after-top-0 after-inset-x-4 after-hpx after-bg-gradient-to-l after-from-transparent after-via-zinc-4 dark-after-via-zinc7 after-to-transparent after-translate-x-4 fx-active-after-translate-x-0 after-duration-300 after-ease-linear after-transition after-invisible fx-active-after-visible"
+    "doc-tab-trigger":"rounded-lg fx-active:text-zinc9 dark:fx-active:text-white fx-active:bg-zinc1/50 dark:fx-active:bg-zinc-9/50 b b-transparent fx-active:b-zinc6/30 dark:fx-active:b-zinc5/20",
+    "doc-tab-indicator":"before-absolute before-content-empty before-bottom-0 before-inset-x-4 before-hpx before-bg-gradient-to-l before-from-transparent before-via-zinc-4 dark-before-via-zinc7 before-to-transparent before--translate-x-4 fx-active:before-translate-x-0 before-duration-300 before-ease-linear before-transition before-invisible fx-active:before-visible",
+    "doc-tab-indicator-1":"after-absolute after-content-empty after-top-0 after-inset-x-4 after-hpx after-bg-gradient-to-l after-from-transparent after-via-zinc-4 dark-after-via-zinc7 after-to-transparent after-translate-x-4 fx-active:after-translate-x-0 after-duration-300 after-ease-linear after-transition after-invisible fx-active:after-visible"
   },
   presets: [
     presetWind3(),

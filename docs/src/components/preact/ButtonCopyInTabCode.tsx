@@ -25,7 +25,7 @@ export default function ButtonCopyInTabCode() {
     return (
         <div ref={triggerBoxRef} className={"relative pr1.5"}>
             <button
-                className="flex group items-center justify-center size-8 rd-lg dark-focus-bg-zinc7/80 text-zinc7 dark-text-zinc3 children-flex"
+                className="flex group items-center justify-center size-8 rounded-lg dark-focus-bg-zinc7/80 text-zinc-700 dark:text-zinc-300 children-flex"
                 aria-label='copy code'
                 onClick={() => {
                     copyToClipboard_();

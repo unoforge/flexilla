@@ -15,16 +15,16 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^4.0.6",
-    "@astrojs/partytown": "^2.1.3",
-    "@astrojs/preact": "^4.0.2",
-    "@astrojs/vercel": "^8.0.2",
-    "@astrojs/vue": "^5.0.5",
-    "@flexilla/flexilla": "^2.1.10",
-    "@flexilla/utilities": "^2.0.71",
+    "@astrojs/mdx": "^4.3.4",
+    "@astrojs/partytown": "^2.1.4",
+    "@astrojs/preact": "^4.1.0",
+    "@astrojs/vercel": "^8.0.4",
+    "@astrojs/vue": "^5.1.0",
+    "@flexilla/flexilla": "^2.2.8-beta.1",
+    "@flexilla/utilities": "^2.4.2",
     "@fontsource/geist-sans": "^5.1.0",
     "@preact/signals": "^1.2.2",
-    "astro": "^5.1.7",
+    "astro": "^5.13.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "overlayscrollbars": "2.5.0",
@@ -35,9 +35,9 @@
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.30",
-    "@shikijs/transformers": "^1.20.0",
-    "@unifydev/flexilla": "^0.1.0",
-    "@unocss/preset-icons": "^0.58.5",
-    "unocss": "^66.1.0-beta.6"
+    "@shikijs/transformers": "^3.12.0",
+    "@unifydev/flexilla": "^0.1.3",
+    "@unocss/preset-icons": "^66.4.2",
+    "unocss": "^66.4.2"
   }
 }

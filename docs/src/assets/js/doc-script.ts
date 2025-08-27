@@ -1,5 +1,5 @@
-import { Tabs,  Collapse, Dismissible, Popover, Dropdown, Accordion, Tooltip, Modal, OffCanvas, AutoResizeTextArea } from "@flexilla/flexilla";
-import { $, $$ } from "@flexilla/utilities";
+import { Tabs, Collapse, Dismissible, Popover, Dropdown, Accordion, Tooltip, Modal, OffCanvas, AutoResizeTextArea } from "@flexilla/flexilla";
+import { $, $$, actionToggler } from "@flexilla/utilities";
 
 
 const initTableOfContent = () => {
@@ -78,6 +78,40 @@ const initAllCustomComponents = () => {
 
 
 export const initAppScript = () => {
+
+    const sidebarOverlay = $("[data-sidebar-overlay]")
+    let sidebarAction: {
+        toInitial: () => void;
+    }
+    const setInitial = () => sidebarAction.toInitial()
+
+    sidebarAction = actionToggler({
+        trigger: "[data-trigger-sidebar]",
+        targets: [
+            {
+                element: "[data-app-sidebar]",
+                attributes: {
+                    initial: { "data-state": "close" },
+                    to: { "data-state": "open" }
+                }
+            },
+            {
+                element: "[data-sidebar-overlay]",
+                attributes: {
+                    initial: { "data-state": "hidden" },
+                    to: { "data-state": "visible" }
+                }
+            }
+        ],
+        onToggle: ({ isExpanded }) => {
+            if (isExpanded) {
+                if (sidebarOverlay) sidebarOverlay.addEventListener("click", setInitial)
+            } else {
+                if (sidebarOverlay) sidebarOverlay.removeEventListener("click", setInitial)
+            }
+        }
+    })
+
     Dismissible.autoInit("[data-dismissible]")
     Collapse.autoInit("[data-collapsible-example]")
     Tabs.autoInit("[data-tab-fx-site]")
@@ -88,8 +122,6 @@ export const initAppScript = () => {
     Dropdown.autoInit("[data-dropdown-demo]")
     Modal.autoInit("[data-modal-demo]")
     OffCanvas.autoInit("[data-slideover-demo]")
-    const sidebar = $("[data-sidebar-offcanvas]")
-    if(sidebar instanceof HTMLElement) OffCanvas.init(sidebar)
     AutoResizeTextArea.autoInit("[data-autoresizable]")
     Tooltip.autoInit("[data-tooltip-demo]")
 }

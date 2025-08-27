@@ -12,23 +12,23 @@ const { icon, title, description } = Astro.props;
 >
   <span
     aria-hidden="true"
-    class="absolute top-0 right-0 bg-gradient-to-tr from-zinc2 to-zinc3 dark-from-zinc8 dark-to-zinc8 rd-full size-18 blur-2xl"
+    class="absolute top-0 right-0 bg-gradient-to-tr from-zinc2 to-zinc3 dark-from-zinc8 dark-to-zinc8 rounded-full size-18 blur-2xl"
   ></span>
   <div class="space-y-5 md-space-y-8">
     <div class="flex items-start gap-x4">
       <div
         aria-hidden="true"
-        class="rd-lg bg-zinc2/40 dark-bg-zinc8/40 size-10 min-w10 flex items-center justify-center"
+        class="rounded-lg bg-zinc2/40 dark-bg-zinc-800/40 size-10 min-w10 flex items-center justify-center"
       >
         <span class=`flex text-lg ${icon}`></span>
       </div>
       <div class="flex-1">
-        <h2 font-semibold text-lg text-zinc9 dark-text-white>
+        <h2 font-semibold text-lg text-zinc-900 dark:text-white>
           {title}
         </h2>
       </div>
     </div>
-    <p text-zinc7 dark-text-zinc3>
+    <p text-zinc-700 dark:text-zinc-300>
       {description}
     </p>
   </div>

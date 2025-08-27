@@ -5,8 +5,8 @@ import { getIcon } from "./mdx-components/TabCodeBlock.astro";
 import { CopyInBlockBtn } from "@components/preact/CopyInBlockBtn";
 
 type Props = {
-    source: string;
-    noRoundedTop?: boolean;
+  source: string;
+  noRoundedTop?: boolean;
 };
 
 const { source, noRoundedTop } = Astro.props;
@@ -14,148 +14,146 @@ const componentData = codeData[source] || [];
 ---
 
 <div
-    data-custom-block-code
-    class="relative my4 first-mt0 last-mb0 wfull flex-1 overflow-hidden"
+  data-custom-block-code
+  class="relative my4 first-mt0 last-mb0 w-full flex-1 overflow-hidden"
 >
-    {
-        componentData.length > 1 ? (
-            <div class="flex justify-end pb-4">
-                <select data-tab-select id="snippet-select">
-                    {componentData.map((subkey) => (
-                        <option value={subkey.id}>{subkey.title}</option>
-                    ))}
-                </select>
-            </div>
-        ) : null
-    }
-    {
-        componentData.map((subkey, index) => (
-            <div
-                data-snippet-bloc
-                id={`snippet-bloc-${subkey.id}`}
-                data-state={`${index === 0 ? "active" : "inactive"}`}
-                class="flex-1 fx-inactive-hidden"
-            >
-                {subkey.items.length > 1 ? (
-                    <>
-                        <div
-                            data-tab-fx-site
-                            data-fx-tabs
-                            class="grid">
-                            <div
-                                data-tab-list-wrapper
-                                class={`
-                                    flex items-center wfull relative bg-white dark-bg-zinc950 b b-zinc2/60 dark-b-zinc8/30 text-sm text-zinc7 dark-text-zinc3 h12
+  {
+    componentData.length > 1 ? (
+      <div class="flex justify-end pb-4">
+        <select data-tab-select id="snippet-select">
+          {componentData.map((subkey) => (
+            <option value={subkey.id}>{subkey.title}</option>
+          ))}
+        </select>
+      </div>
+    ) : null
+  }
+  {
+    componentData.map((subkey, index) => (
+      <div
+        data-snippet-bloc
+        id={`snippet-bloc-${subkey.id}`}
+        data-state={`${index === 0 ? "active" : "inactive"}`}
+        class="flex-1 fx-inactive-hidden"
+      >
+        {subkey.items.length > 1 ? (
+          <>
+            <div data-tab-fx-site data-fx-tabs class="grid">
+              <div
+                data-tab-list-wrapper
+                class={`
+                                    flex items-center w-full relative bg-white dark:bg-zinc-950 b b-zinc2/60 dark-b-zinc8/30 text-sm text-zinc-700 dark:text-zinc-300 h12
                                     ${noRoundedTop ? "b-t-0" : "rd-t-xl "}`}
-                            >
-                                <ul
-                                    role="tablist"
-                                    data-tab-list
-                                    class="flex-1 hfull pl-1.5 flex items-center gap-x3 relative z20 text-zinc7 dark-text-zinc3"
-                                >
-                                    {subkey.items.map((snippet) => (
-                                        <li role="presentation" class="flex z5">
-                                            <a
-                                                data-tabs-trigger
-                                                data-target={snippet.id}
-                                                href={`#${snippet.id}`}
-                                                role="tab"
-                                                aria-controls={snippet.id}
-                                                aria-label={`${snippet.id}`}
-                                                class="relative flex items-center gap-x1 disabled-cursor-not-allowed disabled-op80 px3.5 py2 doc-tab-trigger doc-tab-indicator doc-tab-indicator-1"
-                                            >
-                                                {snippet.icon &&
-                                                snippet.icon !== "" ? (
-                                                    getIcon(
-                                                        snippet.icon,
-                                                    )?.startsWith("/icons/") ? (
-                                                        <img
-                                                            src={getIcon(
-                                                                snippet.icon,
-                                                            )}
-                                                            alt={`icon - ${snippet.icon}`}
-                                                            class="h4 wauto"
-                                                            width="40"
-                                                        />
-                                                    ) : (
-                                                        <span
-                                                            aria-hidden="true"
-                                                            class={`flex text-sm ${getIcon(snippet.icon)}`}
-                                                        />
-                                                    )
-                                                ) : null}
-                                                {snippet.title}
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div
-                                data-panels-container
-                                class="flex-1 overflow-hidden rd-b-xl bg-zinc1/30 dark-bg-zinc9/20 b b-zinc2/50 b-t-0 dark-b-zinc9/30"
-                            >
-                                {subkey.items.map((snippet, index) => (
-                                    <section
-                                        data-tab-panel
-                                        aria-labelledby={snippet.id}
-                                        role="tabpanel"
-                                        id={snippet.id}
-                                        tabindex="0"
-                                        aria-hidden={`${index === 0 ? "false" : "true"}`}
-                                        data-state={`${index === 0 ? "active" : "inactive"}`}
-                                        class={`hidden fx-active-flex active-outline-gray8/50 focus-outline-gray8/50 wfull overflow-hidden`}
-                                    >
-                                        <div
-                                            data-code-component
-                                            class="group overflow-hidden max-h96 wfull grid relative"
-                                        >
-                                            <CopyInBlockBtn client:only="preact" />
-                                            <div
-                                                data-hidden-scrollbar-s
-                                                data-overlayscrollbars-initialize
-                                                class="w-full flex hfull overflow-auto"
-                                            >
-                                                <CustomCode
-                                                    lang={snippet.lang}
-                                                    code={snippet.code}
-                                                    client:load
-                                                />
-                                            </div>
-                                        </div>
-                                    </section>
-                                ))}
-                            </div>
-                        </div>
-                    </>
-                ) : (
-                    <div class="grid">
-                        <div
-                            class={`flex items-center wfull relative bg-white dark-bg-zinc950 ${noRoundedTop ? "b-t-0" : "rd-t-xl"} b b-zinc2/90 dark-b-zinc8/60 text-sm text-zinc7 dark-text-zinc3 h12`}
-                        >
-                            {subkey.items[0].title} ({subkey.items[0].lang})
-                        </div>
-                        <div class="flex w-full overflow-hidden rd-b-xl b b-t-0 b-zinc2/90 dark-b-zinc8/60 bg-zinc1/60 dark-bg-zinc9/60 max-h96">
-                            <div
-                                data-code-component
-                                class="group overflow-hidden max-h96 wfull grid relative"
-                            >
-                                <CopyInBlockBtn client:only="preact" />
-                                <div
-                                    data-hidden-scrollbar-s
-                                    data-overlayscrollbars-initialize
-                                    class="w-full flex hfull overflow-auto"
-                                >
-                                    <CustomCode
-                                        lang={subkey.items[0].lang}
-                                        code={subkey.items[0].code}
-                                        client:load
-                                    />
-                                </div>
-                            </div>
-                        </div>
+              >
+                <ul
+                  role="tablist"
+                  data-tab-list
+                  class="flex-1 hfull pl-1.5 flex items-center gap-x-3 relative z20 text-zinc-700 dark:text-zinc-300"
+                >
+                  {subkey.items.map((snippet) => (
+                    <li role="presentation" class="flex z5">
+                      <a
+                        data-tabs-trigger
+                        data-target={snippet.id}
+                        href={`#${snippet.id}`}
+                        role="tab"
+                        aria-controls={snippet.id}
+                        aria-label={`${snippet.id}`}
+                        class="relative flex items-center gap-x1 disabled:cursor-not-allowed disabled:opacity-80 px3.5 py2 doc-tab-trigger doc-tab-indicator doc-tab-indicator-1"
+                      >
+                        {snippet.icon && snippet.icon !== "" ? (
+                          getIcon(snippet.icon)?.startsWith("/icons/") ? (
+                            <img
+                              src={getIcon(snippet.icon)}
+                              alt={`icon - ${snippet.icon}`}
+                              class="h4 wauto"
+                              width="40"
+                            />
+                          ) : (
+                            <span
+                              aria-hidden="true"
+                              class={`flex text-sm ${getIcon(snippet.icon)}`}
+                            />
+                          )
+                        ) : null}
+                        {snippet.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div
+                data-panels-container
+                class="flex-1 overflow-hidden rd-b-xl bg-zinc1/30 dark-bg-zinc9/20 b b-zinc2/50 b-t-0 dark-b-zinc9/30"
+              >
+                {subkey.items.map((snippet, index) => (
+                  <section
+                    data-tab-panel
+                    aria-labelledby={snippet.id}
+                    role="tabpanel"
+                    id={snippet.id}
+                    tabindex="0"
+                    aria-hidden={`${index === 0 ? "false" : "true"}`}
+                    data-state={`${index === 0 ? "active" : "inactive"}`}
+                    class={`hidden fx-active:flex active-outline-gray8/50 focus-outline-gray8/50 w-full overflow-hidden`}
+                  >
+                    <div
+                      data-code-component
+                      class="group overflow-hidden max-h96 w-full grid relative"
+                    >
+                      <CopyInBlockBtn client:only="preact" />
+                      <div
+                        data-hidden-scrollbar-s
+                        data-overlayscrollbars-initialize
+                        class="w-full flex hfull overflow-auto"
+                      >
+                        <CustomCode
+                          lang={snippet.lang}
+                          code={snippet.code}
+                          client:load
+                        />
+                      </div>
                     </div>
-                )}
+                  </section>
+                ))}
+              </div>
             </div>
-        ))
-    }
+          </>
+        ) : (
+          <div class="grid">
+            <div
+              class={`flex items-center w-full relative px-4 bg-white dark:bg-zinc-950 ${noRoundedTop ? "b-t-0" : "rd-t-xl"} b b-zinc2/90 dark-b-zinc8/60 text-sm text-zinc-700 dark:text-zinc-300 h12`}
+            >
+              <img
+                src={getIcon(`${subkey.items[0].lang}`)}
+                alt={`icon - ${subkey.items[0].lang}`}
+                class="h4 wauto mr2"
+                width="40"
+              />
+              {subkey.items[0].title} ({subkey.items[0].lang})
+            </div>
+            <div class="flex w-full overflow-hidden rd-b-xl b b-t-0 b-zinc2/90 dark-b-zinc8/60 bg-zinc1/60 dark-bg-zinc9/60 max-h96">
+              <div
+                data-code-component
+                class="group overflow-hidden max-h96 w-full grid relative"
+              >
+                <CopyInBlockBtn client:only="preact" />
+                <div
+                  data-hidden-scrollbar-s
+                  data-overlayscrollbars-initialize
+                  class="w-full flex hfull overflow-auto"
+                >
+                  <CustomCode
+                    lang={subkey.items[0].lang}
+                    code={subkey.items[0].code}
+                    client:load
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    ))
+  }
 </div>

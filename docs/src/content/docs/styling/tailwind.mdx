@@ -4,6 +4,44 @@ description: Simplified styling for Flexilla with variants and components
 ---
 
 
+## With Tailwind4
+
+Just include these variants and utilities in your main tailwind config CSS file.
+
+```css
+@custom-variant fx-open (&[data-state="open"]);
+@custom-variant fx-close (&[data-state="open"]);
+@custom-variant fx-visible (&[data-state="open"]);
+@custom-variant fx-hidden (&[data-state="open"]);
+@custom-variant fx-opened (&[data-state="open"]);
+@custom-variant fx-closed (&[data-state="open"]);
+@custom-variant fx-resized (&[data-resized="true"]);
+@custom-variant fx-active (&[data-state="active"]);
+@custom-variant fx-inactive (&[data-state="inactive"]);
+@custom-variant fx-focus-active (&[data-focus="active"]);
+/* Remove unwanted variants or add others if needed */
+
+
+
+@utility ui-popper {
+  @apply fixed left-(--fx-popper-placement-x) top-(--fx-popper-placement-y);
+}
+@utility u-fx-popper {
+  @apply fixed left-(--fx-popper-placement-x) top-(--fx-popper-placement-y);
+}
+
+@utility animated-modal-content {
+  animation-fill-mode: both;
+  animation: var(--un-modal-animation);
+  -webkit-animation: var(--un-modal-animation);
+}
+
+@utility ui-overlay {
+  @apply fixed inset-0;
+}
+```
+
+
 
 ## Using Tailwind3
 
@@ -29,22 +67,6 @@ module.exports = {
 }
 ```
 
-## With Tailwind4
-
-Just include these variants in your main tailwind config CSS file.
-
-```css
-@custom-variant fx-open (&[data-state="open"]);
-@custom-variant fx-close (&[data-state="open"]);
-@custom-variant fx-visible (&[data-state="open"]);
-@custom-variant fx-hidden (&[data-state="open"]);
-@custom-variant fx-opened (&[data-state="open"]);
-@custom-variant fx-closed (&[data-state="open"]);
-@custom-variant fx-resized (&[data-state="resized"]);
-@custom-variant fx-active (&[data-state="active"]);
-@custom-variant fx-inactive (&[data-state="inactive"]);
-/* Remove unwanted variants or add others if needed */
-```
 
 ## Variants
 
@@ -92,7 +114,7 @@ The plugin also supports `peer-` and `group-` variants, allowing you to target p
 
 ## Components
 
-The `@flexilla/tailwind-plugin` also includes essential UI components, each with predefined styles to speed up your development.
+Essential UI components, each with predefined styles to speed up your development.
 
 ### Popper
 
@@ -100,14 +122,6 @@ The `ui-popper` component positions elements based on custom CSS variables:
 
 ```html
 <div class="ui-popper">
-  <!-- Popper content -->
-</div>
-```
-
-For an absolute positioned popper, use:
-
-```html
-<div class="ui-popper-absolute">
   <!-- Popper content -->
 </div>
 ```

@@ -77,14 +77,14 @@ Here is a basic example of how to structure your offcanvas/SliderOver and trigge
   <TabPanel value="html-tab" active={true}>
 ```html
 <button data-offcanvas-trigger data-target="slide-over-from-left"
-    aria-controls="slide-over-from-left" class="bg-neutral8 text-white px4 py2 rd-lg text-sm">
+    aria-controls="slide-over-from-left" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
     Open from left
 </button>
 <div data-fx-offcanvas data-slideover-from-left 
     id="slide-over-from-left" aria-labelledby="slide-over-from-left"
-    class="fixed h100dvh wfull max-wsm -left-full top-0 fx-open-left-0 z90 ease-linear duration-200 p4 bg-zinc1 dark-bg-zinc9 flex">
-    <div class="size-full b b-dashed b-zinc2 dark-b-zinc8">
-        <button data-offcanvas-close class="p4">
+    class="fixed h-dvh w-full max-w-sm -left-full top-0 fx-open:left-0 z-90 ease-linear duration-200 p-4 bg-zinc-100 dark:bg-zinc-900 flex">
+    <div class="size-full border border-dashed border-zinc-200 dark:border-zinc-800">
+        <button data-offcanvas-close class="p-4">
             Close it
         </button>
     </div>
@@ -99,7 +99,7 @@ Here is a basic example of how to structure your offcanvas/SliderOver and trigge
 </button>
 <div data-fx-offcanvas data-slideover-from-left 
     id="slide-over-from-left" aria-labelledby="slide-over-from-left"
-    class="fixed h-[100dvh] w-full max-w-sm -left-full top-0 fx-open-left-0 z-[90] ease-linear duration-200 p-4 bg-zinc-100 dark:bg-zinc-900 flex">
+    class="fixed h-[100dvh] w-full max-w-sm -left-full top-0 fx-open:left-0 z-[90] ease-linear duration-200 p-4 bg-zinc-100 dark:bg-zinc-900 flex">
     <div class="size-full border border-dashed border-zinc-200 dark:border-zinc-800">
         <button data-offcanvas-close class="p-4">
             Close it
@@ -148,17 +148,17 @@ Setting the backdrop classes
 >
   <TabPanel value="html-tab" active={true}>
 ```html
-<button data-offcanvas-trigger data-target="slide-over-overlay" aria-controls="slide-over-overlay" class="bg-neutral8 text-white px4 py2 rd-lg text-sm">
+<button data-offcanvas-trigger data-target="slide-over-overlay" aria-controls="slide-over-overlay" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
     Overlay
 </button>
-<div data-offcanvas-withbackdrop id="slide-over-overlay" aria-labelledby="slide-over-overlay" class="fixed h100dvh wfull max-wsm -right-full top-0 fx-open-right-0 ease-linear duration-200 p4 bg-zinc1 dark-bg-zinc9 flex z90">
-    <div class="size-full b b-dashed b-zinc2 dark-b-zinc8"></div>
+<div data-offcanvas-withbackdrop id="slide-over-overlay" aria-labelledby="slide-over-overlay" class="fixed h-dvh w-full max-w-sm -right-full top-0 fx-open:right-0 ease-linear duration-200 p-4 bg-zinc-100 dark:bg-zinc-900 flex z-90">
+    <div class="size-full border border-dashed border-zinc-200 dark:border-zinc-800"></div>
 </div>
-<button data-offcanvas-trigger data-target="slide-over-overlay1" aria-controls="slide-over-overlay1" class="bg-neutral8 text-white px4 py2 rd-lg text-sm">
+<button data-offcanvas-trigger data-target="slide-over-overlay1" aria-controls="slide-over-overlay1" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
     Overlay with blur
 </button>
-<div data-offcanvas-backdrop-blur id="slide-over-overlay1" aria-labelledby="slide-over-overlay1" class="fixed h100dvh wfull max-wsm -right-full top-0 fx-open-right-0 ease-linear duration-200 p4 bg-zinc1 dark-bg-zinc9 flex z90">
-    <div class="size-full b b-dashed b-zinc2 dark-b-zinc8"> </div>
+<div data-offcanvas-backdrop-blur id="slide-over-overlay1" aria-labelledby="slide-over-overlay1" class="fixed h-dvh w-full max-w-sm -right-full top-0 fx-open:right-0 ease-linear duration-200 p-4 bg-zinc-100 dark:bg-zinc-900 flex z-90">
+    <div class="size-full border border-dashed border-zinc-200 dark:border-zinc-800"> </div>
 </div>
 ```
   </TabPanel>
@@ -183,7 +183,7 @@ OffCanvas.init("#slide-over-overlay1",{
     backdrop: "ui-overlay bg-gray8/50 flex z80"
 })
 OffCanvas.init("#slide-over-overlay2",{
-    backdrop: "ui-overlay bg-zinc8/20 backdrop-filter backdrop-blur-md flex z80"
+    backdrop: "ui-overlay bg-zinc-800/20 backdrop-filter backdrop-blur-md flex z80"
 })
 ```
   </TabPanel>
