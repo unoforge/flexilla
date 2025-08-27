@@ -1,4 +1,4 @@
-import type { Placement } from "@flexilla/create-overlay"
+import type { Placement } from "flexipop"
 
 /** Configuration for controlling event-based behavior */
 type EventEffect = {
@@ -29,7 +29,7 @@ export type DropdownOptions = {
      */
     triggerStrategy?: "click" | "hover",
     /** Position of the dropdown relative to its trigger element
-     * @see Placement from @flexilla/create-overlay
+     * @see Placement from flexipop
      */
     placement?: Placement,
     /** Prevents dropdown from closing when clicking inside the dropdown content */
