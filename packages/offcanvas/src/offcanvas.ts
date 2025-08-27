@@ -123,6 +123,7 @@ class Offcanvas {
         if (overlayElement instanceof HTMLElement)
             destroyOverlay(overlayElement)
 
+        this.offCanvasElement.blur()
         toggleOffCanvasState(
             this.offCanvasElement,
             this.allowBodyScroll,

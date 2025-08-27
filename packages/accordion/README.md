@@ -108,42 +108,42 @@ Here are a few examples to demonstrate the usage of the @flexilla/accordion pack
 
 
 ```html
-<div data-accordion-example data-default-value="accordion-item-2" data-accordion-type="single" class="space-y-2 bg-white rd-md">
+<div data-accordion-example data-default-value="accordion-item-2" data-accordion-type="single" class="space-y-2 bg-white rounded-md">
     <div data-accordion-item data-accordion-value="accordion-item-1"
-    class="rd-md">
+    class="rounded-md">
         <button data-accordion-trigger aria-label="toggle button"
-            class="px4 wfull flex justify-between items-center py2 text-gray8 dark-text-gray2 font-medium text-lg ease-linear hover-bg-gray2/50 dark-hover-bg-gray8/40 rd-md focus:outline-blue6 aria-expanded-text-blue6">
+            class="px4 w-full flex justify-between items-center py2 text-gray8 dark-text-gray2 font-medium text-lg ease-linear hover-bg-gray2/50 dark-hover-bg-gray8/40 rounded-md focus:outline-blue6 aria-expanded-text-blue6">
             Is it accessible?
         </button>
         <div aria-hidden="true" data-accordion-content
             class="text-gray7 dark-text-gray3 duration-200 ease-linear overflow-hidden">
-            <p class="p4">
+            <p class="p-4">
             Yes. It adheres to the WAI-ARIA design pattern.
             </p>
         </div>
     </div>
     <div data-accordion-item data-accordion-value="accordion-item-2"
-    class="rd-md">
+    class="rounded-md">
         <button data-accordion-trigger aria-label="toggle button"
-            class="px4 wfull flex justify-between items-center py2 text-gray8 dark-text-gray2 font-medium text-lg ease-linear hover-bg-gray2/50 dark-hover-bg-gray8/40 rd-md focus:outline-blue6 aria-expanded-text-blue6">
+            class="px4 w-full flex justify-between items-center py2 text-gray8 dark-text-gray2 font-medium text-lg ease-linear hover-bg-gray2/50 dark-hover-bg-gray8/40 rounded-md focus:outline-blue6 aria-expanded-text-blue6">
             Is it unstyled?
         </button>
         <div aria-hidden="true" data-accordion-content
             class="text-gray7 dark-text-gray3 duration-200 ease-linear overflow-hidden">
-            <p class="p4">
+            <p class="p-4">
             Yes. It's unstyled by default, giving you freedom over the look and feel.
             </p>
         </div>
     </div>
     <div data-accordion-item data-accordion-value="accordion-item-3"
-    class="rd-md">
+    class="rounded-md">
         <button data-accordion-trigger aria-label="toggle button"
-            class="px4 wfull flex justify-between items-center py2 text-gray8 dark-text-gray2 font-medium text-lg ease-linear hover-bg-gray2/50 dark-hover-bg-gray8/40 rd-md focus:outline-blue6 aria-expanded-text-blue6">
+            class="px4 w-full flex justify-between items-center py2 text-gray8 dark-text-gray2 font-medium text-lg ease-linear hover-bg-gray2/50 dark-hover-bg-gray8/40 rounded-md focus:outline-blue6 aria-expanded-text-blue6">
             Can it be animated?
         </button>
         <div aria-hidden="true" data-accordion-content
             class="text-gray7 dark-text-gray3 duration-200 ease-linear h0 overflow-hidden">
-            <p class="p4">
+            <p class="p-4">
             Yes! You can use the transition prop to configure the animation.
             </p>
         </div>

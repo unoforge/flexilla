@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/offcanvas",
   "private": false,
-  "version": "2.1.3",
+  "version": "2.1.4-beta.1",
   "type": "module",
   "description": "An offcanvas component for creating responsive and off-screen navigation panels in web applications.",
   "publishConfig": {
@@ -55,7 +55,7 @@
   "homepage": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/unoforge/flexilla"
+    "url": "git+https://github.com/unoforge/flexilla.git"
   },
   "bugs": {
     "url": "https://github.com/unoforge/flexilla/issues"

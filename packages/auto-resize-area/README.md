@@ -34,7 +34,7 @@ fAutoResizableTextArea('[data-my-autorizable]');
 ```
 ## Example
 ```html
-<textarea placeholder="Enter something here" data-autoresizable class="px-3 py-1.5 wfull rounded-md bg-gray50 border border-gray-200 dark:border-gray-800 focus:outline focus:outline-2 focus:outline-blue-600 dark:focus:outline-blue-500 placeholder:text-gray-400 dark:placeholder:text-gray-600 text-gray-700 dark:text-gray-300 resize-none invalid:outline-red-600 dark:invalid:outline-red-500"></textarea>
+<textarea placeholder="Enter something here" data-autoresizable class="px-3 py-1.5 w-full rounded-md bg-gray50 border border-gray-200 dark:border-gray-800 focus:outline focus:outline-2 focus:outline-blue-600 dark:focus:outline-blue-500 placeholder:text-gray-400 dark:placeholder:text-gray-600 text-gray-700 dark:text-gray-300 resize-none invalid:outline-red-600 dark:invalid:outline-red-500"></textarea>
 
 <script>
   import { fAutoResizableTextArea } from '@flexilla/auto-resize-area';
