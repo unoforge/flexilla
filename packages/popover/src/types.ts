@@ -1,4 +1,4 @@
-import { OverlayOptions } from "@flexilla/create-overlay"
+import { OverlayOptions } from "flexipop/create-overlay"
 
 export type ExperimentaOptions = {
     /** Whether to teleport the dropdown content to the body or not

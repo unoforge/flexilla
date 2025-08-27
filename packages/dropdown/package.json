@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/dropdown",
   "private": false,
-  "version": "2.2.5",
+  "version": "2.2.6",
   "type": "module",
   "description": "Utilities package for flexilla library",
   "publishConfig": {

@@ -9,6 +9,7 @@ import { Modal } from "@flexilla/modal"
 import { OffCanvas } from "@flexilla/offcanvas"
 import { Tabs } from "@flexilla/tabs"
 import { Tooltip } from "@flexilla/tooltip"
+// import {} from "@flexilla/pin-input"
 
 import type { AccordionOptions } from "@flexilla/accordion"
 import type { CollapseOptions } from "@flexilla/collapse"
@@ -19,6 +20,7 @@ import type { DropdownOptions } from "@flexilla/dropdown"
 import type { TooltipOptions } from "@flexilla/tooltip"
 import { Popover, type PopoverOptions } from "@flexilla/popover"
 import type { FlexillaOptions } from "./types"
+import { PinInput, PinInputOptions } from "@flexilla/pin-input"
 
 /**
  * Automaticaly init Components based on data-attribute or provided selector for each component via options
@@ -43,10 +45,12 @@ const initFlexilla = (
 export {
     Accordion, AutoResizeTextArea, Collapse,
     CustomRange, Dismissible, Dropdown, Modal, OffCanvas, Tabs, Tooltip, Popover,
+    PinInput,
     initFlexilla
 }
 export type {
     AccordionOptions, CollapseOptions
     , ModalOptions, TabsOptions, OffcanvasOptions, FlexillaOptions,
-    DropdownOptions, TooltipOptions, PopoverOptions
+    DropdownOptions, TooltipOptions, PopoverOptions,
+    PinInputOptions
 }
