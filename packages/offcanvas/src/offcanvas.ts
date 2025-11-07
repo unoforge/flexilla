@@ -28,6 +28,8 @@ class Offcanvas {
     private offCanvasElement!: HTMLElement
     private offCanvasTriggers!: HTMLElement[]
     private offCanvasCloseBtns!: HTMLElement[]
+    private offCanvasId: string = '';
+    private dispatchEventToDocument!: boolean
     private allowBodyScroll!: boolean
     private staticBackdrop!: boolean
     private backdrop!: string
@@ -59,7 +61,7 @@ class Offcanvas {
 
         const offCanvasElement = typeof offcanvas === "string" ? $(offcanvas) : offcanvas
         if (!(offCanvasElement instanceof HTMLElement)) throw new Error("Invalid Offcanvas, the provided Element is not a valid HTMLElement")
-        
+
         this.offCanvasElement = offCanvasElement
         const existingInstance = FlexillaManager.getInstance("offcanvas", offCanvasElement);
         if (existingInstance) {
@@ -76,9 +78,13 @@ class Offcanvas {
         this.staticBackdrop = staticBackdrop || (offCanvasElement.hasAttribute("data-static-backdrop") && offCanvasElement.dataset.staticBackdrop !== "false") || false
         this.allowBodyScroll = allowBodyScroll || (offCanvasElement.hasAttribute("data-allow-body-scroll") && offCanvasElement.dataset.allowBodyScroll !== "false") || false
         const offCanvasId = this.offCanvasElement.getAttribute("id")
+        if (!offCanvasId || offCanvasId === '') throw new Error("❌ id is required but missing on element:")
+        this.offCanvasId = offCanvasId;
         this.offCanvasTriggers = this.findOffCanvasElements("[data-offcanvas-trigger]", false, offCanvasId);
         this.offCanvasCloseBtns = this.findOffCanvasElements("[data-offcanvas-close]", true, offCanvasId, this.offCanvasElement);
         this.backdrop = overlay || this.offCanvasElement.dataset.offcanvasBackdrop || ""
+
+        this.dispatchEventToDocument = this.dispatchEventToDocument = this.options.dispatchEventToDocument || true
 
         this.teleporter = domTeleporter(this.offCanvasElement, document.body, "move")
 
@@ -187,6 +193,9 @@ class Offcanvas {
     private setupOffcanvas() {
         this.initTriggers()
         this.initCloseBtns()
+
+        if (this.dispatchEventToDocument) document.addEventListener(`sheet:${this.offCanvasId}:open`, this.open);
+        if (this.dispatchEventToDocument) document.addEventListener(`sheet:${this.offCanvasId}:close`, this.close);
     }
 
     /**
@@ -197,7 +206,7 @@ class Offcanvas {
      * offcanvas.open();
      * ```
      */
-    open() {
+    open = () => {
         this.openOffCanvas()
     }
 
@@ -212,7 +221,7 @@ class Offcanvas {
      * offcanvas.close();
      * ```
      */
-    close() {
+    close = () => {
         this.closeOffCanvas()
     }
 
@@ -242,6 +251,8 @@ class Offcanvas {
         if (!this.allowBodyScroll) {
             document.removeEventListener("click", this.closeWhenClickOutSide)
         }
+        if (this.dispatchEventToDocument) document.removeEventListener(`sheet:${this.offCanvasId}:open`, this.open);
+        if (this.dispatchEventToDocument) document.removeEventListener(`sheet:${this.offCanvasId}:close`, this.close);
         FlexillaManager.removeInstance("offcanvas", this.offCanvasElement)
     }
 
