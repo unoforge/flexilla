@@ -13,7 +13,7 @@
             <h1 class="text-xl font-semibold text-gray9 dark-text-white">
                 SlideOver
             </h1>
-            <div class="p10 rounded-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6 h96 flex gap-4 items-center justify-center">
+            <div class="p-10 rounded-lg bg-gradient-to-bl from-blue6 via-indigo4 to-sky6 h96 flex gap-4 items-center justify-center">
                 <div>
                     <button data-offcanvas-trigger data-target="slide-over-from-left"
                         aria-controls="slide-over-from-left" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
@@ -78,7 +78,7 @@
                   Overlay backdrop
                 </p>
               </div>
-            <div class="p10 rounded-lg bg-gradient-to-bl from-gray6 via-neutral4 to-zinc6 h96 flex items-center justify-center gap-4">
+            <div class="p-10 rounded-lg bg-gradient-to-bl from-gray6 via-neutral4 to-zinc6 h96 flex items-center justify-center gap-4">
                 <div>
                     <button data-offcanvas-trigger data-target="slide-over-overlay" aria-controls="slide-over-overlay"
                         class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
@@ -116,7 +116,7 @@
                   Allow body scroll when offcanvas Opened
                 </p>
               </div>
-            <div class="p10 rounded-lg bg-gradient-to-bl from-gray6 via-neutral4 to-zinc6 h96 flex items-center justify-center gap-4">
+            <div class="p-10 rounded-lg bg-gradient-to-bl from-gray6 via-neutral4 to-zinc6 h96 flex items-center justify-center gap-4">
                 <div>
                     <button data-offcanvas-trigger data-target="slide-overscrollbody"
                         aria-controls="slide-overscrollbody" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
@@ -154,7 +154,7 @@
                     Offcanvas will not close if cliked on the Overlay Element
                 </p>
             </div>
-            <div class="p10 rounded-lg bg-gradient-to-bl from-gray6 via-neutral4 to-zinc6 h96 flex items-center justify-center gap-4">
+            <div class="p-10 rounded-lg bg-gradient-to-bl from-gray6 via-neutral4 to-zinc6 h96 flex items-center justify-center gap-4">
                 <div class="">
                     <button data-offcanvas-trigger data-target="static-overlay-offcanvas"
                         aria-controls="static-overlay-offcanvas" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
@@ -176,8 +176,11 @@
                     <div data-offcanvas-static-overlay-2 data-static-backdrop role="slideover"
                         data-offcanvas-backdrop="ui-overlay backdrop-filter backdrop-blur-xl bg-gray8/50"
                         id="static-overlay-offcanvas-2" aria-labelledby="static-overlay-offcanvas-2"
-                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="z-100 fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
+                            <button data-offcanvas-close>
+                                Close it
+                            </button>
                         </div>
                     </div>
                 </div>
