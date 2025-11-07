@@ -123,6 +123,7 @@ class Offcanvas {
         if (overlayElement instanceof HTMLElement)
             destroyOverlay(overlayElement)
 
+
         this.offCanvasElement.blur()
         toggleOffCanvasState(
             this.offCanvasElement,
@@ -164,9 +165,14 @@ class Offcanvas {
         }
     }
 
+    private closeFromCloseBtn = (e: MouseEvent) => {
+        const eventSource = e.target as HTMLElement
+        eventSource.blur()
+        this.closeOffCanvas()
+    }
 
     private initCloseBtns() {
-        for (const closeOffCanvas of this.offCanvasCloseBtns) closeOffCanvas.addEventListener("click", this.closeOffCanvas)
+        for (const closeOffCanvas of this.offCanvasCloseBtns) closeOffCanvas.addEventListener("click", this.closeFromCloseBtn)
     }
 
     private changeState = () => {
