@@ -15,6 +15,7 @@ export default defineConfig({
         'dom-utilities': resolve(__dirname, 'src/dom-utilities/index.ts'),
         'scroll-to-top': resolve(__dirname, 'src/scroll-to-top.ts'),
         'dom-teleport': resolve(__dirname, 'src/dom-teleport.ts'),
+        theme: resolve(__dirname, 'src/theme/index.ts'),
       },
       name: '@flexilla/utilities',
       formats: ["es","cjs"]
