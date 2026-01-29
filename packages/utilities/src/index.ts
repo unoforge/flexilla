@@ -12,3 +12,5 @@ export {
 } from "./dom-utilities"
 export { initScrollToTop } from "./scroll-to-top"
 export { domTeleporter } from "./dom-teleport"
+
+export { flexiTheme, getSystemTheme, type ThemeOptions } from "./theme"
