@@ -19,35 +19,27 @@ const { seo } = Astro.props;
 
     <ClientRouter />
     <script is:inline>
-      const initTheme = () => {
-        const docEl = document.documentElement;
-        const getThemePreference = () => {
-          if (
-            typeof localStorage !== "undefined" &&
-            localStorage.getItem("theme")
-          ) {
-            return localStorage.getItem("theme");
-          }
-          return window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light";
+      !(function () {
+        const applyInitialTheme = () => {
+          try {
+            const k = "flexilla-theme",
+              l = "theme",
+              s =
+                localStorage.getItem(k) || localStorage.getItem(l) || "system",
+              m = window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light",
+              r = s === "system" ? m : s,
+              d = document.documentElement;
+            d.classList.toggle("dark", r === "dark");
+            d.setAttribute("data-theme", r);
+            d.style.colorScheme = r;
+          } catch (_) {}
         };
-        const isDark = getThemePreference() === "dark";
-        docEl.classList[isDark ? "add" : "remove"]("dark");
-      };
-      initTheme()
-      document.addEventListener("astro:after-swap", initTheme);
-      if (typeof localStorage !== "undefined") {
-        const docEl = document.documentElement;
-        const observer = new MutationObserver(() => {
-          const isDark = docEl.classList.contains("dark");
-          localStorage.setItem("theme", isDark ? "dark" : "light");
-        });
-        observer.observe(docEl, {
-          attributes: true,
-          attributeFilter: ["class"],
-        });
-      }
+
+        applyInitialTheme();
+        document.addEventListener("astro:after-swap", applyInitialTheme);
+      })();
     </script>
   </head>
   <body
@@ -58,7 +50,7 @@ const { seo } = Astro.props;
 </html>
 <script>
   import { initAppTheme } from "@assets/js/theme";
-  initAppTheme()
+  initAppTheme();
   document.addEventListener("astro:after-swap", initAppTheme);
 </script>
 <style is:global>

@@ -1,8 +1,65 @@
 ---
 title: Dark mode
-description: Easily add light/dark mode
+description: Setup flicker-free dark mode with Flexilla utilities
 ---
 
-<Callout type="warning">
-We're currently working on this page.
-</Callout>
+Use `flexiTheme` to manage light/dark/system mode with a tiny API.
+
+## 1. Add Initial Script In `<head>` (No Flash)
+
+This script runs before your app code, so the correct theme is applied immediately.
+It does not depend on any bundler or framework.
+
+```html
+<script>
+  !(function () {
+    try{const k="flexilla-theme",l="theme",s=localStorage.getItem(k)||localStorage.getItem(l)||"system",m=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light",r=s==="system"?m:s,d=document.documentElement;d.classList.toggle("dark",r==="dark");d.setAttribute("data-theme",r);d.style.colorScheme=r}catch(_){}
+  })();
+</script>
+```
+
+## 2. Initialize Theme Utility
+
+```ts
+import { flexiTheme } from "@flexilla/utilities";
+
+const theme = flexiTheme({
+  storageKey: "flexilla-theme",
+  initialTheme: "system",
+});
+
+theme.initTheme();
+```
+
+## 3. Use The API
+
+```ts
+theme.setTheme("dark");      // "light" | "dark" | "system"
+theme.toggle();              // toggle between light and dark
+theme.getCurrentTheme();     // resolved runtime theme: "light" | "dark"
+theme.getTheme();            // saved preference: "light" | "dark" | "system"
+```
+
+## 4. Optional Theme Buttons
+
+```html
+<button data-theme-value="light">Light</button>
+<button data-theme-value="dark">Dark</button>
+<button data-theme-value="system">System</button>
+<button id="theme-toggle">Toggle</button>
+```
+
+```ts
+document.getElementById("theme-toggle")?.addEventListener("click", () => {
+  theme.toggle();
+});
+
+document.querySelectorAll("[data-theme-value]").forEach((el) => {
+  el.addEventListener("click", () => {
+    const value = el.getAttribute("data-theme-value");
+    if (value === "light" || value === "dark" || value === "system") {
+      theme.setTheme(value);
+    }
+  });
+});
+```
