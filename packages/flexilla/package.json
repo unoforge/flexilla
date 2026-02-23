@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/flexilla",
   "private": false,
-  "version": "2.3.0",
+  "version": "2.3.1",
   "type": "module",
   "description": "A set of unstyled interactive components for building interactive, and customizable user interfaces. Open-Source",
   "publishConfig": {
@@ -42,18 +42,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@flexilla/accordion": "^2.2.5",
-    "@flexilla/auto-resize-area": "^2.0.14",
-    "@flexilla/collapse": "^2.1.5",
-    "@flexilla/custom-range": "^2.0.13",
-    "@flexilla/dismissible": "^2.0.14",
-    "@flexilla/dropdown": "^2.2.6",
-    "@flexilla/modal": "^2.3.4",
-    "@flexilla/offcanvas": "^2.2.0",
-    "@flexilla/pin-input": "^0.0.1",
-    "@flexilla/popover": "^1.0.3",
-    "@flexilla/tabs": "^2.2.3",
-    "@flexilla/tooltip": "^2.4.3"
+    "@flexilla/accordion": "^2.2.6",
+    "@flexilla/auto-resize-area": "^2.0.15",
+    "@flexilla/collapse": "^2.1.6",
+    "@flexilla/custom-range": "^2.0.14",
+    "@flexilla/dismissible": "^2.0.15",
+    "@flexilla/dropdown": "^2.2.7",
+    "@flexilla/modal": "^2.3.5",
+    "@flexilla/offcanvas": "^2.2.1",
+    "@flexilla/pin-input": "^0.0.2",
+    "@flexilla/popover": "^1.0.4",
+    "@flexilla/tabs": "^2.2.4",
+    "@flexilla/tooltip": "^2.4.4"
   },
   "devDependencies": {
     "typescript": "^5.8.3",
