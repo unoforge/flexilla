@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/popover",
   "private": false,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "description": "A lightweight and customizable Popover component for displaying additional information on hover over elements in web applications.",
   "publishConfig": {
@@ -44,8 +44,8 @@
     "vite-plugin-dts": "^4.5.4"
   },
   "dependencies": {
-    "@flexilla/manager": "^0.2.1",
-    "flexipop": "^0.3.1"
+    "@flexilla/manager": "^0.2.2",
+    "flexipop": "^0.3.2"
   },
   "keywords": [
     "popper",
@@ -67,5 +67,6 @@
     "url": "https://github.com/unoforge/flexilla/issues"
   },
   "license": "MIT",
-  "author": "johnkat-mj"
+  "author": "johnkat-mj",
+  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
 }

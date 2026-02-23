@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/collapse",
   "private": false,
-  "version": "2.1.5",
+  "version": "2.1.6",
   "type": "module",
   "description": "A versatile and interactive collapse component for creating collapsible sections in web applications, conserving space and improving user experience.",
   "publishConfig": {
@@ -63,5 +63,6 @@
     "url": "https://github.com/unoforge/flexilla/issues"
   },
   "license": "MIT",
-  "author": "johnkat-mj"
+  "author": "johnkat-mj",
+  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
 }

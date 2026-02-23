@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/manager",
   "private": false,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "description": "Utility that help manage Flexilla Components Instances",
   "publishConfig": {
@@ -52,5 +52,6 @@
     "url": "https://github.com/unoforge/flexilla/issues"
   },
   "license": "MIT",
-  "author": "johnkat-mj"
+  "author": "johnkat-mj",
+  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
 }

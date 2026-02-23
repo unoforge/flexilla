@@ -1,10 +1,9 @@
-import { dispatchCustomEvent } from "@flexilla/utilities";
-import { disableTransitionsTemporarily } from "../dom-utilities";
+import { dispatchCustomEvent, disableTransitionsTemporarily } from "../dom-utilities";
 
 export type Theme = "light" | "dark" | "system";
 export type ThemeMode = "class" | "attribute";
 
-type ThemeOptions = {
+export type ThemeOptions = {
     storageKey?: string;
     docElement?: HTMLElement;
     mode?: ThemeMode;
@@ -13,104 +12,117 @@ type ThemeOptions = {
     initialTheme?: Theme;
     listenSystemChanges?: boolean;
     suppressTransition?: boolean;
-}
-
-const isServer = typeof window === "undefined";
-const getDocEl = (el?: HTMLElement) => el ?? (!isServer ? document.documentElement : undefined);
-
-const getSystemTheme = (): "light" | "dark" =>
-    !isServer && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-
-const storage = {
-    get: (key: string): Theme | null => {
-        try { return localStorage.getItem(key) as Theme; } catch { return null; }
-    },
-    set: (key: string, value: string) => {
-        try { localStorage.setItem(key, value); } catch (e) { console.warn("Theme: Unable to save to localStorage", e); }
-    }
 };
 
+const isServer = typeof window === "undefined";
 
-const flexiTheme = () => {
-    const applyThemeState = (
-        resolvedTheme: "light" | "dark",
-        opts: ThemeOptions
-    ) => {
-        const docEl = getDocEl(opts.docElement);
-        if (!docEl) return;
+const DEFAULT_OPTIONS: Required<Omit<ThemeOptions, "docElement">> = {
+    storageKey: "flexilla-theme",
+    mode: "class",
+    className: "dark",
+    attributeName: "data-theme",
+    initialTheme: "system",
+    listenSystemChanges: true,
+    suppressTransition: true
+};
 
-        const suppressTransition = opts.suppressTransition !== false;
+export const getSystemTheme = (): "light" | "dark" => {
+    if (isServer) return "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+};
 
-        const { mode = "class", className = "dark", attributeName = "data-theme" } = opts;
+const flexiTheme = (userOptions: ThemeOptions = {}) => {
+    const opts = { ...DEFAULT_OPTIONS, ...userOptions };
+    const getDocEl = () => opts.docElement ?? (!isServer ? document.documentElement : undefined);
 
-        const applyTheme = () => {
-            if (mode === "class") {
-                docEl.classList.toggle(className, resolvedTheme === "dark");
-            } else {
-                docEl.setAttribute(attributeName, resolvedTheme);
+    const storage = {
+        get(): Theme | null {
+            try {
+                return localStorage.getItem(opts.storageKey) as Theme | null;
+            } catch {
+                return null;
             }
-
-            // Sync Toggle UI state using ARIA or data attributes for accessibility
-            const toggles = document.querySelectorAll("[data-theme-value]");
-            toggles.forEach((el) => {
-                const isActive = el.getAttribute("data-theme-value") === resolvedTheme;
-                el.setAttribute("aria-pressed", isActive ? "true" : "false");
-                el.setAttribute("data-state", isActive ? "active" : "inactive");
-            });
-        }
-
-        if (suppressTransition) {
-            disableTransitionsTemporarily(() => {
-                applyTheme();
-            });
-        } else {
-            applyTheme();
+        },
+        set(value: Theme) {
+            try {
+                localStorage.setItem(opts.storageKey, value);
+            } catch {
+                // Ignore storage failures in private mode / blocked storage.
+            }
         }
     };
 
-    const setTheme = (theme: Theme, opts: ThemeOptions = { storageKey: "flexilla-theme", initialTheme: "system", listenSystemChanges: true, suppressTransition: true }) => {
-        const storageKey = opts.storageKey || "flexilla-theme";
-        const resolved = theme === "system" ? getSystemTheme() : theme;
+    const applyTheme = (theme: "light" | "dark", suppressTransition = opts.suppressTransition) => {
+        const docEl = getDocEl();
+        if (!docEl) return;
 
-        storage.set(storageKey, theme);
-        applyThemeState(resolved, opts);
+        const apply = () => {
+            if (opts.mode === "class") {
+                docEl.classList.toggle(opts.className, theme === "dark");
+            } else {
+                docEl.setAttribute(opts.attributeName, theme);
+            }
 
-        const docEl = getDocEl(opts.docElement);
+            const toggles = document.querySelectorAll<HTMLElement>("[data-theme-value]");
+            for (const el of toggles) {
+                const isActive = el.getAttribute("data-theme-value") === theme;
+                el.setAttribute("aria-pressed", String(isActive));
+                el.dataset.state = isActive ? "active" : "inactive";
+            }
+        };
+
+        suppressTransition ? disableTransitionsTemporarily(apply) : apply();
+    };
+
+    const resolveTheme = (theme: Theme): "light" | "dark" => (theme === "system" ? getSystemTheme() : theme);
+    const getTheme = (): Theme => storage.get() ?? opts.initialTheme;
+    const getCurrentTheme = (): "light" | "dark" => resolveTheme(getTheme());
+
+    const setTheme = (
+        theme: Theme,
+        options: { suppressTransition?: boolean } = {}
+    ) => {
+        const resolved = resolveTheme(theme);
+        storage.set(theme);
+        applyTheme(resolved, options.suppressTransition ?? opts.suppressTransition);
+
+        const docEl = getDocEl();
         if (docEl) {
             dispatchCustomEvent(docEl, "theme-changed", {
                 theme: resolved,
-                actual: theme
+                preference: theme
             });
         }
     };
 
-    const initTheme = (opts: ThemeOptions = { storageKey: "flexilla-theme", initialTheme: "system", listenSystemChanges: true, suppressTransition: true }) => {
+    const toggle = () => {
+        const next: Theme = getCurrentTheme() === "dark" ? "light" : "dark";
+        setTheme(next);
+        return next;
+    };
+
+    const initTheme = () => {
         if (isServer) return;
+        setTheme(getTheme(), { suppressTransition: opts.suppressTransition });
 
-        const storageKey = opts.storageKey || "flexilla-theme";
-        const saved = storage.get(storageKey) || opts.initialTheme || "system";
-
-        // Apply initial theme
-        setTheme(saved, { ...opts });
-
-        // Listen for System Preference Changes
-        if (opts.listenSystemChanges !== false) {
-            const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-            const handleChange = () => {
-                if (storage.get(storageKey) === "system") {
-                    applyThemeState(getSystemTheme(), opts);
-                }
-            };
-
-            mediaQuery.addEventListener("change", handleChange);
+        if (opts.listenSystemChanges) {
+            const media = window.matchMedia("(prefers-color-scheme: dark)");
+            const handleChange = () => getTheme() === "system" && applyTheme(getSystemTheme());
+            media.addEventListener("change", handleChange);
         }
     };
 
     return {
+        initTheme,
         setTheme,
-        initTheme
+        toggle,
+        getCurrentTheme,
+        getTheme,
+        // Backward-compatible aliases
+        toogle: toggle,
+        getcurrentTheme: getCurrentTheme,
+        toggleTheme: toggle
     };
-}
+};
 
-
-export { flexiTheme, getSystemTheme, type ThemeOptions };
+export { flexiTheme };

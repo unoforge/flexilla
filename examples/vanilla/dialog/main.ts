@@ -1,4 +1,5 @@
 import { Modal, ModalOptions } from "@flexilla/modal"
+import { Dropdown } from "./../../../packages/dropdown"
 import "./../main"
 
 new Modal("[data-modal-test-1]")
@@ -87,3 +88,6 @@ new Modal(
     },
     "[data-trigger-third]"
 )
+
+
+const droptest = new Dropdown("[data-drop-down-1]")

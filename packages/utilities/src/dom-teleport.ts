@@ -1,4 +1,12 @@
 type TeleportMode = "move" | "detachable";
+const TELEPORT_ROOT_ATTR = "data-fx-teleport-root";
+const TELEPORTED_ATTR = "data-fx-teleported";
+
+const noopTeleporter: DomTeleporter = {
+  append: () => { },
+  remove: () => { },
+  restore: () => { },
+};
 
 export interface DomTeleporter {
   append: () => void;
@@ -19,7 +27,6 @@ export function domTeleporter(
   target: HTMLElement | null,
   mode: TeleportMode = "move"
 ): DomTeleporter {
-  // Validate inputs
   if (!(el instanceof HTMLElement)) {
     throw new Error("Source element must be an HTMLElement");
   }
@@ -30,26 +37,33 @@ export function domTeleporter(
     throw new Error(`Invalid teleport mode: ${mode}. Must be "move" or "detachable".`);
   }
 
+
+  const hasTeleportRootAncestor = Boolean(
+    el.parentElement?.closest(`[${TELEPORT_ROOT_ATTR}]`)
+  );
+  if (hasTeleportRootAncestor) {
+    return noopTeleporter;
+  }
+
+  el.setAttribute(TELEPORT_ROOT_ATTR, "");
   let placeholder: Comment | null = document.createComment("teleporter-placeholder");
   const originalParent = el.parentNode;
 
-  // Ensure placeholder is inserted only if there's a valid parent
   if (originalParent) {
     originalParent.insertBefore(placeholder, el);
-  } else {
-    console.warn("Element has no parent; placeholder not inserted.");
   }
 
   if (mode === "move") {
-    // Move mode: Relocate element, restore to original position on remove/restore
     if (el.parentNode) {
       target.appendChild(el);
+      el.setAttribute(TELEPORTED_ATTR, "");
     }
 
     return {
       append() {
         if (el.parentNode !== target) {
           target.appendChild(el);
+          el.setAttribute(TELEPORTED_ATTR, "");
         }
       },
       remove() {
@@ -67,6 +81,7 @@ export function domTeleporter(
 
   if (el.parentNode) {
     target.appendChild(el);
+    el.setAttribute(TELEPORTED_ATTR, "");
   }
 
   return {

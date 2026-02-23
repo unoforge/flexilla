@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/dismissible",
   "private": false,
-  "version": "2.0.14",
+  "version": "2.0.15",
   "type": "module",
   "description": "A lightweight JavaScript component that automatically makes a component dismissible for easy user interaction.",
   "publishConfig": {
@@ -62,6 +62,7 @@
   "license": "MIT",
   "author": "johnkat-mj",
   "dependencies": {
-    "@flexilla/manager": "^0.2.1"
-  }
+    "@flexilla/manager": "^0.2.2"
+  },
+  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
 }

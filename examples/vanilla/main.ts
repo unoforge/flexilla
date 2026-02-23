@@ -7,3 +7,4 @@ import { flexiTheme } from '@flexilla/utilities'
 const theme = flexiTheme()
 theme.initTheme()
 
+theme.setTheme("dark")

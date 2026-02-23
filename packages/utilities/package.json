@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/utilities",
   "private": false,
-  "version": "2.5.1",
+  "version": "2.5.3",
   "type": "module",
   "description": "Utilities package for flexilla library",
   "publishConfig": {
@@ -102,5 +102,6 @@
     "url": "https://github.com/unoforge/flexilla/issues"
   },
   "license": "MIT",
-  "author": "johnkat-mj"
+  "author": "johnkat-mj",
+  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
 }

@@ -1,7 +1,7 @@
 {
   "name": "@flexilla/accordion",
   "private": false,
-  "version": "2.2.5",
+  "version": "2.2.6",
   "type": "module",
   "description": "A versatile and interactive accordion component for creating collapsible sections in web applications, conserving space and improving user experience",
   "publishConfig": {
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@flexilla/manager": "latest",
-    "@flexilla/utilities": "^2.4.2"
+    "@flexilla/utilities": "^2.5.3"
   },
   "devDependencies": {
     "typescript": "^5.8.3",
@@ -63,5 +63,6 @@
     "url": "https://github.com/unoforge/flexilla/issues"
   },
   "license": "MIT",
-  "author": "johnkat-mj"
+  "author": "johnkat-mj",
+  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
 }

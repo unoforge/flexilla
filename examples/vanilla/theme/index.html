@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Theme Utility Example</title>
+  <script>
+  !(function () {
+    try {
+      var key = "flexilla-theme__";
+      var legacyKey = "theme";
+      var pref = localStorage.getItem(key) || localStorage.getItem(legacyKey) || "system";
+      var system = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      var resolved = pref === "system" ? system : pref;
+      var root = document.documentElement;
+      root.classList.toggle("dark", resolved === "dark");
+      root.setAttribute("data-theme", resolved);
+      root.style.colorScheme = resolved;
+    } catch (_) {}
+  })();
+</script>
+</head>
+<body class="pt14 px4 lg:px0 bg-white dark:bg-zinc-950">
+  <section class="max-w3xl mxauto space-y8 pb20">
+    <header class="space-y3">
+      <h1 class="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">Utilities Theme Example</h1>
+      <p class="text-zinc-700 dark:text-zinc-300">
+        Test <code>setTheme</code>, <code>toggle</code>, and <code>getCurrentTheme</code>.
+      </p>
+    </header>
+
+    <div class="rounded-xl border border-zinc-300 dark:border-zinc-700 p4 space-y3 bg-white dark:bg-zinc-900">
+      <p class="text-sm text-zinc-700 dark:text-zinc-300">
+        Preference: <strong data-theme-preference>system</strong>
+      </p>
+      <p class="text-sm text-zinc-700 dark:text-zinc-300">
+        Current: <strong data-theme-current>light</strong>
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap3">
+      <button data-theme-value="light" class="px4 py2 rounded-lg border border-zinc-400 dark:border-zinc-600 text-zinc-900 dark:text-zinc-100">
+        setTheme("light")
+      </button>
+      <button data-theme-value="dark" class="px4 py2 rounded-lg border border-zinc-400 dark:border-zinc-600 text-zinc-900 dark:text-zinc-100">
+        setTheme("dark")
+      </button>
+      <button data-theme-value="system" class="px4 py2 rounded-lg border border-zinc-400 dark:border-zinc-600 text-zinc-900 dark:text-zinc-100">
+        setTheme("system")
+      </button>
+      <button data-theme-toggle class="px4 py2 rounded-lg bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
+        toggle()
+      </button>
+    </div>
+  </section>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

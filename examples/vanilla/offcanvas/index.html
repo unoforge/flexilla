@@ -21,7 +21,7 @@
                     </button>
                     <div data-fx-offcanvas data-slideover-from-left role="slideover"
                         id="slide-over-from-left" aria-labelledby="slide-over-from-left"
-                        class="fixed h-dvh w-full max-w-sm -left-full top-0 data-[state=open]-left-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="fixed h-dvh w-full max-w-sm -left-full top-0 data-[state=open]-left-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
                             <button data-offcanvas-close class="p-4">
                                 Close it
@@ -35,7 +35,7 @@
                         Open from top
                     </button>
                     <div data-fx-offcanvas data-slideover-from-top role="slideover" aria-labelledby="slide-over-top" id="slide-over-top"
-                        class="fixed left-0 wscreen h64 -top-full ease-linear duration-200 data-[state=open]-top-0 flex p-4 bg-gray1 dark-bg-gray9">
+                        class="fixed left-0 wscreen h64 -top-full ease-linear duration-200 data-[state=open]-top-0 flex p-4 bg-gray1 dark-bg-gray9 z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
 
                         </div>
@@ -48,7 +48,7 @@
                     </button>
                     <div data-fx-offcanvas data-slideover-from-bottom role="slideover" aria-labelledby="slide-over-bottom"
                         id="slide-over-bottom"
-                        class="fixed left-0 wscreen h64 -bottom-full ease-linear duration-200 data-[state=open]-bottom-0 flex p-4 bg-gray1 dark-bg-gray9">
+                        class="fixed left-0 wscreen h64 -bottom-full ease-linear duration-200 data-[state=open]-bottom-0 flex p-4 bg-gray1 dark-bg-gray9 z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
 
                         </div>
@@ -61,7 +61,7 @@
                     </button>
                     <div data-fx-offcanvas data-slideover-from-right role="slideover" id="slide-over-from-right"
                         aria-labelledby="slide-over-from-right"
-                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
 
                         </div>
@@ -84,9 +84,9 @@
                         class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
                         Overlay
                     </button>
-                    <div data-offcanvas-withbackdrop data-offcanvas-backdrop="ui-overlay bg-gray8/80" role="slideover"
+                    <div data-offcanvas-withbackdrop data-offcanvas-backdrop="ui-overlay bg-gray8/80 z-30" role="slideover"
                         id="slide-over-overlay" aria-labelledby="slide-over-overlay"
-                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
 
                         </div>
@@ -98,9 +98,9 @@
                         Overlay with blur
                     </button>
                     <div data-offcanvas-backdrop-blur role="slideover"
-                        data-offcanvas-backdrop="ui-overlay bg-gray8/20 backdrop-filter backdrop-blur-md"
+                        data-offcanvas-backdrop="ui-overlay bg-gray8/20 backdrop-filter backdrop-blur-md z-30"
                         id="slide-over-overlay1" aria-labelledby="slide-over-overlay1"
-                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
                         </div>
                     </div>
@@ -124,7 +124,7 @@
                     </button>
                     <div data-offcanvas-bodyscroll data-allow-body-scroll role="slideover" id="slide-overscrollbody"
                         aria-labelledby="slide-overscrollbody"
-                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
 
                         </div>
@@ -136,9 +136,9 @@
                         Body Scroll With Overlay
                     </button>
                     <div data-offcanvas-bodyscroll-overlay role="slideover"
-                        data-offcanvas-backdrop="ui-overlay backdrop-filter backdrop-blur-xl bg-gray8/50"
+                        data-offcanvas-backdrop="ui-overlay backdrop-filter backdrop-blur-xl bg-gray8/50 z-30"
                         id="slide-overbodyscroll_overlay" aria-labelledby="slide-overbodyscroll_overlay"
-                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
                         </div>
                     </div>
@@ -161,9 +161,9 @@
                         Static Backdrop
                     </button>
                     <div data-offcanvas-static-overlay data-static-backdrop role="slideover"
-                        data-offcanvas-backdrop="ui-overlay backdrop-filter backdrop-blur-xl bg-gray8/50"
+                        data-offcanvas-backdrop="ui-overlay backdrop-filter backdrop-blur-xl bg-gray8/50 z-30"
                         id="static-overlay-offcanvas" aria-labelledby="static-overlay-offcanvas"
-                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex z-40">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
                         </div>
                     </div>
@@ -174,9 +174,9 @@
                         Static Backdrop
                     </button>
                     <div data-offcanvas-static-overlay-2 data-static-backdrop role="slideover"
-                        data-offcanvas-backdrop="ui-overlay backdrop-filter backdrop-blur-xl bg-gray8/50"
+                        data-offcanvas-backdrop="ui-overlay backdrop-filter backdrop-blur-xl bg-gray8/50 z-30"
                         id="static-overlay-offcanvas-2" aria-labelledby="static-overlay-offcanvas-2"
-                        class="z-100 fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex">
+                        class="z-100 fixed h-dvh w-full max-w-sm -right-full top-0 data-[state=open]-right-0 ease-linear duration-200 p-4 bg-gray1 dark-bg-gray9 flex ">
                         <div class="size-full b b-dashed b-gray2 dark-b-gray8">
                             <button data-offcanvas-close>
                                 Close it

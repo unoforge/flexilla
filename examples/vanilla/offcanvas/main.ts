@@ -11,7 +11,7 @@ new OffCanvas(
 )
 new OffCanvas("[data-slideover-from-bottom]",
     {
-        backdrop:"ui-overlay bg-gray8/50"
+        backdrop:"ui-overlay bg-gray8/50 z-30"
     }
 )
 
