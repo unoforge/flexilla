@@ -6,6 +6,9 @@ const SELECT_CONTENT = "[data-select-content]";
 const SELECT_ITEM = "[data-select-item]";
 const SELECT_INPUT = "[data-select-input]";
 const SELECT_VALUE = "[data-selected-value]";
+const SELECT_CLEAR = "[data-select-clear]";
+const SELECT_CLEAR_ALL = "[data-select-clear-all]";
+const SELECT_REMOVE = "[data-select-remove]";
 
 const parseItem = (element: HTMLElement): SelectItem | null => {
   const value = element.dataset.selectItem;
@@ -24,6 +27,9 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   let input: HTMLInputElement | null = null;
   let itemElements: HTMLElement[] = [];
   let selectedValueEls: HTMLElement[] = [];
+  let clearEls: HTMLElement[] = [];
+  let clearAllEls: HTMLElement[] = [];
+  let removeValueEls: HTMLElement[] = [];
   const cleanup: Array<() => void> = [];
   let unsubscribe: (() => void) | null = null;
   let placeholder = "Select";
@@ -80,13 +86,88 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   };
 
   const updateSelectedDisplays = (state: SelectState) => {
-    const labels = state.selectedValues
-      .map((value) => state.items.find((item) => item.value === value)?.label ?? value)
-      .filter(Boolean);
-    const text = labels.length ? labels.join(", ") : placeholder;
+    selectedValueEls.forEach((container) => {
+      const template = container.querySelector<HTMLElement>("[data-select-template]");
+      if (template) template.style.display = "none";
+      const keep = template ? [template] : [];
+      Array.from(container.children).forEach((child) => {
+        if (!keep.includes(child as HTMLElement)) container.removeChild(child);
+      });
 
-    selectedValueEls.forEach((el) => {
-      el.textContent = text;
+      const labels = state.selectedValues
+        .map((value) => state.items.find((item) => item.value === value)?.label ?? value)
+        .filter(Boolean);
+
+      if (!options.multiple) {
+        const text = labels[0] ?? placeholder;
+        if (template) {
+          const node = template.cloneNode(true) as HTMLElement;
+          node.removeAttribute("data-select-template");
+          node.style.removeProperty("display");
+          const labelEl = node.querySelector<HTMLElement>("[data-select-label]");
+          if (labelEl) labelEl.textContent = text;
+          const removeEl = node.querySelector<HTMLElement>("[data-select-remove]");
+          if (removeEl) removeEl.setAttribute("data-select-remove", state.selectedValues[0] ?? "");
+          if (removeEl && state.selectedValues[0]) {
+            const handler = (event: Event) => {
+              event.preventDefault();
+              core.unselect(state.selectedValues[0]!);
+            };
+            removeEl.addEventListener("click", handler);
+            cleanup.push(() => removeEl.removeEventListener("click", handler));
+          }
+          container.appendChild(node);
+        } else {
+          container.textContent = text;
+        }
+        return;
+      }
+
+      if (!labels.length) {
+        if (template) {
+          const emptyNode = template.cloneNode(true) as HTMLElement;
+          emptyNode.removeAttribute("data-select-template");
+          const labelEl = emptyNode.querySelector<HTMLElement>("[data-select-label]");
+          if (labelEl) labelEl.textContent = placeholder;
+          container.appendChild(emptyNode);
+        } else {
+          container.textContent = placeholder;
+        }
+        return;
+      }
+
+      labels.forEach((label, index) => {
+        const value = state.selectedValues[index];
+        let chip: HTMLElement;
+        if (template) {
+          chip = template.cloneNode(true) as HTMLElement;
+          chip.removeAttribute("data-select-template");
+          chip.style.removeProperty("display");
+          const labelEl = chip.querySelector<HTMLElement>("[data-select-label]");
+          if (labelEl) labelEl.textContent = label;
+          const valueEl = chip.querySelector<HTMLElement>("[data-select-value]");
+          if (valueEl) valueEl.textContent = value;
+        } else {
+          chip = document.createElement("span");
+          chip.textContent = label;
+        }
+
+        const removeTarget =
+          chip.querySelector<HTMLElement>("[data-select-remove]") ??
+          chip.querySelector<HTMLElement>("[data-select-chip-remove]") ??
+          null;
+        if (removeTarget) {
+          removeTarget.setAttribute("data-select-remove", value);
+          const handler = (event: Event) => {
+            event.preventDefault();
+            core.unselect(value);
+          };
+          removeTarget.addEventListener("click", handler);
+          cleanup.push(() => removeTarget.removeEventListener("click", handler));
+        }
+
+        container.appendChild(chip);
+      });
     });
   };
 
@@ -167,6 +248,12 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
     selectedValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_VALUE}[data-select-id="${selectId}"]`));
     if (!selectedValueEls.length) selectedValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE));
+    clearEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR}[data-select-id="${selectId}"]`));
+    if (!clearEls.length) clearEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR));
+    clearAllEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR_ALL}[data-select-id="${selectId}"]`));
+    if (!clearAllEls.length) clearAllEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR_ALL));
+    removeValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_REMOVE}[data-select-id="${selectId}"]`));
+    if (!removeValueEls.length) removeValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_REMOVE));
 
     const sourceTrigger = triggers[0];
     if (sourceTrigger) {
@@ -193,6 +280,28 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       cleanup.push(() => input?.removeEventListener("keydown", handleKeyDown));
     }
 
+    const clearSelection = () => {
+      core.clear();
+      core.highlight(null);
+    };
+
+    const bindClick = (el: HTMLElement, action: () => void) => {
+      const handler = (event: Event) => {
+        event.preventDefault();
+        action();
+      };
+      el.addEventListener("click", handler);
+      cleanup.push(() => el.removeEventListener("click", handler));
+    };
+
+    clearEls.forEach((el) => bindClick(el, clearSelection));
+    clearAllEls.forEach((el) => bindClick(el, clearSelection));
+    removeValueEls.forEach((el) => {
+      const value = el.getAttribute("data-select-remove");
+      if (!value) return;
+      bindClick(el, () => core.unselect(value));
+    });
+
     registerItems();
   };
 
@@ -216,6 +325,9 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     input = null;
     itemElements = [];
     selectedValueEls = [];
+    clearEls = [];
+    clearAllEls = [];
+    removeValueEls = [];
   };
 
   const connect = ({ root: rootElement }: SelectDom) => {

@@ -1,6 +1,6 @@
 import { registerItem, unregisterItem } from "./itemRegistry";
 import { highlight, highlightNext, highlightPrev } from "./navigation";
-import { selectValue, toggleValue, unselectValue } from "./selection";
+import { clearSelection, selectValue, toggleValue, unselectValue } from "./selection";
 import { createSelectStore } from "./selectStore";
 import { setSearch } from "./search";
 import { subscribeToState } from "./events";
@@ -12,6 +12,7 @@ export type SelectCore = {
   toggle: () => void;
   select: (value: string) => void;
   unselect: (value: string) => void;
+  clear: () => void;
   toggleValue: (value: string) => void;
   highlightNext: () => void;
   highlightPrev: () => void;
@@ -43,6 +44,7 @@ export const createSelectCore = (options: SelectOptions = {}): SelectCore => {
     toggle,
     select: (value: string) => selectValue(store, value, multiple),
     unselect: (value: string) => unselectValue(store, value),
+    clear: () => clearSelection(store),
     toggleValue: (value: string) => toggleValue(store, value, multiple),
     highlightNext: () => highlightNext(store),
     highlightPrev: () => highlightPrev(store),

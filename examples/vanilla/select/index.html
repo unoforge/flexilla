@@ -15,15 +15,16 @@
       <p class="text-zinc-600 dark:text-zinc-400">Headless select powered by @flexilla/select-core with DOM bindings.</p>
     </header>
 
-    <div class="space-y-6">
-      <div class="space-y-3">
-        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Single select</h2>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400">Uses trigger + list with keyboard navigation.</p>
-      </div>
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Single select</h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Uses trigger + list with keyboard navigation.</p>
+        </div>
       <div id="demo-select" data-select data-demo-select class="inline-block relative">
         <button data-select-trigger data-select-id="demo-select" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm">
           <span data-selected-value data-select-id="demo-select">Choose a fruit</span>
         </button>
+        <button data-select-clear data-select-id="demo-select" class="ml-3 text-sm text-blue6 hover:text-blue7">Clear</button>
         <div data-select-content data-select-id="demo-select" class="mt-2 w-56 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
           <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
             <li data-select-item="apple" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Apple</li>
@@ -35,15 +36,25 @@
       </div>
     </div>
 
-    <div class="space-y-6">
-      <div class="space-y-3">
-        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select</h2>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400">Toggle multiple values with Enter or click.</p>
-      </div>
-      <div id="demo-select-multi" data-select data-demo-select-multi class="inline-block relative">
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select</h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Toggle multiple values with Enter or click.</p>
+        </div>
+      <div id="demo-select-multi" data-select data-demo-select-multi class="inline-block relative space-y-2">
         <button data-select-trigger data-select-id="demo-select-multi" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm">
-          <span data-selected-value data-select-id="demo-select-multi">Choose toppings</span>
+          <span>Choose toppings</span>
         </button>
+        <div data-selected-value data-select-id="demo-select-multi" class="flex gap-2 flex-wrap text-sm text-zinc-800 dark:text-zinc-100">
+          <span data-select-template class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800">
+            <span data-select-label></span>
+            <button data-select-remove class="text-xs text-zinc-600 dark:text-zinc-300 hover:text-red-500">×</button>
+          </span>
+          <span class="text-zinc-500" data-placeholder>Choose toppings</span>
+        </div>
+        <div class="flex items-center gap-2 mt-2">
+          <button data-select-clear-all data-select-id="demo-select-multi" class="text-sm text-blue6 hover:text-blue7">Clear all</button>
+        </div>
         <div data-select-content data-select-id="demo-select-multi" class="mt-2 w-60 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
           <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
             <li data-select-item="pepperoni" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Pepperoni</li>

@@ -6,6 +6,9 @@ const SELECT_CONTENT = "[data-select-content]";
 const SELECT_ITEM = "[data-select-item]";
 const SELECT_INPUT = "[data-select-input]";
 const SELECT_VALUE = "[data-selected-value]";
+const SELECT_CLEAR = "[data-select-clear]";
+const SELECT_CLEAR_ALL = "[data-select-clear-all]";
+const SELECT_REMOVE = "[data-select-remove]";
 
 const defaultFilter = (query: string, item: SelectItem) => {
   if (!query) return true;
@@ -24,7 +27,11 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   let itemsContainer: HTMLElement | null = null;
   let itemElements: HTMLElement[] = [];
   let selectedValueEls: HTMLElement[] = [];
+  let clearEls: HTMLElement[] = [];
+  let clearAllEls: HTMLElement[] = [];
+  let removeValueEls: HTMLElement[] = [];
   let placeholder = "Select";
+  let initialInputValue = "";
   let unsubscribe: (() => void) | null = null;
   const cleanup: Array<() => void> = [];
   let renderedValues = new Set<string>();
@@ -135,15 +142,91 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   };
 
   const updateSelectedDisplays = (state: SelectState) => {
-    const labels = state.selectedValues
-      .map((value) => state.items.find((item) => item.value === value)?.label ?? value)
-      .filter(Boolean);
-    const text = labels.length ? labels.join(", ") : placeholder;
-    selectedValueEls.forEach((el) => {
-      el.textContent = text;
+    selectedValueEls.forEach((container) => {
+      const template = container.querySelector<HTMLElement>("[data-select-template]");
+      if (template) template.style.display = "none";
+      const keep = template ? [template] : [];
+      Array.from(container.children).forEach((child) => {
+        if (!keep.includes(child as HTMLElement)) container.removeChild(child);
+      });
+
+      const labels = state.selectedValues
+        .map((value) => state.items.find((item) => item.value === value)?.label ?? value)
+        .filter(Boolean);
+
+      if (!options.multiple) {
+        const text = labels[0] ?? placeholder;
+        if (template) {
+          const node = template.cloneNode(true) as HTMLElement;
+          node.removeAttribute("data-select-template");
+          node.style.removeProperty("display");
+          const labelEl = node.querySelector<HTMLElement>("[data-select-label]");
+          if (labelEl) labelEl.textContent = text;
+          const removeEl = node.querySelector<HTMLElement>("[data-select-remove]");
+          if (removeEl) removeEl.setAttribute("data-select-remove", state.selectedValues[0] ?? "");
+          if (removeEl && state.selectedValues[0]) {
+            const handler = (event: Event) => {
+              event.preventDefault();
+              core.unselect(state.selectedValues[0]!);
+            };
+            removeEl.addEventListener("click", handler);
+            cleanup.push(() => removeEl.removeEventListener("click", handler));
+          }
+          container.appendChild(node);
+        } else {
+          container.textContent = text;
+        }
+      } else {
+        if (!labels.length) {
+          if (template) {
+            const emptyNode = template.cloneNode(true) as HTMLElement;
+            emptyNode.removeAttribute("data-select-template");
+            const labelEl = emptyNode.querySelector<HTMLElement>("[data-select-label]");
+            if (labelEl) labelEl.textContent = placeholder;
+            container.appendChild(emptyNode);
+          } else {
+            container.textContent = placeholder;
+          }
+          return;
+        }
+
+        labels.forEach((label, index) => {
+          const value = state.selectedValues[index];
+          let chip: HTMLElement;
+          if (template) {
+            chip = template.cloneNode(true) as HTMLElement;
+            chip.removeAttribute("data-select-template");
+            chip.style.removeProperty("display");
+            const labelEl = chip.querySelector<HTMLElement>("[data-select-label]");
+            if (labelEl) labelEl.textContent = label;
+            const valueEl = chip.querySelector<HTMLElement>("[data-select-value]");
+            if (valueEl) valueEl.textContent = value;
+          } else {
+            chip = document.createElement("span");
+            chip.textContent = label;
+          }
+
+          const removeTarget =
+            chip.querySelector<HTMLElement>("[data-select-remove]") ??
+            chip.querySelector<HTMLElement>("[data-select-chip-remove]") ??
+            null;
+          if (removeTarget) {
+            removeTarget.setAttribute("data-select-remove", value);
+            const handler = (event: Event) => {
+              event.preventDefault();
+              core.unselect(value);
+            };
+            removeTarget.addEventListener("click", handler);
+            cleanup.push(() => removeTarget.removeEventListener("click", handler));
+          }
+
+          container.appendChild(chip);
+        });
+      }
     });
-    if (input && !state.open && !options.multiple && labels.length === 1) {
-      input.value = labels[0];
+
+    if (input && !state.open && !options.multiple) {
+      input.value = state.selectedValues.length === 1 ? (state.items.find((i) => i.value === state.selectedValues[0])?.label ?? state.selectedValues[0]) : input.value;
     }
   };
 
@@ -208,9 +291,16 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     if (!selectedValueEls.length) {
       selectedValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE));
     }
+    clearEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR}[data-select-id="${selectId}"]`));
+    if (!clearEls.length) clearEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR));
+    clearAllEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR_ALL}[data-select-id="${selectId}"]`));
+    if (!clearAllEls.length) clearAllEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR_ALL));
+    removeValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_REMOVE}[data-select-id="${selectId}"]`));
+    if (!removeValueEls.length) removeValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_REMOVE));
 
     const sourcePlaceholder = input?.getAttribute("data-placeholder") || input?.getAttribute("placeholder") || placeholder;
     placeholder = sourcePlaceholder || placeholder;
+    if (input) initialInputValue = input.value;
 
     if (!content) throw new Error("[autocomplete] data-select-content is required");
     if (!itemsContainer) throw new Error("[autocomplete] items container not found");
@@ -236,6 +326,30 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       cleanup.push(() => input?.removeEventListener("keydown", handleKeyDown));
     }
 
+    const bindClick = (el: HTMLElement, action: () => void) => {
+      const handler = (event: Event) => {
+        event.preventDefault();
+        action();
+      };
+      el.addEventListener("click", handler);
+      cleanup.push(() => el.removeEventListener("click", handler));
+    };
+
+    const clearSelection = () => {
+      core.clear();
+      core.highlight(null);
+      core.setSearch("");
+      if (input) input.value = initialInputValue;
+    };
+
+    clearEls.forEach((el) => bindClick(el, clearSelection));
+    clearAllEls.forEach((el) => bindClick(el, clearSelection));
+    removeValueEls.forEach((el) => {
+      const value = el.getAttribute("data-select-remove");
+      if (!value) return;
+      bindClick(el, () => core.unselect(value));
+    });
+
     if (!itemsMeta.length) parseDomItems();
     updateFromSource(core.getState().search);
   };
@@ -259,6 +373,11 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     content = null;
     input = null;
     itemsContainer = null;
+    selectedValueEls = [];
+    clearEls = [];
+    clearAllEls = [];
+    removeValueEls = [];
+    itemsMeta = [];
   };
 
   const connect = ({ root: rootElement }: AutocompleteDom) => {

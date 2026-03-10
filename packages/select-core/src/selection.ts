@@ -23,6 +23,13 @@ export const unselectValue = (store: SelectStore, value: string) => {
   });
 };
 
+export const clearSelection = (store: SelectStore) => {
+  store.setState((state) => {
+    if (state.selectedValues.length === 0) return state;
+    return { ...state, selectedValues: [] };
+  });
+};
+
 export const toggleValue = (store: SelectStore, value: string, multiple: boolean) => {
   store.setState((state) => {
     if (!canSelectValue(state, value)) return state;
