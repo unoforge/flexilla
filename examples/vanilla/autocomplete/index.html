@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autocomplete Demo</title>
+</head>
+
+<body class="pt14 bg-white dark:bg-zinc-950">
+  <section class="max-w3xl mxauto space-y-14 relative z20 pb20">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">Autocomplete</h1>
+      <p class="text-sm text-zinc-600 dark:text-zinc-400">Powered by @flexilla/autocomplete using the shared select core.</p>
+    </header>
+
+    <div class="space-y-6">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Static list</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Filters existing items with case-insensitive matching.</p>
+      </div>
+      <div id="demo-autocomplete-static" data-select data-demo-autocomplete-static class="w-full max-w-md space-y-2">
+        <label class="block text-sm font-medium text-zinc-800 dark:text-zinc-200">Search fruit</label>
+        <input data-select-input data-autocomplete-id="demo-autocomplete-static" type="text" placeholder="Type to filter" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+        <p data-selected-value data-select-id="demo-autocomplete-static" class="text-sm text-zinc-600 dark:text-zinc-400">Nothing selected</p>
+        <div data-select-content data-select-id="demo-autocomplete-static" class="border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="apple" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Apple</li>
+            <li data-select-item="banana" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Banana</li>
+            <li data-select-item="cherry" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Cherry</li>
+            <li data-select-item="date" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Date</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select</h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Toggle multiple tags via keyboard or click.</p>
+        </div>
+        <div id="demo-autocomplete-multi" data-select data-demo-autocomplete-multi class="w-full max-w-md space-y-2">
+          <label class="block text-sm font-medium text-zinc-800 dark:text-zinc-200">Choose tags</label>
+          <input data-select-input data-autocomplete-id="demo-autocomplete-multi" type="text" placeholder="Type to filter" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+          <p data-selected-value data-select-id="demo-autocomplete-multi" class="text-sm text-zinc-600 dark:text-zinc-400">None selected</p>
+          <div data-select-content data-select-id="demo-autocomplete-multi" class="border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+            <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+              <li data-select-item="design" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Design</li>
+              <li data-select-item="frontend" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Frontend</li>
+              <li data-select-item="backend" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Backend</li>
+            <li data-select-item="devops" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">DevOps</li>
+            <li data-select-item="docs" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Docs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Async demo intentionally omitted for current scope -->
+  </section>
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>

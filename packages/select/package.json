@@ -1,0 +1,61 @@
+{
+  "name": "@flexilla/select",
+  "private": false,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "DOM binding layer for Flexilla select built on @flexilla/select-core",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/select.js",
+  "module": "./dist/select.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/select.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/select.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json",
+    "!vite.config.ts",
+    "!.gitignore",
+    "!tsconfig.json"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@flexilla/select-core": "^0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "keywords": [
+    "select",
+    "headless",
+    "flexilla"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unoforge/flexilla"
+  },
+  "bugs": {
+    "url": "https://github.com/unoforge/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "Flexilla Team"
+}

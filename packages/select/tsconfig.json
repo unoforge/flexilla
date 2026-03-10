@@ -1,0 +1,9 @@
+{
+  "extends": "./../../shared/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@flexilla/select-core": ["../select-core/src"]
+    }
+  },
+  "include": ["src"]
+}
