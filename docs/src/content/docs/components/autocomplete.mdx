@@ -38,10 +38,10 @@ yarn add @flexilla/autocomplete
 
 ## Markup structure
 
-The root must have an `id`.
+The root must have an `id`. For the class-based API, add `data-fx-autocomplete`.
 
 ```html
-<div id="framework-autocomplete">
+<div id="framework-autocomplete" data-fx-autocomplete>
   <input
     type="text"
     data-select-input
@@ -49,7 +49,13 @@ The root must have an `id`.
     placeholder="Search frameworks"
   />
 
-  <div data-select-content data-select-id="framework-autocomplete" hidden>
+  <div
+    data-select-content
+    data-select-id="framework-autocomplete"
+    data-placement="bottom-start"
+    class="ui-popper"
+    hidden
+  >
     <button data-select-item="astro">Astro</button>
     <button data-select-item="vue">Vue</button>
     <button data-select-item="laravel">Laravel</button>
@@ -61,13 +67,41 @@ The root must have an `id`.
 </div>
 ```
 
+Useful overlay attributes on `data-select-content`:
+
+- `data-placement`
+- `data-offset-distance`
+- `data-prevent-close-outside`
+- `data-prevent-close-inside`
+- `data-readjust-height`
+- `data-min-height`
+
+`readjustHeight` is enabled by default for autocomplete and can be disabled with `data-readjust-height="false"` or `{ readjustHeight: false }`.
+
 ## Basic usage
+
+### Class API
+
+```js
+import { Autocomplete } from "@flexilla/autocomplete";
+
+const autocomplete = new Autocomplete("#framework-autocomplete");
+```
+
+### Auto init
+
+```js
+import { Autocomplete } from "@flexilla/autocomplete";
+
+Autocomplete.autoInit();
+```
+
+### Controller API
 
 ```js
 import { createAutocomplete } from "@flexilla/autocomplete";
 
 const root = document.querySelector("#framework-autocomplete");
-
 const autocomplete = createAutocomplete();
 const { destroy } = autocomplete.connect({ root });
 ```
@@ -89,9 +123,20 @@ const autocomplete = createAutocomplete({
 ## Multiple selection
 
 ```js
-const autocomplete = createAutocomplete({ multiple: true });
-autocomplete.connect({ root: document.querySelector("#framework-autocomplete") });
+const autocomplete = new Autocomplete("#framework-autocomplete", {
+  multiple: true,
+});
 ```
+
+You can also declare it in markup:
+
+```html
+<div id="framework-autocomplete" data-fx-autocomplete data-multiple>
+  ...
+</div>
+```
+
+For multiple autocomplete instances, clicks inside the list stay open by default so the user can keep selecting values.
 
 ## State and methods
 
@@ -121,7 +166,16 @@ autocomplete.subscribe((state) => {
 
 ## Lifecycle
 
-`connect()` returns a `destroy()` function:
+The class API exposes `cleanup()`:
+
+```js
+const autocomplete = new Autocomplete("#framework-autocomplete");
+
+// Later
+autocomplete.cleanup();
+```
+
+The controller API still returns a `destroy()` function:
 
 ```js
 const { destroy } = autocomplete.connect({ root });

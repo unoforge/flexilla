@@ -76,15 +76,17 @@ class CreatePopper {
     /**
      * Set Style Property
      */
-    private setPopperStyleProperty = (x: number, y: number, placement: Placement) => {
+    private setPopperStyleProperty = (x: number, y: number, placement: Placement, triggerWidth: number) => {
         this.popper.setAttribute("data-show-placement", placement)
         this.popper.style.setProperty("--fx-popper-placement-x", `${x}px`)
         this.popper.style.setProperty("--fx-popper-placement-y", `${y}px`)
+        this.popper.style.setProperty("--trigger-width", `${triggerWidth}px`)
     }
 
     private setInitialStyles = (): void => {
         this.popper.style.setProperty("--fx-popper-placement-x", "")
         this.popper.style.setProperty("--fx-popper-placement-y", "")
+        this.popper.style.setProperty("--trigger-width", "")
     };
 
     private resetReadjustHeightStyles = (): void => {
@@ -146,7 +148,7 @@ class CreatePopper {
             }
         );
 
-        this.setPopperStyleProperty(x, y, resolvedPlacement)
+        this.setPopperStyleProperty(x, y, resolvedPlacement, refWidth)
         this.onUpdate?.({ x, y, placement: this.placement })
 
     };

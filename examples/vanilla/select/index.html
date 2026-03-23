@@ -20,12 +20,12 @@
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Single select</h2>
           <p class="text-sm text-gray-600 dark:text-gray-400">Uses trigger + list with keyboard navigation.</p>
         </div>
-      <div id="demo-select" data-select data-demo-select class="inline-block relative">
+      <div id="demo-select" data-fx-select data-demo-select class="inline-block relative">
         <button data-select-trigger data-select-id="demo-select" class="b b-zinc8 hover-bg-gray-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm">
           <span data-selected-value data-select-id="demo-select">Choose a fruit</span>
         </button>
         <button data-select-clear data-select-id="demo-select" class="ml-3 text-sm text-blue6 hover:text-blue7">Clear</button>
-        <div data-select-content data-select-id="demo-select" class="mt-2 w-56 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm" hidden>
+        <div data-select-content data-select-id="demo-select" data-placement="bottom-start" class="ui-popper mt-2 w-56 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm" hidden>
           <ul class="py-1 text-sm text-gray-800 dark:text-gray-100">
             <li data-select-item="apple" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Apple</li>
             <li data-select-item="banana" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Banana</li>
@@ -41,7 +41,7 @@
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Multi select</h2>
           <p class="text-sm text-gray-600 dark:text-gray-400">Toggle multiple values with Enter or click.</p>
         </div>
-      <div id="demo-select-multi" data-select data-demo-select-multi class="inline-block relative space-y-2">
+      <div id="demo-select-multi" data-fx-select data-multiple data-demo-select-multi class="inline-block relative space-y-2">
         <button data-select-trigger data-select-id="demo-select-multi" class="b b-zinc8 hover-bg-gray-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm">
           <span>Choose toppings</span>
         </button>
@@ -55,7 +55,7 @@
         <div class="flex items-center gap-2 mt-2">
           <button data-select-clear-all data-select-id="demo-select-multi" class="text-sm text-blue6 hover:text-blue7">Clear all</button>
         </div>
-        <div data-select-content data-select-id="demo-select-multi" class="mt-2 w-60 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm" hidden>
+        <div data-select-content data-select-id="demo-select-multi" data-placement="bottom-start" class="ui-popper mt-2 w-60 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm" hidden>
           <ul class="py-1 text-sm text-gray-800 dark:text-gray-100">
             <li data-select-item="pepperoni" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Pepperoni</li>
             <li data-select-item="mushroom" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Mushroom</li>

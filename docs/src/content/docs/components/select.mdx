@@ -40,15 +40,21 @@ yarn add @flexilla/select
 
 ## Markup structure
 
-The root element must have an `id`, because the controller uses it to connect triggers, content, and related elements.
+The root element must have an `id`. For the class-based API, add `data-fx-select` so you can use `Select.autoInit()`.
 
 ```html
-<div id="framework-select">
+<div id="framework-select" data-fx-select>
   <button data-select-trigger data-select-id="framework-select" data-placeholder="Choose a framework">
     Open select
   </button>
 
-  <div data-select-content data-select-id="framework-select" hidden>
+  <div
+    data-select-content
+    data-select-id="framework-select"
+    data-placement="bottom-start"
+    class="ui-popper"
+    hidden
+  >
     <button data-select-item="astro">Astro</button>
     <button data-select-item="vue">Vue</button>
     <button data-select-item="laravel">Laravel</button>
@@ -70,13 +76,39 @@ Common elements:
 - `data-select-remove`
 - `data-select-input`
 
+Useful overlay attributes on `data-select-content`:
+
+- `data-placement`
+- `data-offset-distance`
+- `data-prevent-close-outside`
+- `data-prevent-close-inside`
+- `data-readjust-height`
+- `data-min-height`
+
 ## Basic usage
+
+### Class API
+
+```js
+import { Select } from "@flexilla/select";
+
+const select = new Select("#framework-select");
+```
+
+### Auto init
+
+```js
+import { Select } from "@flexilla/select";
+
+Select.autoInit();
+```
+
+### Controller API
 
 ```js
 import { createSelect } from "@flexilla/select";
 
 const root = document.querySelector("#framework-select");
-
 const select = createSelect();
 const { destroy } = select.connect({ root });
 ```
@@ -84,13 +116,22 @@ const { destroy } = select.connect({ root });
 ## Multiple selection
 
 ```js
-import { createSelect } from "@flexilla/select";
+import { Select } from "@flexilla/select";
 
-const root = document.querySelector("#framework-select");
-
-const select = createSelect({ multiple: true });
-select.connect({ root });
+const select = new Select("#framework-select", {
+  multiple: true,
+});
 ```
+
+You can also declare it in markup:
+
+```html
+<div id="framework-select" data-fx-select data-multiple>
+  ...
+</div>
+```
+
+For multiple selects, clicks inside the option panel stay open by default so users can keep selecting items.
 
 ## State and methods
 
@@ -123,7 +164,16 @@ select.subscribe((state) => {
 
 ## Lifecycle
 
-`connect()` returns a cleanup object:
+The class API exposes `cleanup()`:
+
+```js
+const select = new Select("#framework-select");
+
+// Later
+select.cleanup();
+```
+
+The controller API still returns a cleanup object from `connect()`:
 
 ```js
 const { destroy } = select.connect({ root });

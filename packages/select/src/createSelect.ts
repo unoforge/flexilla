@@ -1,5 +1,8 @@
-import { createSelectCore, type SelectState, type SelectItem } from "@flexilla/select-core";
+import { createSelectCore, type SelectState, type SelectItem, type SelectCore } from "@flexilla/select-core";
 import type { SelectController, SelectDom, SelectOptions } from "./types";
+import { CreateOverlay, type Placement } from "flexipop/create-overlay";
+import { $, $$ } from "@flexilla/utilities";
+import { FlexillaManager } from "@flexilla/manager";
 
 const SELECT_TRIGGER = "[data-select-trigger]";
 const SELECT_CONTENT = "[data-select-content]";
@@ -18,6 +21,62 @@ const parseItem = (element: HTMLElement): SelectItem | null => {
   return { value, label, disabled };
 };
 
+const getBooleanAttr = (element: HTMLElement | null, attr: string): boolean | undefined => {
+  if (!(element instanceof HTMLElement)) return undefined;
+  if (!element.hasAttribute(attr)) return undefined;
+  const value = element.getAttribute(attr);
+  return value !== "false";
+};
+
+const getNumberAttr = (element: HTMLElement | null, attr: string): number | undefined => {
+  if (!(element instanceof HTMLElement)) return undefined;
+  const rawValue = element.getAttribute(attr);
+  if (!rawValue) return undefined;
+  const value = Number(rawValue);
+  return Number.isFinite(value) ? value : undefined;
+};
+
+const resolveOverlayOptions = ({
+  root,
+  content,
+  options,
+}: {
+  root: HTMLElement;
+  content: HTMLElement | null;
+  options: SelectOptions;
+}) => {
+  const source = content ?? root;
+  const multiple = options.multiple ?? (root.hasAttribute("data-multiple") || root.dataset.multiple === "true");
+
+  return {
+    placement: (content?.dataset.placement as Placement | undefined) || (root.dataset.placement as Placement | undefined) || options.placement || "bottom-start",
+    offsetDistance:
+      getNumberAttr(content, "data-offset-distance") ??
+      getNumberAttr(root, "data-offset-distance") ??
+      options.offsetDistance ??
+      6,
+    preventFromCloseOutside:
+      getBooleanAttr(content, "data-prevent-close-outside") ??
+      getBooleanAttr(root, "data-prevent-close-outside") ??
+      options.preventFromCloseOutside ??
+      false,
+    preventCloseFromInside:
+      getBooleanAttr(content, "data-prevent-close-inside") ??
+      getBooleanAttr(root, "data-prevent-close-inside") ??
+      options.preventCloseFromInside ??
+      multiple,
+    readjustHeight:
+      getBooleanAttr(source, "data-readjust-height") ??
+      options.readjustHeight ??
+      true,
+    minHeight:
+      getNumberAttr(source, "data-min-height") ??
+      options.minHeight ??
+      140,
+    popper: options.popper,
+  };
+};
+
 export const createSelect = (options: SelectOptions = {}): SelectController => {
   const core = createSelectCore({ multiple: options.multiple });
   let root: HTMLElement | null = null;
@@ -30,15 +89,35 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   let clearEls: HTMLElement[] = [];
   let clearAllEls: HTMLElement[] = [];
   let removeValueEls: HTMLElement[] = [];
+  let overlay: CreateOverlay | null = null;
   const cleanup: Array<() => void> = [];
   let unsubscribe: (() => void) | null = null;
   let placeholder = "Select";
+  let syncingOverlay = false;
 
   const ensureHighlighted = () => {
     const state = core.getState();
     if (state.highlightedIndex !== null) return;
     const firstEnabled = state.items.findIndex((item) => !item.disabled);
     if (firstEnabled >= 0) core.highlight(firstEnabled);
+  };
+
+  const syncOverlay = (state: SelectState) => {
+    if (!overlay || syncingOverlay) return;
+    const content = contents[0];
+    if (!(content instanceof HTMLElement)) return;
+    const overlayState = content.dataset.state || "close";
+    if (state.open && overlayState !== "open") {
+      syncingOverlay = true;
+      overlay.show();
+      syncingOverlay = false;
+      return;
+    }
+    if (!state.open && overlayState === "open") {
+      syncingOverlay = true;
+      overlay.hide();
+      syncingOverlay = false;
+    }
   };
 
   const registerItems = () => {
@@ -223,6 +302,8 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
   const handleTriggerClick = (event: Event) => {
     event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
     core.toggle();
     ensureHighlighted();
   };
@@ -302,6 +383,37 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       bindClick(el, () => core.unselect(value));
     });
 
+    if (triggers[0] && contents[0]) {
+      const overlayOptions = resolveOverlayOptions({
+        root,
+        content: contents[0],
+        options,
+      });
+
+      overlay = new CreateOverlay({
+        trigger: triggers[0],
+        content: contents[0],
+        options: {
+          triggerStrategy: "manual",
+          placement: overlayOptions.placement,
+          offsetDistance: overlayOptions.offsetDistance,
+          preventFromCloseOutside: overlayOptions.preventFromCloseOutside,
+          preventCloseFromInside: overlayOptions.preventCloseFromInside,
+          readjustHeight: overlayOptions.readjustHeight,
+          minHeight: overlayOptions.minHeight,
+          popper: overlayOptions.popper,
+          onHide: () => {
+            if (core.getState().open) {
+              syncingOverlay = true;
+              core.close();
+              syncingOverlay = false;
+            }
+          },
+        },
+      });
+      cleanup.push(() => overlay?.cleanup());
+    }
+
     registerItems();
   };
 
@@ -309,6 +421,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     updateAria(state);
     updateItemsState(state);
     updateSelectedDisplays(state);
+    syncOverlay(state);
   };
 
   const destroy = () => {
@@ -328,6 +441,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     clearEls = [];
     clearAllEls = [];
     removeValueEls = [];
+    overlay = null;
   };
 
   const connect = ({ root: rootElement }: SelectDom) => {
@@ -346,3 +460,63 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     connect,
   };
 };
+
+type SelectInstanceOptions = SelectOptions & {
+  multiple?: boolean;
+};
+
+export class Select implements SelectCore {
+  private root: HTMLElement;
+  private controller: SelectController;
+  private destroyConnection: (() => void) | null = null;
+
+  constructor(select: string | HTMLElement, options: SelectInstanceOptions = {}) {
+    const root = typeof select === "string" ? $(select) : select;
+    if (!(root instanceof HTMLElement)) {
+      throw new Error("Invalid select root element");
+    }
+
+    const existingInstance = FlexillaManager.getInstance("select", root);
+    if (existingInstance) {
+      return existingInstance;
+    }
+
+    const multiple = options.multiple ?? getBooleanAttr(root, "data-multiple") ?? false;
+    this.root = root;
+    this.controller = createSelect({ ...options, multiple });
+    this.destroyConnection = this.controller.connect({ root });
+
+    FlexillaManager.register("select", root, this);
+  }
+
+  open = () => this.controller.open();
+  close = () => this.controller.close();
+  toggle = () => this.controller.toggle();
+  select = (value: string) => this.controller.select(value);
+  unselect = (value: string) => this.controller.unselect(value);
+  clear = () => this.controller.clear();
+  toggleValue = (value: string) => this.controller.toggleValue(value);
+  highlightNext = () => this.controller.highlightNext();
+  highlightPrev = () => this.controller.highlightPrev();
+  highlight = (index: number | null) => this.controller.highlight(index);
+  setSearch = (query: string) => this.controller.setSearch(query);
+  registerItem = (item: SelectItem) => this.controller.registerItem(item);
+  unregisterItem = (value: string) => this.controller.unregisterItem(value);
+  getState = () => this.controller.getState();
+  subscribe = (listener: (state: Readonly<SelectState>) => void) => this.controller.subscribe(listener);
+
+  cleanup = () => {
+    this.destroyConnection?.();
+    this.destroyConnection = null;
+    FlexillaManager.removeInstance("select", this.root);
+  };
+
+  static init = (select: string | HTMLElement, options: SelectInstanceOptions = {}) => new Select(select, options);
+
+  static autoInit = (selector = "[data-fx-select]") => {
+    const roots = $$(selector);
+    for (const root of roots) {
+      new Select(root);
+    }
+  };
+}

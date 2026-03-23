@@ -1,5 +1,8 @@
-import { createSelectCore,type  SelectItem, type SelectState } from "@flexilla/select-core";
+import { createSelectCore, type SelectItem, type SelectState, type SelectCore } from "@flexilla/select-core";
 import type { AutocompleteController, AutocompleteDom, AutocompleteOptions } from "./types";
+import { CreateOverlay, type Placement } from "flexipop/create-overlay";
+import { $, $$ } from "@flexilla/utilities";
+import { FlexillaManager } from "@flexilla/manager";
 
 const SELECT_TRIGGER = "[data-select-trigger]";
 const SELECT_CONTENT = "[data-select-content]";
@@ -16,6 +19,62 @@ const defaultFilter = (query: string, item: SelectItem) => {
   return text.includes(query.toLowerCase());
 };
 
+const getBooleanAttr = (element: HTMLElement | null, attr: string): boolean | undefined => {
+  if (!(element instanceof HTMLElement)) return undefined;
+  if (!element.hasAttribute(attr)) return undefined;
+  const value = element.getAttribute(attr);
+  return value !== "false";
+};
+
+const getNumberAttr = (element: HTMLElement | null, attr: string): number | undefined => {
+  if (!(element instanceof HTMLElement)) return undefined;
+  const rawValue = element.getAttribute(attr);
+  if (!rawValue) return undefined;
+  const value = Number(rawValue);
+  return Number.isFinite(value) ? value : undefined;
+};
+
+const resolveOverlayOptions = ({
+  root,
+  content,
+  options,
+}: {
+  root: HTMLElement;
+  content: HTMLElement | null;
+  options: AutocompleteOptions;
+}) => {
+  const source = content ?? root;
+  const multiple = options.multiple ?? (root.hasAttribute("data-multiple") || root.dataset.multiple === "true");
+
+  return {
+    placement: (content?.dataset.placement as Placement | undefined) || (root.dataset.placement as Placement | undefined) || options.placement || "bottom-start",
+    offsetDistance:
+      getNumberAttr(content, "data-offset-distance") ??
+      getNumberAttr(root, "data-offset-distance") ??
+      options.offsetDistance ??
+      6,
+    preventFromCloseOutside:
+      getBooleanAttr(content, "data-prevent-close-outside") ??
+      getBooleanAttr(root, "data-prevent-close-outside") ??
+      options.preventFromCloseOutside ??
+      false,
+    preventCloseFromInside:
+      getBooleanAttr(content, "data-prevent-close-inside") ??
+      getBooleanAttr(root, "data-prevent-close-inside") ??
+      options.preventCloseFromInside ??
+      multiple,
+    readjustHeight:
+      getBooleanAttr(source, "data-readjust-height") ??
+      options.readjustHeight ??
+      true,
+    minHeight:
+      getNumberAttr(source, "data-min-height") ??
+      options.minHeight ??
+      140,
+    popper: options.popper,
+  };
+};
+
 export const createAutocomplete = (options: AutocompleteOptions = {}): AutocompleteController => {
   const core = createSelectCore({ multiple: options.multiple });
   const filter = options.filter ?? defaultFilter;
@@ -24,7 +83,6 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   let trigger: HTMLElement | null = null;
   let content: HTMLElement | null = null;
   let input: HTMLInputElement | null = null;
-  let itemsContainer: HTMLElement | null = null;
   let itemElements: HTMLElement[] = [];
   let selectedValueEls: HTMLElement[] = [];
   let clearEls: HTMLElement[] = [];
@@ -33,9 +91,11 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   let placeholder = "Select";
   let initialInputValue = "";
   let unsubscribe: (() => void) | null = null;
+  let overlay: CreateOverlay | null = null;
   const cleanup: Array<() => void> = [];
   let renderedValues = new Set<string>();
   let lastSearch = core.getState().search;
+  let syncingOverlay = false;
   type ItemMeta = { item: SelectItem; el: HTMLElement };
   let itemsMeta: ItemMeta[] = [];
   const boundElements = new WeakSet<HTMLElement>();
@@ -45,6 +105,22 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     if (state.highlightedIndex !== null) return;
     const firstEnabled = state.items.findIndex((item) => !item.disabled);
     if (firstEnabled >= 0) core.highlight(firstEnabled);
+  };
+
+  const syncOverlay = (state: SelectState) => {
+    if (!overlay || syncingOverlay || !(content instanceof HTMLElement)) return;
+    const overlayState = content.dataset.state || "close";
+    if (state.open && overlayState !== "open") {
+      syncingOverlay = true;
+      overlay.show();
+      syncingOverlay = false;
+      return;
+    }
+    if (!state.open && overlayState === "open") {
+      syncingOverlay = true;
+      overlay.hide();
+      syncingOverlay = false;
+    }
   };
 
   const parseDomItems = () => {
@@ -269,6 +345,8 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
   const handleTriggerClick = (event: Event) => {
     event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
     core.toggle();
     ensureHighlighted();
   };
@@ -286,7 +364,6 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     trigger = document.querySelector<HTMLElement>(`${SELECT_TRIGGER}[data-autocomplete-id="${selectId}"]`) || root.querySelector(SELECT_TRIGGER);
     content = document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${selectId}"]`) || root.querySelector(SELECT_CONTENT);
     input = document.querySelector<HTMLInputElement>(`${SELECT_INPUT}[data-autocomplete-id="${selectId}"]`) || root.querySelector<HTMLInputElement>(SELECT_INPUT);
-    itemsContainer = content;
     selectedValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_VALUE}[data-select-id="${selectId}"]`));
     if (!selectedValueEls.length) {
       selectedValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE));
@@ -303,7 +380,6 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     if (input) initialInputValue = input.value;
 
     if (!content) throw new Error("[autocomplete] data-select-content is required");
-    if (!itemsContainer) throw new Error("[autocomplete] items container not found");
     if (!input) throw new Error("[autocomplete] input element with data-autocomplete-id is required");
 
     if (trigger) {
@@ -319,11 +395,20 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     }
 
     if (input) {
+      const focusHandler = () => core.open();
+      const clickHandler = (event: Event) => {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        core.open();
+      };
       input.addEventListener("input", handleInput);
       input.addEventListener("keydown", handleKeyDown);
-      input.addEventListener("focus", () => core.open());
+      input.addEventListener("focus", focusHandler);
+      input.addEventListener("click", clickHandler);
       cleanup.push(() => input?.removeEventListener("input", handleInput));
       cleanup.push(() => input?.removeEventListener("keydown", handleKeyDown));
+      cleanup.push(() => input?.removeEventListener("focus", focusHandler));
+      cleanup.push(() => input?.removeEventListener("click", clickHandler));
     }
 
     const bindClick = (el: HTMLElement, action: () => void) => {
@@ -352,6 +437,38 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
     if (!itemsMeta.length) parseDomItems();
     updateFromSource(core.getState().search);
+
+    const overlayTrigger = trigger ?? input;
+    if (overlayTrigger && content) {
+      const overlayOptions = resolveOverlayOptions({
+        root,
+        content,
+        options,
+      });
+
+      overlay = new CreateOverlay({
+        trigger: overlayTrigger,
+        content,
+        options: {
+          triggerStrategy: "manual",
+          placement: overlayOptions.placement,
+          offsetDistance: overlayOptions.offsetDistance,
+          preventFromCloseOutside: overlayOptions.preventFromCloseOutside,
+          preventCloseFromInside: overlayOptions.preventCloseFromInside,
+          readjustHeight: overlayOptions.readjustHeight,
+          minHeight: overlayOptions.minHeight,
+          popper: overlayOptions.popper,
+          onHide: () => {
+            if (core.getState().open) {
+              syncingOverlay = true;
+              core.close();
+              syncingOverlay = false;
+            }
+          },
+        },
+      });
+      cleanup.push(() => overlay?.cleanup());
+    }
   };
 
   const render = (state: SelectState) => {
@@ -362,6 +479,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     updateAria(state);
     updateItemsState(state);
     updateSelectedDisplays(state);
+    syncOverlay(state);
   };
 
   const destroy = () => {
@@ -372,12 +490,12 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     trigger = null;
     content = null;
     input = null;
-    itemsContainer = null;
     selectedValueEls = [];
     clearEls = [];
     clearAllEls = [];
     removeValueEls = [];
     itemsMeta = [];
+    overlay = null;
   };
 
   const connect = ({ root: rootElement }: AutocompleteDom) => {
@@ -396,3 +514,63 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     connect,
   };
 };
+
+type AutocompleteInstanceOptions = AutocompleteOptions & {
+  multiple?: boolean;
+};
+
+export class Autocomplete implements SelectCore {
+  private root: HTMLElement;
+  private controller: AutocompleteController;
+  private destroyConnection: (() => void) | null = null;
+
+  constructor(autocomplete: string | HTMLElement, options: AutocompleteInstanceOptions = {}) {
+    const root = typeof autocomplete === "string" ? $(autocomplete) : autocomplete;
+    if (!(root instanceof HTMLElement)) {
+      throw new Error("Invalid autocomplete root element");
+    }
+
+    const existingInstance = FlexillaManager.getInstance("autocomplete", root);
+    if (existingInstance) {
+      return existingInstance;
+    }
+
+    const multiple = options.multiple ?? getBooleanAttr(root, "data-multiple") ?? false;
+    this.root = root;
+    this.controller = createAutocomplete({ ...options, multiple });
+    this.destroyConnection = this.controller.connect({ root });
+
+    FlexillaManager.register("autocomplete", root, this);
+  }
+
+  open = () => this.controller.open();
+  close = () => this.controller.close();
+  toggle = () => this.controller.toggle();
+  select = (value: string) => this.controller.select(value);
+  unselect = (value: string) => this.controller.unselect(value);
+  clear = () => this.controller.clear();
+  toggleValue = (value: string) => this.controller.toggleValue(value);
+  highlightNext = () => this.controller.highlightNext();
+  highlightPrev = () => this.controller.highlightPrev();
+  highlight = (index: number | null) => this.controller.highlight(index);
+  setSearch = (query: string) => this.controller.setSearch(query);
+  registerItem = (item: SelectItem) => this.controller.registerItem(item);
+  unregisterItem = (value: string) => this.controller.unregisterItem(value);
+  getState = () => this.controller.getState();
+  subscribe = (listener: (state: Readonly<SelectState>) => void) => this.controller.subscribe(listener);
+
+  cleanup = () => {
+    this.destroyConnection?.();
+    this.destroyConnection = null;
+    FlexillaManager.removeInstance("autocomplete", this.root);
+  };
+
+  static init = (autocomplete: string | HTMLElement, options: AutocompleteInstanceOptions = {}) => new Autocomplete(autocomplete, options);
+
+  static autoInit = (selector = "[data-fx-autocomplete]") => {
+    const roots = $$(selector);
+    for (const root of roots) {
+      new Autocomplete(root);
+    }
+  };
+}

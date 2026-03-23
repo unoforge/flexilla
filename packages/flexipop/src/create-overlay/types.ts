@@ -24,8 +24,8 @@ export type OverlayOptions = {
     placement?: Placement,
     /** Distance in pixels between overlay and trigger element */
     offsetDistance?: number,
-    /** How the overlay is triggered ("click" or "hover") */
-    triggerStrategy?: "click" | "hover",
+    /** How the overlay is triggered ("click", "hover", or "manual") */
+    triggerStrategy?: "click" | "hover" | "manual",
     /** Popper-specific configuration */
     popper?: {
         /** Event-related effects configuration */

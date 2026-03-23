@@ -1,10 +1,10 @@
-import { createSelect } from "@flexilla/select";
+import { Select } from "@flexilla/select";
 import "./../main";
 
 const singleSelectRoot = document.querySelector<HTMLElement>("[data-demo-select]");
 const multiSelectRoot = document.querySelector<HTMLElement>("[data-demo-select-multi]");
 
-type Controller = ReturnType<typeof createSelect>;
+type Controller = Select;
 
 const wireTriggerLabel = (root: HTMLElement, controller: Controller, placeholder: string) => {
   const trigger = root.querySelector<HTMLElement>("[data-select-trigger]");
@@ -28,15 +28,13 @@ const wireTriggerLabel = (root: HTMLElement, controller: Controller, placeholder
 };
 
 if (singleSelectRoot) {
-  const select = createSelect();
-  select.connect({ root: singleSelectRoot });
+  const select = new Select(singleSelectRoot);
   const placeholder = singleSelectRoot.querySelector("[data-select-trigger]")?.textContent?.trim() || "Select";
   wireTriggerLabel(singleSelectRoot, select, placeholder);
 }
 
 if (multiSelectRoot) {
-  const select = createSelect({ multiple: true });
-  select.connect({ root: multiSelectRoot });
+  const select = new Select(multiSelectRoot, { multiple: true });
   const placeholder = multiSelectRoot.querySelector("[data-select-trigger]")?.textContent?.trim() || "Select";
   wireTriggerLabel(multiSelectRoot, select, placeholder);
 }

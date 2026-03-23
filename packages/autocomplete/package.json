@@ -29,7 +29,10 @@
     "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/select-core": "workspace:*"
+    "@flexilla/manager": "workspace:*",
+    "@flexilla/select-core": "workspace:*",
+    "@flexilla/utilities": "workspace:*",
+    "flexipop": "workspace:*"
   },
   "devDependencies": {
     "typescript": "5.9.3"
