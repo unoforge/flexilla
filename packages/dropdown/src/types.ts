@@ -1,4 +1,4 @@
-import type { Placement } from "flexipop"
+import type { Placement } from "flexipop/create-overlay"
 
 /** Configuration for controlling event-based behavior */
 type EventEffect = {

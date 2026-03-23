@@ -1,0 +1,9 @@
+    "reset": "node reset-setup.js",
+    "cleanup": "node cleanup.js",
+    "setup": "npm install && npm run cleanup && npm run build",
+    "build:flexipop":"npx lerna run build --scope=flexipop",
+    "build:utilities": "npx lerna run build --scope=@flexilla/manager && npx lerna run build --scope=@flexilla/utilities && npm run build:flexipop && npx lerna run build --scope=@flexilla/collapsible && npx lerna run build --scope=@flexilla/pin-input",
+    "build:select":"npx lerna run build --scope @flexilla/select-core && npx lerna run build --scope @flexilla/select && npx lerna run build --scope @flexilla/autocomplete",
+    "build:packages": "npx lerna run build --scope=@flexilla/accordion && npx lerna run build --scope=@flexilla/popover && npx lerna run build --scope=@flexilla/collapse && npx lerna run build --scope=@flexilla/auto-resize-area && npx lerna run build --scope=@flexilla/custom-range && npx lerna run build --scope=@flexilla/dismissible && npx lerna run build --scope=@flexilla/dropdown && npx lerna run build --scope=@flexilla/modal && npx lerna run build --scope=@flexilla/offcanvas && npx lerna run build --scope=@flexilla/tabs && npx lerna run build --scope=@flexilla/tooltip",
+    "build": "npm run build:utilities && npm run build:packages && npm run build:select && npx lerna run build --scope=@flexilla/flexilla",
+   

@@ -1,5 +1,5 @@
-import { SelectItem } from "./types";
-import { SelectStore } from "./selectStore";
+import type { SelectItem } from "./types";
+import type { SelectStore } from "./selectStore";
 
 export const registerItem = (store: SelectStore, item: SelectItem) => {
   store.setState((state) => {

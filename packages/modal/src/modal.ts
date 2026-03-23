@@ -1,5 +1,5 @@
 
-import { ModalContentAnimations, ModalOptions } from "./types";
+import type { ModalContentAnimations, ModalOptions } from "./types";
 import { setBodyScrollable, toggleModalState } from "./helpers";
 import { $, $$, afterAnimation, dispatchCustomEvent, waitForFxComponents } from "@flexilla/utilities";
 import { FlexillaManager } from "@flexilla/manager"

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { determinePosition } from '../helpers'; 
-import { Placement } from '../types';
+import type { Placement } from '../types';
 
 // Default dimensions for a spacious environment
 const defaultWindow = { windowHeight: 1000, windowWidth: 1000 };

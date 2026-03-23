@@ -1,4 +1,4 @@
-import { Dimensions, ElementType } from "./types";
+import type { Dimensions, ElementType } from "./types";
 
 /**
  * Calculates the dimensions of reference and popper elements

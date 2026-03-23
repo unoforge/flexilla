@@ -1,6 +1,6 @@
 import { $$ } from "./../selector";
 import { $getEl } from "./../selector";
-import { KeyDirAccessibilityOptions } from "./types";
+import { type KeyDirAccessibilityOptions } from "./types";
 
 
 /**

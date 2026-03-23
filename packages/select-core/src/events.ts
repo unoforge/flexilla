@@ -1,5 +1,5 @@
-import { SelectListener } from "./types";
-import { SelectStore } from "./selectStore";
+import type { SelectListener } from "./types";
+import type { SelectStore } from "./selectStore";
 
 export type Unsubscribe = () => void;
 

@@ -20,7 +20,7 @@ import type { DropdownOptions } from "@flexilla/dropdown"
 import type { TooltipOptions } from "@flexilla/tooltip"
 import { Popover, type PopoverOptions } from "@flexilla/popover"
 import type { FlexillaOptions } from "./types"
-import { PinInput, PinInputOptions } from "@flexilla/pin-input"
+import { PinInput, type PinInputOptions } from "@flexilla/pin-input"
 
 /**
  * Automaticaly init Components based on data-attribute or provided selector for each component via options

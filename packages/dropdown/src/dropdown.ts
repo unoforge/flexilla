@@ -1,4 +1,4 @@
-import { DropdownOptions, ExperimentalOptions } from "./types"
+import type { DropdownOptions, ExperimentalOptions } from "./types"
 import { CreateOverlay, type Placement } from "flexipop/create-overlay"
 
 import { $$, $, keyboardNavigation, dispatchCustomEvent, waitForFxComponents } from "@flexilla/utilities"
@@ -120,6 +120,7 @@ class Dropdown {
                         return { cancelAction: true }
                     }
                     this.beforeHide()
+                    return
                 },
                 onShow: this.onShow,
                 onHide: this.onHide,

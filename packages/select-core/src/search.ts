@@ -1,4 +1,4 @@
-import { SelectStore } from "./selectStore";
+import type { SelectStore } from "./selectStore";
 
 export const setSearch = (store: SelectStore, query: string) => {
   store.setState((state) => {

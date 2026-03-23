@@ -1,4 +1,4 @@
-import { Placement } from "./types";
+import type { Placement } from "./types";
 
 export const DEFAULT_PLACEMENT:Placement = "bottom"
 export const DEFAULT_OFFSETDISTANCE = 10

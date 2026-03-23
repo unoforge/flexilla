@@ -1,43 +1,35 @@
 {
   "name": "@flexilla/manager",
-  "private": false,
   "version": "0.2.2",
+  "private": false,
   "type": "module",
+  "sideEffects": false,
   "description": "Utility that help manage Flexilla Components Instances",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/manager.js",
-  "module": "./dist/manager.cjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/manager.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/manager.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
-    "dist",
-    "package.json",
-    "!vite.config.ts",
-    "!.gitignore",
-    "!tsconfig.json"
+    "dist"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
+  "dependencies": {},
   "devDependencies": {
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "5.9.3"
   },
   "keywords": [
     "flexilla",
@@ -51,7 +43,5 @@
   "bugs": {
     "url": "https://github.com/unoforge/flexilla/issues"
   },
-  "license": "MIT",
-  "author": "johnkat-mj",
-  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
+  "license": "MIT"
 }

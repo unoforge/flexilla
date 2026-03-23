@@ -12,6 +12,8 @@ type UtilType = {
     windowHeight: number,
     windowWidth: number,
     offsetDistance: number
+    minHeight?: number,
+    readjustHeight?: boolean
 }
 
 export const determinePosition = (
@@ -34,7 +36,6 @@ export const determinePosition = (
     const availableSpaceTop = refTop;
 
     const adjustContentVisibilityY = () => {
-
         return adjustYForTopVisibility(
             () => canAdjustYToFitTop(refTop, refHeight, popperHeight, windowHeight),
             () => canAdjustYToFitBottom(refTop, refHeight, popperHeight, windowHeight), refTop, refHeight, popperHeight)

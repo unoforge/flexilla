@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import CreatePopper from '../popper'; 
 import * as utils from '../utils'; // To mock getDimensions
 import * as helpers from '../helpers'; // To mock determinePosition
-import { Placement, PopperOptions } from '../types';
+import type { Placement, PopperOptions } from '../types';
 
 // Mock the helper modules
 vi.mock('../utils');

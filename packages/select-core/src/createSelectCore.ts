@@ -4,7 +4,7 @@ import { clearSelection, selectValue, toggleValue, unselectValue } from "./selec
 import { createSelectStore } from "./selectStore";
 import { setSearch } from "./search";
 import { subscribeToState } from "./events";
-import { SelectItem, SelectOptions, SelectState, SelectListener } from "./types";
+import type { SelectItem, SelectOptions, SelectState, SelectListener } from "./types";
 
 export type SelectCore = {
   open: () => void;

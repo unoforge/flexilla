@@ -1,5 +1,5 @@
-import { createSelectCore, SelectState, SelectItem } from "@flexilla/select-core";
-import { SelectController, SelectDom, SelectOptions } from "./types";
+import { createSelectCore, type SelectState, type SelectItem } from "@flexilla/select-core";
+import type { SelectController, SelectDom, SelectOptions } from "./types";
 
 const SELECT_TRIGGER = "[data-select-trigger]";
 const SELECT_CONTENT = "[data-select-content]";

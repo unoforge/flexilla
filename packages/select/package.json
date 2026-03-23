@@ -1,47 +1,38 @@
 {
   "name": "@flexilla/select",
-  "private": false,
   "version": "0.1.0",
+  "private": false,
   "type": "module",
+  "sideEffects": false,
   "description": "DOM binding layer for Flexilla select built on @flexilla/select-core",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/select.js",
-  "module": "./dist/select.cjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/select.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/select.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
     "dist",
-    "README.md",
-    "package.json",
-    "!vite.config.ts",
-    "!.gitignore",
-    "!tsconfig.json"
+    "README.md"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/select-core": "^0.1.0"
+    "@flexilla/select-core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "5.9.3"
   },
   "keywords": [
     "select",

@@ -1,6 +1,6 @@
 import { DEFAULT_OFFSETDISTANCE, DEFAULT_PLACEMENT } from "./const";
 import { getDimensions } from "./utils";
-import { Placement, PopperOptions } from "./types";
+import type { Placement, PopperOptions } from "./types";
 import { determinePosition } from "./helpers";
 
 /**
@@ -15,6 +15,8 @@ class CreatePopper {
     private placement: Placement
     private disableOnResize: boolean
     private disableOnScroll: boolean
+    private readjustHeight: boolean
+    private minHeight: number
     private onUpdate: (({ x, y, placement }: { x: number, y: number, placement: Placement }) => void) | undefined
     private isWindowEventsRegistered: boolean
 
@@ -41,7 +43,9 @@ class CreatePopper {
             offsetDistance = DEFAULT_OFFSETDISTANCE,
             placement = DEFAULT_PLACEMENT,
             eventEffect = {},
-            onUpdate
+            onUpdate,
+            readjustHeight,
+            minHeight
         } = options
         if (!(reference instanceof HTMLElement)) throw new Error("Invalid HTMLElement for Reference Element");
         if (!(popper instanceof HTMLElement)) throw new Error("Invalid HTMLElement for Popper");
@@ -55,6 +59,8 @@ class CreatePopper {
         this.placement = placement
         this.disableOnResize = disableOnResize || false
         this.disableOnScroll = disableOnScroll || false
+        this.readjustHeight = readjustHeight || false
+        this.minHeight = minHeight || 140
         this.onUpdate = onUpdate
     }
 
@@ -97,13 +103,15 @@ class CreatePopper {
                 popperHeight,
                 windowHeight,
                 windowWidth,
-                offsetDistance: this.offsetDistance
+                offsetDistance: this.offsetDistance,
+                minHeight: this.minHeight,
+                readjustHeight: this.readjustHeight
             }
         );
 
-        this.setPopperStyleProperty(x, y)  
+        this.setPopperStyleProperty(x, y)
         this.onUpdate?.({ x, y, placement: this.placement })
-  
+
     };
 
     private removeWindowEvents = () => {

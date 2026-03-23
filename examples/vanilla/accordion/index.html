@@ -23,10 +23,10 @@
     </script>
   </head>
 
-  <body class="bg-white dark:bg-zinc-950">
+  <body class="bg-white dark:bg-gray-950">
     <section class="mx-auto space-y-16 max-w2xl py20">
       <div class="space-y-6">
-        <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
           Default Accordion
         </h1>
         <div
@@ -35,7 +35,7 @@
           <div
             data-accordion-1
             data-default-value="accordion-1"
-            class="space-y-2 bg-zinc-200/40 dark:bg-zinc-900/60 rounded-md"
+            class="space-y-2 bg-gray-200/40 dark:bg-gray-900/60 rounded-md"
           >
             <div
               data-accordion-item
@@ -45,7 +45,7 @@
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
               >
                 Is it accessible?
               </button>
@@ -53,7 +53,7 @@
                 data-state="open"
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It adheres to the WAI-ARIA design pattern.
@@ -68,14 +68,14 @@
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
               >
                 Is it unstyled?
               </button>
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It's unstyled by default, giving you freedom over the
@@ -91,14 +91,14 @@
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
               >
                 Can it be animated?
               </button>
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes! You can use the transition prop to configure the
@@ -110,7 +110,7 @@
         </div>
       </div>
       <div class="space-y-6">
-        <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
           Nested Accordion
         </h1>
         <div
@@ -120,7 +120,7 @@
             data-accordion-nested
             data-default-value="accordion-2"
             data-accordion-type="single"
-            class="space-y-2 bg-zinc-200/40 dark:bg-zinc-900/60 rounded-md"
+            class="space-y-2 bg-gray-200/40 dark:bg-gray-900/60 rounded-md"
           >
             <div
               data-accordion-item
@@ -130,20 +130,20 @@
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
               >
                 Is it accessible?
               </button>
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear overflow-hidden px2 h-0 fx-open:h-auto"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear overflow-hidden px2 h-0 fx-open:h-auto"
               >
                 <div
                   data-accordion-nested-child
                   data-default-value="accordion-1"
                   data-accordion-type="single"
-                  class="space-y-2 bg-zinc-200 dark-bg-zinc-800 rounded-md"
+                  class="space-y-2 bg-gray-200 dark-bg-gray-800 rounded-md"
                 >
                   <div
                     data-accordion-item
@@ -153,7 +153,7 @@
                     <button
                       data-accordion-trigger
                       aria-label="toggle button"
-                      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                      class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
                     >
                       Is it accessible?
                     </button>
@@ -161,7 +161,7 @@
                       aria-hidden="false"
                       data-state="open"
                       data-accordion-content
-                      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                      class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
                     >
                       <p class="p-4">
                         Yes. It adheres to the WAI-ARIA design pattern.
@@ -176,14 +176,14 @@
                     <button
                       data-accordion-trigger
                       aria-label="toggle button"
-                      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                      class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
                     >
                       Is it unstyled?
                     </button>
                     <div
                       aria-hidden="true"
                       data-accordion-content
-                      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                      class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
                     >
                       <p class="p-4">
                         Yes. It's unstyled by default, giving you freedom over
@@ -199,14 +199,14 @@
                     <button
                       data-accordion-trigger
                       aria-label="toggle button"
-                      class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                      class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
                     >
                       Can it be animated?
                     </button>
                     <div
                       aria-hidden="true"
                       data-accordion-content
-                      class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                      class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
                     >
                       <p class="p-4">
                         Yes! You can use the transition prop to configure the
@@ -225,7 +225,7 @@
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
               >
                 Is it unstyled?
               </button>
@@ -233,7 +233,7 @@
                 aria-hidden="true"
                 data-state="open"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It's unstyled by default, giving you freedom over the
@@ -249,14 +249,14 @@
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 aria-expanded-text-blue6"
               >
                 Can it be animated?
               </button>
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes! You can use the transition prop to configure the
@@ -268,7 +268,7 @@
         </div>
       </div>
       <div class="space-y-6">
-        <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
           Active Item & Arrow Indicator
         </h1>
         <div class="p6 rounded-lg b b-zinc2 dark-b-zinc9">
@@ -276,12 +276,12 @@
             <div
               data-accordion-item
               data-accordion-value="accordion-1"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Is it accessible?
                 <span
@@ -292,7 +292,7 @@
                 aria-hidden="true"
                 data-state="open"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It adheres to the WAI-ARIA design pattern.
@@ -303,12 +303,12 @@
               data-accordion-item
               data-default-open
               data-accordion-value="accordion-2"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Is it unstyled?
                 <span
@@ -318,7 +318,7 @@
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It's unstyled by default, giving you freedom over the
@@ -329,12 +329,12 @@
             <div
               data-accordion-item
               data-accordion-value="accordion-3"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Can it be animated?
                 <span
@@ -344,7 +344,7 @@
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes! You can use the transition prop to configure the
@@ -356,7 +356,7 @@
         </div>
       </div>
       <div class="space-y-6">
-        <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
           Allow Multiple
         </h1>
         <div class="p6 rounded-lg b b-zinc2 dark-b-zinc9">
@@ -364,12 +364,12 @@
             <div
               data-accordion-item
               data-accordion-value="accordion-1"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Is it accessible?
                 <span
@@ -379,7 +379,7 @@
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It adheres to the WAI-ARIA design pattern.
@@ -389,12 +389,12 @@
             <div
               data-accordion-item
               data-accordion-value="accordion-2"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Is it unstyled?
                 <span
@@ -404,7 +404,7 @@
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It's unstyled by default, giving you freedom over the
@@ -415,12 +415,12 @@
             <div
               data-accordion-item
               data-accordion-value="accordion-3"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Can it be animated?
                 <span
@@ -430,7 +430,7 @@
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes! You can use the transition prop to configure the
@@ -442,7 +442,7 @@
         </div>
       </div>
       <div class="space-y-6">
-        <h1 class="text-xl font-semibold text-zinc-900 dark:text-white">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
           Prevent From Closing All Item
         </h1>
         <div class="p6 rounded-lg b b-zinc2 dark-b-zinc9">
@@ -450,12 +450,12 @@
             <div
               data-accordion-item
               data-accordion-value="accordion-1"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Is it accessible?
                 <span
@@ -465,7 +465,7 @@
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It adheres to the WAI-ARIA design pattern.
@@ -475,12 +475,12 @@
             <div
               data-accordion-item
               data-accordion-value="accordion-2"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Is it unstyled?
                 <span
@@ -491,7 +491,7 @@
                 aria-hidden="true"
                 data-state="open"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes. It's unstyled by default, giving you freedom over the
@@ -502,12 +502,12 @@
             <div
               data-accordion-item
               data-accordion-value="accordion-3"
-              class="rounded-md bg-zinc-100/5 dark:bg-zinc-900/5 border border-zinc-200/30 dark:border-zinc-800/20 fx-open:bg-zinc-100/80 dark:fx-open:bg-zinc-900/60 fx-open:border-zinc-200/50 dark:fx-open:border-zinc-800/40"
+              class="rounded-md bg-gray-100/5 dark:bg-gray-900/5 border border-gray-200/30 dark:border-gray-800/20 fx-open:bg-gray-100/80 dark:fx-open:bg-gray-900/60 fx-open:border-gray-200/50 dark:fx-open:border-gray-800/40"
             >
               <button
                 data-accordion-trigger
                 aria-label="toggle button"
-                class="px-4 w-full flex justify-between items-center py-2 text-zinc-800 dark:text-zinc-200 font-medium text-lg ease-linear hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 rounded-md focus:outline-blue-600 group"
+                class="px-4 w-full flex justify-between items-center py-2 text-gray-800 dark:text-gray-200 font-medium text-lg ease-linear hover:bg-gray-200/50 dark:hover:bg-gray-800/40 rounded-md focus:outline-blue-600 group"
               >
                 Can it be animated?
                 <span
@@ -517,7 +517,7 @@
               <div
                 aria-hidden="true"
                 data-accordion-content
-                class="text-zinc-700 dark:text-zinc-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
+                class="text-gray-700 dark:text-gray-300 duration-200 ease-linear h-0 fx-open:h-auto overflow-hidden"
               >
                 <p class="p-4">
                   Yes! You can use the transition prop to configure the

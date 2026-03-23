@@ -1,4 +1,4 @@
-import { SelectStore } from "./selectStore";
+import type { SelectStore } from "./selectStore";
 
 const findNextEnabledIndex = (items: { disabled?: boolean }[], start: number, direction: 1 | -1): number | null => {
   if (items.length === 0) return null;

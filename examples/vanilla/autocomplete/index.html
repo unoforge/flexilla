@@ -8,29 +8,29 @@
   <title>Autocomplete Demo</title>
 </head>
 
-<body class="pt14 bg-white dark:bg-zinc-950">
+<body class="pt14 bg-white dark:bg-gray-950">
   <section class="max-w3xl mxauto space-y-14 relative z20 pb20">
     <header class="space-y-2">
-      <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">Autocomplete</h1>
-      <p class="text-sm text-zinc-600 dark:text-zinc-400">Powered by @flexilla/autocomplete using the shared select core.</p>
+      <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Autocomplete</h1>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Powered by @flexilla/autocomplete using the shared select core.</p>
     </header>
 
     <div class="space-y-6">
       <div class="space-y-3">
-        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Static list</h2>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400">Filters existing items with case-insensitive matching.</p>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Static list</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Filters existing items with case-insensitive matching.</p>
       </div>
       <div id="demo-autocomplete-static" data-select data-demo-autocomplete-static class="w-full max-w-md space-y-2">
-        <label class="block text-sm font-medium text-zinc-800 dark:text-zinc-200">Search fruit</label>
-        <input data-select-input data-autocomplete-id="demo-autocomplete-static" type="text" placeholder="Type to filter" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Search fruit</label>
+        <input data-select-input data-autocomplete-id="demo-autocomplete-static" type="text" placeholder="Type to filter" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-800 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100" />
         <button data-select-clear data-select-id="demo-autocomplete-static" class="text-sm text-blue6 hover:text-blue7">Clear selection</button>
-        <p data-selected-value data-select-id="demo-autocomplete-static" class="text-sm text-zinc-600 dark:text-zinc-400">Nothing selected</p>
-        <div data-select-content data-select-id="demo-autocomplete-static" class="border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
-          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
-            <li data-select-item="apple" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Apple</li>
-            <li data-select-item="banana" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Banana</li>
-            <li data-select-item="cherry" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Cherry</li>
-            <li data-select-item="date" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded">Date</li>
+        <p data-selected-value data-select-id="demo-autocomplete-static" class="text-sm text-gray-600 dark:text-gray-400">Nothing selected</p>
+        <div data-select-content data-select-id="demo-autocomplete-static" class="border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm" hidden>
+          <ul class="py-1 text-sm text-gray-800 dark:text-gray-100">
+            <li data-select-item="apple" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Apple</li>
+            <li data-select-item="banana" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Banana</li>
+            <li data-select-item="cherry" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Cherry</li>
+            <li data-select-item="date" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Date</li>
           </ul>
         </div>
       </div>
@@ -38,29 +38,29 @@
 
           <div class="space-y-6">
       <div class="space-y-3">
-        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select</h2>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400">Toggle multiple tags via keyboard or click.</p>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Multi select</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Toggle multiple tags via keyboard or click.</p>
       </div>
       <div id="demo-autocomplete-multi" data-select data-demo-autocomplete-multi class="w-full max-w-md space-y-2">
-        <label class="block text-sm font-medium text-zinc-800 dark:text-zinc-200">Choose tags</label>
-        <input data-select-input data-autocomplete-id="demo-autocomplete-multi" type="text" placeholder="Type to filter" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Choose tags</label>
+        <input data-select-input data-autocomplete-id="demo-autocomplete-multi" type="text" placeholder="Type to filter" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-800 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100" />
         <div class="flex items-center gap-2">
           <button data-select-clear-all data-select-id="demo-autocomplete-multi" class="text-sm text-blue6 hover:text-blue7">Clear all</button>
         </div>
-        <div data-selected-value data-select-id="demo-autocomplete-multi" class="flex gap-2 flex-wrap text-sm text-zinc-800 dark:text-zinc-100">
-          <span data-select-template class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800">
+        <div data-selected-value data-select-id="demo-autocomplete-multi" class="flex gap-2 flex-wrap text-sm text-gray-800 dark:text-gray-100">
+          <span data-select-template class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-200 dark:bg-gray-800">
             <span data-select-label></span>
-            <button data-select-remove class="text-xs text-zinc-600 dark:text-zinc-300 hover:text-red-500">×</button>
+            <button data-select-remove class="text-xs text-gray-600 dark:text-gray-300 hover:text-red-500">×</button>
           </span>
-          <span class="text-zinc-500" data-placeholder>None selected</span>
+          <span class="text-gray-500" data-placeholder>None selected</span>
         </div>
-        <div data-select-content data-select-id="demo-autocomplete-multi" class="border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
-          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
-            <li data-select-item="design" class="px-3 py-2 hover:bg-zinc-100 dark:hover-bg-zinc-800 rounded">Design</li>
-            <li data-select-item="frontend" class="px-3 py-2 hover-bg-zinc-100 dark:hover-bg-zinc-800 rounded">Frontend</li>
-            <li data-select-item="backend" class="px-3 py-2 hover-bg-zinc-100 dark:hover-bg-zinc-800 rounded">Backend</li>
-            <li data-select-item="devops" class="px-3 py-2 hover-bg-zinc-100 dark:hover-bg-zinc-800 rounded">DevOps</li>
-            <li data-select-item="docs" class="px-3 py-2 hover-bg-zinc-100 dark:hover-bg-zinc-800 rounded">Docs</li>
+        <div data-select-content data-select-id="demo-autocomplete-multi" class="border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm" hidden>
+          <ul class="py-1 text-sm text-gray-800 dark:text-gray-100">
+            <li data-select-item="design" class="px-3 py-2 hover:bg-gray-100 dark:hover-bg-gray-800 rounded">Design</li>
+            <li data-select-item="frontend" class="px-3 py-2 hover-bg-gray-100 dark:hover-bg-gray-800 rounded">Frontend</li>
+            <li data-select-item="backend" class="px-3 py-2 hover-bg-gray-100 dark:hover-bg-gray-800 rounded">Backend</li>
+            <li data-select-item="devops" class="px-3 py-2 hover-bg-gray-100 dark:hover-bg-gray-800 rounded">DevOps</li>
+            <li data-select-item="docs" class="px-3 py-2 hover-bg-gray-100 dark:hover-bg-gray-800 rounded">Docs</li>
           </ul>
         </div>
       </div>

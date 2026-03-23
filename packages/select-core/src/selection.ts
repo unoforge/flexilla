@@ -1,4 +1,4 @@
-import { SelectStore } from "./selectStore";
+import type{ SelectStore } from "./selectStore";
 
 const canSelectValue = (state: ReturnType<SelectStore["getState"]>, value: string) => {
   const item = state.items.find((entry) => entry.value === value);

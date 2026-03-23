@@ -1,4 +1,4 @@
-import { ModalContentAnimations } from "./types";
+import type { ModalContentAnimations } from "./types";
 
 export const DEFAULT_ON_SHOW = () => { };
 

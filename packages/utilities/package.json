@@ -1,107 +1,71 @@
 {
   "name": "@flexilla/utilities",
-  "private": false,
   "version": "2.5.3",
+  "private": false,
   "type": "module",
-  "description": "Utilities package for flexilla library",
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./dist/utilities.js",
-  "module": "./dist/utilities.js",
+  "sideEffects": false,
+  "description": "Utility functions for Flexilla",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/utilities.js"
-      },
-      "require": {
-        "types": "./dist/utilities.d.ts",
-        "default": "./dist/utilities.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./accessibility": {
-      "import": {
-        "types": "./dist/accessibility.js",
-        "default": "./dist/accessibility.d.ts"
-      },
-      "require": {
-        "types": "./dist/accessibility.d.ts",
-        "default": "./dist/accessibility.cjs"
-      }
+      "types": "./dist/accessibility/index.d.ts",
+      "import": "./dist/accessibility/index.js",
+      "require": "./dist/accessibility/index.cjs"
     },
     "./toggler": {
-      "import": {
-        "types": "./dist/toggler.d.ts",
-        "default": "./dist/toggler.js"
-      },
-      "require": {
-        "types": "./dist/toggler.d.ts",
-        "default": "./dist/toggler.cjs"
-      }
+      "types": "./dist/toggler/index.d.ts",
+      "import": "./dist/toggler/index.js",
+      "require": "./dist/toggler/index.cjs"
     },
     "./selector": {
-      "import": {
-        "types": "./dist/selector.d.ts",
-        "default": "./dist/selector.js"
-      },
-      "require": {
-        "types": "./dist/selector.d.ts",
-        "default": "./dist/selector.cjs"
-      }
+      "types": "./dist/selector/index.d.ts",
+      "import": "./dist/selector/index.js",
+      "require": "./dist/selector/index.cjs"
     },
     "./dom-utilities": {
-      "import": {
-        "types": "./dist/dom-utilities.d.ts",
-        "default": "./dist/dom-utilities.js"
-      },
-      "require": {
-        "types": "./dist/dom-utilities.d.ts",
-        "default": "./dist/dom-utilities.cjs"
-      }
+      "types": "./dist/dom-utilities/index.d.ts",
+      "import": "./dist/dom-utilities/index.js",
+      "require": "./dist/dom-utilities/index.cjs"
     },
     "./scroll-to-top": {
-      "import": {
-        "types": "./dist/scroll-to-top.d.ts",
-        "default": "./dist/scroll-to-top.js"
-      },
-      "require": {
-        "types": "./dist/scroll-to-top.d.ts",
-        "default": "./dist/scroll-to-top.cjs"
-      }
+      "types": "./dist/scroll-to-top.d.ts",
+      "import": "./dist/scroll-to-top.js",
+      "require": "./dist/scroll-to-top.cjs"
+    },
+    "./dom-teleport": {
+      "types": "./dist/dom-teleport.d.ts",
+      "import": "./dist/dom-teleport.js",
+      "require": "./dist/dom-teleport.cjs"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme/index.js",
+      "require": "./dist/theme/index.cjs"
     }
   },
   "files": [
-    "dist",
-    "package.json",
-    "!vite.config.ts",
-    "!.gitignore",
-    "!tsconfig.json"
+    "dist"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
+  "dependencies": {},
   "devDependencies": {
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "5.9.3"
   },
   "keywords": [
     "flexilla",
-    "flexilla utilities"
+    "utilities"
   ],
-  "homepage": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/unoforge/flexilla"
-  },
-  "bugs": {
-    "url": "https://github.com/unoforge/flexilla/issues"
-  },
-  "license": "MIT",
-  "author": "johnkat-mj",
-  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
+  "license": "MIT"
 }

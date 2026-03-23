@@ -1,4 +1,4 @@
-import { SelectListener, SelectState } from "./types";
+import type { SelectListener, SelectState } from "./types";
 
 export type SelectStore = {
   getState: () => Readonly<SelectState>;
