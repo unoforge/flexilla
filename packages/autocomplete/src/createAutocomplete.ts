@@ -1,7 +1,16 @@
 import { createSelectCore, type SelectItem, type SelectState, type SelectCore } from "@flexilla/select-core";
 import type { AutocompleteController, AutocompleteDom, AutocompleteOptions } from "./types";
 import { CreateOverlay, type Placement } from "flexipop/create-overlay";
-import { $, $$ } from "@flexilla/utilities";
+import {
+  $$,
+  DEFAULT_SELECT_CHECK_ICON,
+  renderSelectedValues,
+  setupSelectPresentationItem,
+  setupSelectValueContainer,
+  setupSelectItemIndicator,
+  syncSelectEmptyState,
+  syncSelectItemIndicator,
+} from "@flexilla/utilities";
 import { FlexillaManager } from "@flexilla/manager";
 
 const SELECT_TRIGGER = "[data-select-trigger]";
@@ -79,6 +88,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   const core = createSelectCore({ multiple: options.multiple });
   const filter = options.filter ?? defaultFilter;
   let root: HTMLElement | null = null;
+  let anchor: HTMLElement | null = null;
   let selectId: string | null = null;
   let trigger: HTMLElement | null = null;
   let content: HTMLElement | null = null;
@@ -96,13 +106,25 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   let renderedValues = new Set<string>();
   let lastSearch = core.getState().search;
   let syncingOverlay = false;
-  type ItemMeta = { item: SelectItem; el: HTMLElement };
+  const checkIconMarkup = options.checkIcon || DEFAULT_SELECT_CHECK_ICON;
+  const indicatorPosition = options.indicatorPosition || "start";
+  type ItemMeta = { item: SelectItem; element: HTMLElement };
   let itemsMeta: ItemMeta[] = [];
+  const itemsByValue = new Map<string, ItemMeta>();
   const boundElements = new WeakSet<HTMLElement>();
+
+  const getScopeElement = () => root ?? anchor ?? content ?? trigger ?? input;
 
   const ensureHighlighted = () => {
     const state = core.getState();
-    if (state.highlightedIndex !== null) return;
+    if (
+      state.highlightedIndex !== null &&
+      state.highlightedIndex >= 0 &&
+      state.highlightedIndex < state.items.length &&
+      !state.items[state.highlightedIndex]?.disabled
+    ) {
+      return;
+    }
     const firstEnabled = state.items.findIndex((item) => !item.disabled);
     if (firstEnabled >= 0) core.highlight(firstEnabled);
   };
@@ -134,17 +156,22 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
         if (!value) return null;
         const label = (el.getAttribute("data-label") || el.textContent || "").trim() || value;
         const disabled = el.getAttribute("aria-disabled") === "true" || el.hasAttribute("data-disabled");
-        return { item: { value, label, disabled }, el };
+        return { item: { value, label, disabled }, element: el };
       })
       .filter((entry): entry is ItemMeta => Boolean(entry))
       .filter((entry) => {
-        const itemId = entry.el.getAttribute("data-select-id");
+        const itemId = entry.element.getAttribute("data-select-id");
         return !itemId || itemId === selectId;
       });
 
-    itemsMeta.forEach(({ el, item }) => {
-      el.setAttribute("role", "option");
-      if (item.disabled) el.setAttribute("aria-disabled", "true");
+    itemsByValue.clear();
+
+    itemsMeta.forEach(({ element, item }) => {
+      itemsByValue.set(item.value, { item, element });
+      element.setAttribute("role", "option");
+      if (item.disabled) element.setAttribute("aria-disabled", "true");
+      setupSelectPresentationItem(element);
+      setupSelectItemIndicator({ element, fallbackIcon: checkIconMarkup });
     });
   };
 
@@ -165,29 +192,35 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
     teardownItems();
 
-    filtered.forEach(({ item, el }) => {
-      el.removeAttribute("hidden");
-      if (!boundElements.has(el)) {
+    filtered.forEach(({ item, element }) => {
+      element.removeAttribute("hidden");
+      if (!boundElements.has(element)) {
         const clickHandler = (event: Event) => {
           event.preventDefault();
           if (item.disabled) return;
           core.toggleValue(item.value);
-          const index = itemElements.indexOf(el);
+          const index = itemElements.indexOf(element);
           if (index >= 0) core.highlight(index);
           if (!options.multiple) core.close();
         };
-        el.addEventListener("click", clickHandler);
-        cleanup.push(() => el.removeEventListener("click", clickHandler));
-        boundElements.add(el);
+        element.addEventListener("click", clickHandler);
+        cleanup.push(() => element.removeEventListener("click", clickHandler));
+        boundElements.add(element);
       }
 
-      itemElements.push(el);
+      itemElements.push(element);
       renderedValues.add(item.value);
       core.registerItem(item);
     });
 
-    itemsMeta.forEach(({ item, el }) => {
-      if (!nextValues.has(item.value)) el.setAttribute("hidden", "");
+    itemsMeta.forEach(({ item, element }) => {
+      if (!nextValues.has(item.value)) element.setAttribute("hidden", "");
+    });
+
+    syncSelectEmptyState({
+      content,
+      visibleCount: filtered.length,
+      query,
     });
 
     ensureHighlighted();
@@ -214,95 +247,32 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       if (isHighlighted) element.setAttribute("data-select-highlighted", "true");
       else element.removeAttribute("data-select-highlighted");
       element.setAttribute("aria-selected", String(isSelected));
+      syncSelectItemIndicator({
+        element,
+        isSelected,
+        fallbackIcon: checkIconMarkup,
+        root: getScopeElement(),
+        indicatorPosition,
+      });
     });
   };
 
   const updateSelectedDisplays = (state: SelectState) => {
-    selectedValueEls.forEach((container) => {
-      const template = container.querySelector<HTMLElement>("[data-select-template]");
-      if (template) template.style.display = "none";
-      const keep = template ? [template] : [];
-      Array.from(container.children).forEach((child) => {
-        if (!keep.includes(child as HTMLElement)) container.removeChild(child);
-      });
-
-      const labels = state.selectedValues
-        .map((value) => state.items.find((item) => item.value === value)?.label ?? value)
-        .filter(Boolean);
-
-      if (!options.multiple) {
-        const text = labels[0] ?? placeholder;
-        if (template) {
-          const node = template.cloneNode(true) as HTMLElement;
-          node.removeAttribute("data-select-template");
-          node.style.removeProperty("display");
-          const labelEl = node.querySelector<HTMLElement>("[data-select-label]");
-          if (labelEl) labelEl.textContent = text;
-          const removeEl = node.querySelector<HTMLElement>("[data-select-remove]");
-          if (removeEl) removeEl.setAttribute("data-select-remove", state.selectedValues[0] ?? "");
-          if (removeEl && state.selectedValues[0]) {
-            const handler = (event: Event) => {
-              event.preventDefault();
-              core.unselect(state.selectedValues[0]!);
-            };
-            removeEl.addEventListener("click", handler);
-            cleanup.push(() => removeEl.removeEventListener("click", handler));
-          }
-          container.appendChild(node);
-        } else {
-          container.textContent = text;
-        }
-      } else {
-        if (!labels.length) {
-          if (template) {
-            const emptyNode = template.cloneNode(true) as HTMLElement;
-            emptyNode.removeAttribute("data-select-template");
-            const labelEl = emptyNode.querySelector<HTMLElement>("[data-select-label]");
-            if (labelEl) labelEl.textContent = placeholder;
-            container.appendChild(emptyNode);
-          } else {
-            container.textContent = placeholder;
-          }
-          return;
-        }
-
-        labels.forEach((label, index) => {
-          const value = state.selectedValues[index];
-          let chip: HTMLElement;
-          if (template) {
-            chip = template.cloneNode(true) as HTMLElement;
-            chip.removeAttribute("data-select-template");
-            chip.style.removeProperty("display");
-            const labelEl = chip.querySelector<HTMLElement>("[data-select-label]");
-            if (labelEl) labelEl.textContent = label;
-            const valueEl = chip.querySelector<HTMLElement>("[data-select-value]");
-            if (valueEl) valueEl.textContent = value;
-          } else {
-            chip = document.createElement("span");
-            chip.textContent = label;
-          }
-
-          const removeTarget =
-            chip.querySelector<HTMLElement>("[data-select-remove]") ??
-            chip.querySelector<HTMLElement>("[data-select-chip-remove]") ??
-            null;
-          if (removeTarget) {
-            removeTarget.setAttribute("data-select-remove", value);
-            const handler = (event: Event) => {
-              event.preventDefault();
-              core.unselect(value);
-            };
-            removeTarget.addEventListener("click", handler);
-            cleanup.push(() => removeTarget.removeEventListener("click", handler));
-          }
-
-          container.appendChild(chip);
-        });
-      }
+    renderSelectedValues({
+      containers: selectedValueEls,
+      itemsByValue,
+      selectedValues: state.selectedValues,
+      multiple: options.multiple,
+      placeholder,
+      onRemove: (value) => core.unselect(value),
+      registerCleanup: (fn) => cleanup.push(fn),
     });
 
     if (input && !state.open && !options.multiple) {
-      input.value = state.selectedValues.length === 1 ? (state.items.find((i) => i.value === state.selectedValues[0])?.label ?? state.selectedValues[0]) : input.value;
+      input.value =
+        state.selectedValues.length === 1
+          ? (itemsByValue.get(state.selectedValues[0]!)?.item.label ?? state.selectedValues[0])
+          : input.value;
     }
   };
 
@@ -360,20 +330,22 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   };
 
   const bindDom = () => {
-    if (!root || !selectId) return;
-    trigger = document.querySelector<HTMLElement>(`${SELECT_TRIGGER}[data-autocomplete-id="${selectId}"]`) || root.querySelector(SELECT_TRIGGER);
-    content = document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${selectId}"]`) || root.querySelector(SELECT_CONTENT);
-    input = document.querySelector<HTMLInputElement>(`${SELECT_INPUT}[data-autocomplete-id="${selectId}"]`) || root.querySelector<HTMLInputElement>(SELECT_INPUT);
+    if (!selectId) return;
+    trigger = document.querySelector<HTMLElement>(`${SELECT_TRIGGER}[data-autocomplete-id="${selectId}"]`) || root?.querySelector(SELECT_TRIGGER) || null;
+    content = document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${selectId}"]`) || root?.querySelector(SELECT_CONTENT) || null;
+    input = document.querySelector<HTMLInputElement>(`${SELECT_INPUT}[data-autocomplete-id="${selectId}"]`) || root?.querySelector<HTMLInputElement>(SELECT_INPUT) || null;
     selectedValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_VALUE}[data-select-id="${selectId}"]`));
     if (!selectedValueEls.length) {
-      selectedValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE));
+      selectedValueEls = root ? Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE)) : [];
     }
     clearEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR}[data-select-id="${selectId}"]`));
-    if (!clearEls.length) clearEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR));
+    if (!clearEls.length) clearEls = root ? Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR)) : [];
     clearAllEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR_ALL}[data-select-id="${selectId}"]`));
-    if (!clearAllEls.length) clearAllEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR_ALL));
+    if (!clearAllEls.length) clearAllEls = root ? Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR_ALL)) : [];
     removeValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_REMOVE}[data-select-id="${selectId}"]`));
-    if (!removeValueEls.length) removeValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_REMOVE));
+    if (!removeValueEls.length) removeValueEls = root ? Array.from(root.querySelectorAll<HTMLElement>(SELECT_REMOVE)) : [];
+
+    selectedValueEls.forEach((container) => setupSelectValueContainer(container));
 
     const sourcePlaceholder = input?.getAttribute("data-placeholder") || input?.getAttribute("placeholder") || placeholder;
     placeholder = sourcePlaceholder || placeholder;
@@ -414,6 +386,8 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     const bindClick = (el: HTMLElement, action: () => void) => {
       const handler = (event: Event) => {
         event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
         action();
       };
       el.addEventListener("click", handler);
@@ -441,7 +415,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     const overlayTrigger = trigger ?? input;
     if (overlayTrigger && content) {
       const overlayOptions = resolveOverlayOptions({
-        root,
+        root: getScopeElement() ?? overlayTrigger,
         content,
         options,
       });
@@ -487,6 +461,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     if (unsubscribe) unsubscribe();
     teardownItems();
     root = null;
+    anchor = null;
     trigger = null;
     content = null;
     input = null;
@@ -494,14 +469,16 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     clearEls = [];
     clearAllEls = [];
     removeValueEls = [];
+    itemsByValue.clear();
     itemsMeta = [];
     overlay = null;
   };
 
-  const connect = ({ root: rootElement }: AutocompleteDom) => {
-    root = rootElement;
-    selectId = root.id || null;
-    if (!selectId) throw new Error("[autocomplete] root element requires an id attribute");
+  const connect = ({ root: rootElement, id, anchor: anchorElement }: AutocompleteDom) => {
+    root = rootElement ?? null;
+    anchor = anchorElement ?? rootElement ?? null;
+    selectId = id || root?.id || anchor?.getAttribute("data-autocomplete-id") || anchor?.getAttribute("data-select-id") || anchor?.id || null;
+    if (!selectId) throw new Error("[autocomplete] an id is required to connect input and content");
     bindDom();
     if (unsubscribe) unsubscribe();
     unsubscribe = core.subscribe(render);
@@ -519,28 +496,76 @@ type AutocompleteInstanceOptions = AutocompleteOptions & {
   multiple?: boolean;
 };
 
+const normalizeAutocompleteId = (value: string) => value.replace(/^#/, "");
+
+const resolveAutocompleteTarget = (autocomplete: string | HTMLElement) => {
+  if (typeof autocomplete === "string") {
+    const element = document.querySelector<HTMLElement>(autocomplete);
+    if (element instanceof HTMLElement) {
+      return resolveAutocompleteTarget(element);
+    }
+
+    const id = normalizeAutocompleteId(autocomplete);
+    const input = document.querySelector<HTMLElement>(`${SELECT_INPUT}[data-autocomplete-id="${id}"]`);
+    const trigger = document.querySelector<HTMLElement>(`${SELECT_TRIGGER}[data-autocomplete-id="${id}"]`);
+    const content = document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${id}"]`);
+    const anchorElement = input ?? trigger ?? content;
+
+    if (!anchorElement) {
+      throw new Error(`Invalid autocomplete target: ${autocomplete}`);
+    }
+
+    const rootElement =
+      (anchorElement.matches("[data-fx-autocomplete]") ? anchorElement : anchorElement.closest<HTMLElement>("[data-fx-autocomplete]")) ?? null;
+
+    return {
+      root: rootElement,
+      anchor: anchorElement,
+      id,
+    };
+  }
+
+  const id = autocomplete.getAttribute("data-autocomplete-id") || autocomplete.getAttribute("data-select-id") || autocomplete.id || "";
+  if (!id) {
+    throw new Error("Invalid autocomplete root element");
+  }
+
+  const rootElement =
+    (autocomplete.matches("[data-fx-autocomplete]") ? autocomplete : autocomplete.closest<HTMLElement>("[data-fx-autocomplete]")) ?? null;
+
+  return {
+    root: rootElement,
+    anchor: autocomplete,
+    id,
+  };
+};
+
 export class Autocomplete implements SelectCore {
-  private root: HTMLElement;
+  private registryElement: HTMLElement;
   private controller: AutocompleteController;
   private destroyConnection: (() => void) | null = null;
 
   constructor(autocomplete: string | HTMLElement, options: AutocompleteInstanceOptions = {}) {
-    const root = typeof autocomplete === "string" ? $(autocomplete) : autocomplete;
-    if (!(root instanceof HTMLElement)) {
-      throw new Error("Invalid autocomplete root element");
-    }
+    const target = resolveAutocompleteTarget(autocomplete);
+    const registryElement = target.anchor ?? target.root;
+    if (!(registryElement instanceof HTMLElement)) throw new Error("Invalid autocomplete root element");
 
-    const existingInstance = FlexillaManager.getInstance("autocomplete", root);
+    const existingInstance = FlexillaManager.getInstance("autocomplete", registryElement);
     if (existingInstance) {
       return existingInstance;
     }
 
-    const multiple = options.multiple ?? getBooleanAttr(root, "data-multiple") ?? false;
-    this.root = root;
+    const multiple =
+      options.multiple ??
+      getBooleanAttr(target.root, "data-multiple") ??
+      getBooleanAttr(target.anchor, "data-multiple") ??
+      getBooleanAttr(document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${target.id}"]`), "data-multiple") ??
+      false;
+    this.registryElement = registryElement;
     this.controller = createAutocomplete({ ...options, multiple });
-    this.destroyConnection = this.controller.connect({ root });
+    this.destroyConnection = this.controller.connect(target);
 
-    FlexillaManager.register("autocomplete", root, this);
+    FlexillaManager.register("autocomplete", registryElement, this);
   }
 
   open = () => this.controller.open();
@@ -562,7 +587,7 @@ export class Autocomplete implements SelectCore {
   cleanup = () => {
     this.destroyConnection?.();
     this.destroyConnection = null;
-    FlexillaManager.removeInstance("autocomplete", this.root);
+    FlexillaManager.removeInstance("autocomplete", this.registryElement);
   };
 
   static init = (autocomplete: string | HTMLElement, options: AutocompleteInstanceOptions = {}) => new Autocomplete(autocomplete, options);

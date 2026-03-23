@@ -5,6 +5,8 @@ export type AutocompleteSource = SelectItem[] | string[];
 
 export type AutocompleteOptions = {
   multiple?: boolean;
+  checkIcon?: string;
+  indicatorPosition?: "start" | "end";
   source?: AutocompleteSource;
   filter?: (query: string, item: SelectItem) => boolean;
   placement?: Placement;
@@ -22,7 +24,9 @@ export type AutocompleteOptions = {
 };
 
 export type AutocompleteDom = {
-  root: HTMLElement;
+  root?: HTMLElement;
+  id?: string;
+  anchor?: HTMLElement;
 };
 
 export type AutocompleteController = SelectCore & {

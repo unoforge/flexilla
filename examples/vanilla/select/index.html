@@ -8,59 +8,218 @@
   <title>Select Demo</title>
 </head>
 
-<body class="pt14 bg-white dark:bg-gray-950">
+<body class="pt14 bg-white dark:bg-zinc-950">
   <section class="max-w3xl mxauto space-y-14 relative z20 pb20">
     <header class="space-y-2">
-      <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Select</h1>
-      <p class="text-gray-600 dark:text-gray-400">Headless select powered by @flexilla/select-core with DOM bindings.</p>
+      <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">Select</h1>
+      <p class="text-zinc-600 dark:text-zinc-400">Headless select powered by @flexilla/select-core with DOM bindings.</p>
     </header>
 
-      <div class="space-y-6">
-        <div class="space-y-3">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Single select</h2>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Uses trigger + list with keyboard navigation.</p>
-        </div>
-      <div id="demo-select" data-fx-select data-demo-select class="inline-block relative">
-        <button data-select-trigger data-select-id="demo-select" class="b b-zinc8 hover-bg-gray-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm">
-          <span data-selected-value data-select-id="demo-select">Choose a fruit</span>
+    <div class="space-y-6">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Basic single select</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Minimal usage with only a trigger, a content list, and a shared id.</p>
+      </div>
+      <div class="relative w-full max-w-md space-y-2">
+        <button data-fx-select data-select-trigger data-select-id="demo-select-basic" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">
+          <span data-selected-value data-select-id="demo-select-basic" class="flex-1 text-left">Choose a framework</span>
+          <span class="text-xs opacity-70">⌄</span>
         </button>
-        <button data-select-clear data-select-id="demo-select" class="ml-3 text-sm text-blue6 hover:text-blue7">Clear</button>
-        <div data-select-content data-select-id="demo-select" data-placement="bottom-start" class="ui-popper mt-2 w-56 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm" hidden>
-          <ul class="py-1 text-sm text-gray-800 dark:text-gray-100">
-            <li data-select-item="apple" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Apple</li>
-            <li data-select-item="banana" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Banana</li>
-            <li data-select-item="cherry" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Cherry</li>
-            <li data-select-item="grape" data-disabled class="px-3 py-2 opacity-60 cursor-not-allowed">Grape (disabled)</li>
+        <div data-select-content data-select-id="demo-select-basic" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="astro" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Astro</li>
+            <li data-select-item="vue" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Vue</li>
+            <li data-select-item="laravel" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Laravel</li>
           </ul>
         </div>
       </div>
     </div>
 
-      <div class="space-y-6">
+    <div class="space-y-6">
         <div class="space-y-3">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Multi select</h2>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Toggle multiple values with Enter or click.</p>
+          <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Searchable single select</h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Uses a search field inside the panel and renders rich trigger content from the selected item.</p>
         </div>
-      <div id="demo-select-multi" data-fx-select data-multiple data-demo-select-multi class="inline-block relative space-y-2">
-        <button data-select-trigger data-select-id="demo-select-multi" class="b b-zinc8 hover-bg-gray-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm">
-          <span>Choose toppings</span>
+      <div class="relative w-full max-w-md space-y-2">
+        <button data-fx-select data-select-trigger data-select-id="demo-select" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">
+          <span data-selected-value data-select-id="demo-select" class="flex-1 text-left">Choose an owner</span>
+          <span class="text-xs opacity-70">⌄</span>
         </button>
-        <div data-selected-value data-select-id="demo-select-multi" class="flex gap-2 flex-wrap text-sm text-gray-800 dark:text-gray-100">
-          <span data-select-template class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-200 dark:bg-gray-800">
-            <span data-select-label></span>
-            <button data-select-remove class="text-xs text-gray-600 dark:text-gray-300 hover:text-red-500">×</button>
+        <button data-select-clear data-select-id="demo-select" class="ml-3 text-sm text-blue6 hover:text-blue7">Clear</button>
+        <div data-select-content data-select-id="demo-select" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+          <div class="p-2 border-b border-zinc-200 dark:border-zinc-800">
+            <input data-select-input data-select-id="demo-select" type="text" placeholder="Search team members" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+          </div>
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="alice" data-label="Alice Johnson" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-amber-200 text-amber-900 inline-flex items-center justify-center text-xs font-semibold">AJ</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Alice Johnson</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">alice@flexilla.dev</div>
+                </div>
+              </div>
+              <div data-select-trigger-content class="flex items-center gap-2">
+                <span class="size-6 rounded-full bg-amber-200 text-amber-900 inline-flex items-center justify-center text-[11px] font-semibold">AJ</span>
+                <span>Alice Johnson</span>
+              </div>
+            </li>
+            <li data-select-item="marc" data-label="Marc Dupont" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-sky-200 text-sky-900 inline-flex items-center justify-center text-xs font-semibold">MD</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Marc Dupont</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">marc@flexilla.dev</div>
+                </div>
+              </div>
+              <div data-select-trigger-content class="flex items-center gap-2">
+                <span class="size-6 rounded-full bg-sky-200 text-sky-900 inline-flex items-center justify-center text-[11px] font-semibold">MD</span>
+                <span>Marc Dupont</span>
+              </div>
+            </li>
+            <li data-select-item="nina" data-label="Nina Lopez" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-emerald-200 text-emerald-900 inline-flex items-center justify-center text-xs font-semibold">NL</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Nina Lopez</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">nina@flexilla.dev</div>
+                </div>
+              </div>
+              <div data-select-trigger-content class="flex items-center gap-2">
+                <span class="size-6 rounded-full bg-emerald-200 text-emerald-900 inline-flex items-center justify-center text-[11px] font-semibold">NL</span>
+                <span>Nina Lopez</span>
+              </div>
+            </li>
+          </ul>
+          <template data-select-empty>
+            <div class="px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400">
+              No team member found for "<span data-select-empty-query></span>"
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+        <div class="space-y-3">
+          <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select</h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Toggle multiple values with Enter or click.</p>
+        </div>
+      <div class="relative max-w-md space-y-2">
+        <button data-fx-select data-multiple data-select-trigger data-select-id="demo-select-multi" class="w-full b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg flex justify-start text-left text-sm">
+          <span>Assign reviewers</span>
+        </button>
+        <div data-selected-value data-select-id="demo-select-multi" class="flex gap-2 flex-wrap text-sm text-zinc-800 dark:text-zinc-100">
+          <span data-select-template class="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800">
+            <span data-select-rich-content></span>
+            <button data-select-remove class="text-xs text-zinc-600 dark:text-zinc-300 hover:text-red-500">×</button>
           </span>
-          <span class="text-gray-500" data-placeholder>Choose toppings</span>
+          <span class="text-zinc-500" data-placeholder>No reviewer selected</span>
         </div>
         <div class="flex items-center gap-2 mt-2">
           <button data-select-clear-all data-select-id="demo-select-multi" class="text-sm text-blue6 hover:text-blue7">Clear all</button>
         </div>
-        <div data-select-content data-select-id="demo-select-multi" data-placement="bottom-start" class="ui-popper mt-2 w-60 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm" hidden>
-          <ul class="py-1 text-sm text-gray-800 dark:text-gray-100">
-            <li data-select-item="pepperoni" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Pepperoni</li>
-            <li data-select-item="mushroom" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Mushroom</li>
-            <li data-select-item="onion" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Onion</li>
-            <li data-select-item="olive" class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">Olive</li>
+        <div data-select-content data-select-id="demo-select-multi" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+          <div class="p-2 border-b border-zinc-200 dark:border-zinc-800">
+            <input data-select-input data-select-id="demo-select-multi" type="text" placeholder="Filter reviewers" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+          </div>
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="brenda" data-label="Brenda Stone" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-rose-200 text-rose-900 inline-flex items-center justify-center text-xs font-semibold">BS</span>
+                <div>
+                  <div class="font-medium">Brenda Stone</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">Product designer</div>
+                </div>
+              </div>
+              <div data-select-tag-content class="flex items-center gap-2">
+                <span class="size-5 rounded-full bg-rose-200 text-rose-900 inline-flex items-center justify-center text-[10px] font-semibold">BS</span>
+                <span>Brenda Stone</span>
+              </div>
+            </li>
+            <li data-select-item="david" data-label="David Kim" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-violet-200 text-violet-900 inline-flex items-center justify-center text-xs font-semibold">DK</span>
+                <div>
+                  <div class="font-medium">David Kim</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">Frontend engineer</div>
+                </div>
+              </div>
+              <div data-select-tag-content class="flex items-center gap-2">
+                <span class="size-5 rounded-full bg-violet-200 text-violet-900 inline-flex items-center justify-center text-[10px] font-semibold">DK</span>
+                <span>David Kim</span>
+              </div>
+            </li>
+            <li data-select-item="sarah" data-label="Sarah Chen" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-cyan-200 text-cyan-900 inline-flex items-center justify-center text-xs font-semibold">SC</span>
+                <div>
+                  <div class="font-medium">Sarah Chen</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">Documentation lead</div>
+                </div>
+              </div>
+              <div data-select-tag-content class="flex items-center gap-2">
+                <span class="size-5 rounded-full bg-cyan-200 text-cyan-900 inline-flex items-center justify-center text-[10px] font-semibold">SC</span>
+                <span>Sarah Chen</span>
+              </div>
+            </li>
+          </ul>
+          <template data-select-empty>
+            <div class="px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400">
+              No reviewer found for "<span data-select-empty-query></span>"
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Single select with custom value template</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Uses `data-select-template` and `data-select-rich-content` to render a compact selected summary.</p>
+      </div>
+      <div class="relative w-full max-w-md space-y-2">
+        <button data-fx-select data-select-trigger data-select-id="demo-select-template" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">
+          <span data-selected-value data-select-id="demo-select-template" class="flex-1 text-left">
+            <span data-select-template class="inline-flex items-center gap-2">
+              <span data-select-rich-content></span>
+            </span>
+            <span data-placeholder>Select project status</span>
+          </span>
+          <span class="text-xs opacity-70">⌄</span>
+        </button>
+        <div data-select-content data-select-id="demo-select-template" data-placement="bottom-start" data-indicator-position="end" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="todo" data-label="Todo" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-zinc-400"></span>
+                <span>Todo</span>
+              </div>
+              <span data-select-display-content class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-zinc-400"></span>
+                <span>Todo</span>
+              </span>
+            </li>
+            <li data-select-item="progress" data-label="In progress" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-amber-400"></span>
+                <span>In progress</span>
+              </div>
+              <span data-select-display-content class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-amber-400"></span>
+                <span>In progress</span>
+              </span>
+            </li>
+            <li data-select-item="done" data-label="Done" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-emerald-500"></span>
+                <span>Done</span>
+              </div>
+              <span data-select-display-content class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-emerald-500"></span>
+                <span>Done</span>
+              </span>
+            </li>
           </ul>
         </div>
       </div>

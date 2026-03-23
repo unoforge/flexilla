@@ -35,6 +35,7 @@ export const toggleValue = (store: SelectStore, value: string, multiple: boolean
     if (!canSelectValue(state, value)) return state;
     const alreadySelected = state.selectedValues.includes(value);
     if (alreadySelected) {
+      if (!multiple) return state;
       const selectedValues = state.selectedValues.filter((entry) => entry !== value);
       return { ...state, selectedValues };
     }

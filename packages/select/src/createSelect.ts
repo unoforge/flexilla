@@ -1,7 +1,16 @@
 import { createSelectCore, type SelectState, type SelectItem, type SelectCore } from "@flexilla/select-core";
 import type { SelectController, SelectDom, SelectOptions } from "./types";
 import { CreateOverlay, type Placement } from "flexipop/create-overlay";
-import { $, $$ } from "@flexilla/utilities";
+import {
+  $$,
+  DEFAULT_SELECT_CHECK_ICON,
+  renderSelectedValues,
+  setupSelectPresentationItem,
+  setupSelectValueContainer,
+  setupSelectItemIndicator,
+  syncSelectEmptyState,
+  syncSelectItemIndicator,
+} from "@flexilla/utilities";
 import { FlexillaManager } from "@flexilla/manager";
 
 const SELECT_TRIGGER = "[data-select-trigger]";
@@ -12,6 +21,12 @@ const SELECT_VALUE = "[data-selected-value]";
 const SELECT_CLEAR = "[data-select-clear]";
 const SELECT_CLEAR_ALL = "[data-select-clear-all]";
 const SELECT_REMOVE = "[data-select-remove]";
+
+const defaultFilter = (query: string, item: SelectItem) => {
+  if (!query) return true;
+  const text = `${item.label ?? item.value}`.toLowerCase();
+  return text.includes(query.toLowerCase());
+};
 
 const parseItem = (element: HTMLElement): SelectItem | null => {
   const value = element.dataset.selectItem;
@@ -47,6 +62,10 @@ const resolveOverlayOptions = ({
 }) => {
   const source = content ?? root;
   const multiple = options.multiple ?? (root.hasAttribute("data-multiple") || root.dataset.multiple === "true");
+  const hasSearchInput =
+    Boolean(content?.querySelector(SELECT_INPUT)) ||
+    Boolean(root.querySelector(`${SELECT_INPUT}[data-select-id="${root.id}"]`)) ||
+    Boolean(root.querySelector(SELECT_INPUT));
 
   return {
     placement: (content?.dataset.placement as Placement | undefined) || (root.dataset.placement as Placement | undefined) || options.placement || "bottom-start",
@@ -64,7 +83,7 @@ const resolveOverlayOptions = ({
       getBooleanAttr(content, "data-prevent-close-inside") ??
       getBooleanAttr(root, "data-prevent-close-inside") ??
       options.preventCloseFromInside ??
-      multiple,
+      (multiple || hasSearchInput),
     readjustHeight:
       getBooleanAttr(source, "data-readjust-height") ??
       options.readjustHeight ??
@@ -79,12 +98,19 @@ const resolveOverlayOptions = ({
 
 export const createSelect = (options: SelectOptions = {}): SelectController => {
   const core = createSelectCore({ multiple: options.multiple });
+  const filter = options.filter ?? defaultFilter;
   let root: HTMLElement | null = null;
+  let anchor: HTMLElement | null = null;
   let selectId: string | null = null;
   let triggers: HTMLElement[] = [];
   let contents: HTMLElement[] = [];
   let input: HTMLInputElement | null = null;
   let itemElements: HTMLElement[] = [];
+  type ItemMeta = { item: SelectItem; element: HTMLElement };
+  let itemsMeta: ItemMeta[] = [];
+  let renderedValues = new Set<string>();
+  const itemsByValue = new Map<string, ItemMeta>();
+  const boundElements = new WeakSet<HTMLElement>();
   let selectedValueEls: HTMLElement[] = [];
   let clearEls: HTMLElement[] = [];
   let clearAllEls: HTMLElement[] = [];
@@ -94,10 +120,22 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   let unsubscribe: (() => void) | null = null;
   let placeholder = "Select";
   let syncingOverlay = false;
+  let lastSearch = core.getState().search;
+  const checkIconMarkup = options.checkIcon || DEFAULT_SELECT_CHECK_ICON;
+  const indicatorPosition = options.indicatorPosition || "start";
+
+  const getScopeElement = () => root ?? anchor ?? contents[0] ?? triggers[0] ?? input;
 
   const ensureHighlighted = () => {
     const state = core.getState();
-    if (state.highlightedIndex !== null) return;
+    if (
+      state.highlightedIndex !== null &&
+      state.highlightedIndex >= 0 &&
+      state.highlightedIndex < state.items.length &&
+      !state.items[state.highlightedIndex]?.disabled
+    ) {
+      return;
+    }
     const firstEnabled = state.items.findIndex((item) => !item.disabled);
     if (firstEnabled >= 0) core.highlight(firstEnabled);
   };
@@ -120,23 +158,40 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     }
   };
 
+  const teardownItems = () => {
+    renderedValues.forEach((value) => core.unregisterItem(value));
+    itemElements = [];
+    renderedValues = new Set<string>();
+  };
+
   const registerItems = () => {
-    if (!root || !selectId) return;
-    const containers = contents.length ? contents : [root];
-    itemElements = containers.flatMap((container) => Array.from(container.querySelectorAll<HTMLElement>(SELECT_ITEM)));
+    if (!selectId) return;
+    const scope = getScopeElement();
+    const containers = contents.length ? contents : scope ? [scope] : [];
+    const existingItems = containers.flatMap((container) => Array.from(container.querySelectorAll<HTMLElement>(SELECT_ITEM)));
 
-    itemElements = itemElements.filter((element) => {
-      const itemId = element.getAttribute("data-select-id");
-      return !itemId || itemId === selectId;
-    });
+    itemsMeta = existingItems
+      .filter((element) => {
+        const itemId = element.getAttribute("data-select-id");
+        return !itemId || itemId === selectId;
+      })
+      .map((element): ItemMeta | null => {
+        const item = parseItem(element);
+        if (!item) return null;
+        return { item, element };
+      })
+      .filter((entry): entry is ItemMeta => Boolean(entry));
 
-    itemElements.forEach((element) => {
-      const item = parseItem(element);
-      if (!item) return;
+    itemsByValue.clear();
 
-      core.registerItem(item);
+    itemsMeta.forEach(({ element, item }) => {
+      itemsByValue.set(item.value, { item, element });
       element.setAttribute("role", "option");
       if (item.disabled) element.setAttribute("aria-disabled", "true");
+      setupSelectPresentationItem(element);
+      setupSelectItemIndicator({ element, fallbackIcon: checkIconMarkup });
+
+      if (boundElements.has(element)) return;
 
       const clickHandler = (event: Event) => {
         event.preventDefault();
@@ -149,7 +204,43 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
       element.addEventListener("click", clickHandler);
       cleanup.push(() => element.removeEventListener("click", clickHandler));
+      boundElements.add(element);
     });
+  };
+
+  const updateFromSearch = (query: string) => {
+    if (!itemsMeta.length) registerItems();
+
+    const filtered = itemsMeta.filter(({ item }) => filter(query, item));
+    const nextValues = new Set(filtered.map(({ item }) => item.value));
+
+    teardownItems();
+
+    filtered.forEach(({ item, element }) => {
+      element.removeAttribute("hidden");
+      itemElements.push(element);
+      renderedValues.add(item.value);
+      core.registerItem(item);
+    });
+
+    itemsMeta.forEach(({ item, element }) => {
+      if (!nextValues.has(item.value)) {
+        element.setAttribute("hidden", "");
+        element.removeAttribute("data-select-highlighted");
+      }
+    });
+
+    contents.forEach((panel) => {
+      const visibleCount = itemElements.filter((el) => panel.contains(el)).length;
+      syncSelectEmptyState({
+        content: panel,
+        visibleCount,
+        query,
+      });
+    });
+
+    ensureHighlighted();
+    if (!filtered.length) core.highlight(null);
   };
 
   const updateAria = (state: SelectState) => {
@@ -165,88 +256,14 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   };
 
   const updateSelectedDisplays = (state: SelectState) => {
-    selectedValueEls.forEach((container) => {
-      const template = container.querySelector<HTMLElement>("[data-select-template]");
-      if (template) template.style.display = "none";
-      const keep = template ? [template] : [];
-      Array.from(container.children).forEach((child) => {
-        if (!keep.includes(child as HTMLElement)) container.removeChild(child);
-      });
-
-      const labels = state.selectedValues
-        .map((value) => state.items.find((item) => item.value === value)?.label ?? value)
-        .filter(Boolean);
-
-      if (!options.multiple) {
-        const text = labels[0] ?? placeholder;
-        if (template) {
-          const node = template.cloneNode(true) as HTMLElement;
-          node.removeAttribute("data-select-template");
-          node.style.removeProperty("display");
-          const labelEl = node.querySelector<HTMLElement>("[data-select-label]");
-          if (labelEl) labelEl.textContent = text;
-          const removeEl = node.querySelector<HTMLElement>("[data-select-remove]");
-          if (removeEl) removeEl.setAttribute("data-select-remove", state.selectedValues[0] ?? "");
-          if (removeEl && state.selectedValues[0]) {
-            const handler = (event: Event) => {
-              event.preventDefault();
-              core.unselect(state.selectedValues[0]!);
-            };
-            removeEl.addEventListener("click", handler);
-            cleanup.push(() => removeEl.removeEventListener("click", handler));
-          }
-          container.appendChild(node);
-        } else {
-          container.textContent = text;
-        }
-        return;
-      }
-
-      if (!labels.length) {
-        if (template) {
-          const emptyNode = template.cloneNode(true) as HTMLElement;
-          emptyNode.removeAttribute("data-select-template");
-          const labelEl = emptyNode.querySelector<HTMLElement>("[data-select-label]");
-          if (labelEl) labelEl.textContent = placeholder;
-          container.appendChild(emptyNode);
-        } else {
-          container.textContent = placeholder;
-        }
-        return;
-      }
-
-      labels.forEach((label, index) => {
-        const value = state.selectedValues[index];
-        let chip: HTMLElement;
-        if (template) {
-          chip = template.cloneNode(true) as HTMLElement;
-          chip.removeAttribute("data-select-template");
-          chip.style.removeProperty("display");
-          const labelEl = chip.querySelector<HTMLElement>("[data-select-label]");
-          if (labelEl) labelEl.textContent = label;
-          const valueEl = chip.querySelector<HTMLElement>("[data-select-value]");
-          if (valueEl) valueEl.textContent = value;
-        } else {
-          chip = document.createElement("span");
-          chip.textContent = label;
-        }
-
-        const removeTarget =
-          chip.querySelector<HTMLElement>("[data-select-remove]") ??
-          chip.querySelector<HTMLElement>("[data-select-chip-remove]") ??
-          null;
-        if (removeTarget) {
-          removeTarget.setAttribute("data-select-remove", value);
-          const handler = (event: Event) => {
-            event.preventDefault();
-            core.unselect(value);
-          };
-          removeTarget.addEventListener("click", handler);
-          cleanup.push(() => removeTarget.removeEventListener("click", handler));
-        }
-
-        container.appendChild(chip);
-      });
+    renderSelectedValues({
+      containers: selectedValueEls,
+      itemsByValue,
+      selectedValues: state.selectedValues,
+      multiple: options.multiple,
+      placeholder,
+      onRemove: (value) => core.unselect(value),
+      registerCleanup: (fn) => cleanup.push(fn),
     });
   };
 
@@ -260,6 +277,13 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       else element.removeAttribute("data-select-highlighted");
 
       element.setAttribute("aria-selected", String(isSelected));
+      syncSelectItemIndicator({
+        element,
+        isSelected,
+        fallbackIcon: checkIconMarkup,
+        root: getScopeElement(),
+        indicatorPosition,
+      });
     });
   };
 
@@ -310,37 +334,49 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
   const handleInput = (event: Event) => {
     const target = event.target as HTMLInputElement;
-    core.setSearch(target.value || "");
+    const query = target.value || "";
+    core.setSearch(query);
+    updateFromSearch(query);
   };
 
   const bindDom = () => {
-    if (!root || !selectId) return;
+    if (!selectId) return;
 
     triggers = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_TRIGGER}[data-select-id="${selectId}"]`));
-    if (!triggers.length) triggers = Array.from(root.querySelectorAll<HTMLElement>(SELECT_TRIGGER));
+    if (!triggers.length && root) triggers = Array.from(root.querySelectorAll<HTMLElement>(SELECT_TRIGGER));
 
     contents = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${selectId}"]`));
     if (!contents.length) {
-      const contentInRoot = root.querySelector<HTMLElement>(SELECT_CONTENT);
+      const contentInRoot = root?.querySelector<HTMLElement>(SELECT_CONTENT);
       if (contentInRoot) contents = [contentInRoot];
     }
 
-    input = document.querySelector<HTMLInputElement>(`${SELECT_INPUT}[data-select-id="${selectId}"]`) || root.querySelector<HTMLInputElement>(SELECT_INPUT);
+    input = document.querySelector<HTMLInputElement>(`${SELECT_INPUT}[data-select-id="${selectId}"]`) || root?.querySelector<HTMLInputElement>(SELECT_INPUT) || null;
 
     selectedValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_VALUE}[data-select-id="${selectId}"]`));
-    if (!selectedValueEls.length) selectedValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE));
+    if (!selectedValueEls.length && root) selectedValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE));
     clearEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR}[data-select-id="${selectId}"]`));
-    if (!clearEls.length) clearEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR));
+    if (!clearEls.length && root) clearEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR));
     clearAllEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR_ALL}[data-select-id="${selectId}"]`));
-    if (!clearAllEls.length) clearAllEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR_ALL));
+    if (!clearAllEls.length && root) clearAllEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR_ALL));
     removeValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_REMOVE}[data-select-id="${selectId}"]`));
-    if (!removeValueEls.length) removeValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_REMOVE));
+    if (!removeValueEls.length && root) removeValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_REMOVE));
 
     const sourceTrigger = triggers[0];
     if (sourceTrigger) {
-      const triggerPlaceholder = sourceTrigger.getAttribute("data-placeholder") || sourceTrigger.textContent?.trim() || placeholder;
+      const selectedValueSource =
+        sourceTrigger.querySelector<HTMLElement>(SELECT_VALUE)?.textContent?.trim() ||
+        selectedValueEls[0]?.textContent?.trim() ||
+        "";
+      const triggerPlaceholder =
+        sourceTrigger.getAttribute("data-placeholder") ||
+        selectedValueSource ||
+        sourceTrigger.textContent?.trim() ||
+        placeholder;
       placeholder = triggerPlaceholder || placeholder;
     }
+
+    selectedValueEls.forEach((container) => setupSelectValueContainer(container));
 
     triggers.forEach((btn) => {
       btn.addEventListener("click", handleTriggerClick);
@@ -369,6 +405,8 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     const bindClick = (el: HTMLElement, action: () => void) => {
       const handler = (event: Event) => {
         event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
         action();
       };
       el.addEventListener("click", handler);
@@ -385,7 +423,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
     if (triggers[0] && contents[0]) {
       const overlayOptions = resolveOverlayOptions({
-        root,
+        root: getScopeElement() ?? triggers[0],
         content: contents[0],
         options,
       });
@@ -415,9 +453,14 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     }
 
     registerItems();
+    updateFromSearch(core.getState().search);
   };
 
   const render = (state: SelectState) => {
+    if (state.search !== lastSearch) {
+      lastSearch = state.search;
+      updateFromSearch(state.search);
+    }
     updateAria(state);
     updateItemsState(state);
     updateSelectedDisplays(state);
@@ -425,18 +468,18 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   };
 
   const destroy = () => {
-    itemElements
-      .map((element) => element.dataset.selectItem)
-      .filter((value): value is string => Boolean(value))
-      .forEach((value) => core.unregisterItem(value));
+    teardownItems();
     cleanup.splice(0).forEach((fn) => fn());
     if (unsubscribe) unsubscribe();
     root = null;
+    anchor = null;
     selectId = null;
     triggers = [];
     contents = [];
     input = null;
     itemElements = [];
+    itemsMeta = [];
+    itemsByValue.clear();
     selectedValueEls = [];
     clearEls = [];
     clearAllEls = [];
@@ -444,10 +487,11 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     overlay = null;
   };
 
-  const connect = ({ root: rootElement }: SelectDom) => {
-    root = rootElement;
-    selectId = root.id || null;
-    if (!selectId) throw new Error("[select] root element requires an id attribute");
+  const connect = ({ root: rootElement, id, anchor: anchorElement }: SelectDom) => {
+    root = rootElement ?? null;
+    anchor = anchorElement ?? rootElement ?? null;
+    selectId = id || root?.id || anchor?.getAttribute("data-select-id") || anchor?.id || null;
+    if (!selectId) throw new Error("[select] an id is required to connect trigger and content");
     bindDom();
     if (unsubscribe) unsubscribe();
     unsubscribe = core.subscribe(render);
@@ -465,28 +509,74 @@ type SelectInstanceOptions = SelectOptions & {
   multiple?: boolean;
 };
 
+const normalizeSelectId = (value: string) => value.replace(/^#/, "");
+
+const resolveSelectTarget = (select: string | HTMLElement) => {
+  if (typeof select === "string") {
+    const element = document.querySelector<HTMLElement>(select);
+    if (element instanceof HTMLElement) {
+      return resolveSelectTarget(element);
+    }
+
+    const id = normalizeSelectId(select);
+    const trigger = document.querySelector<HTMLElement>(`${SELECT_TRIGGER}[data-select-id="${id}"]`);
+    const content = document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${id}"]`);
+    const anchorElement = trigger ?? content;
+
+    if (!anchorElement) {
+      throw new Error(`Invalid select target: ${select}`);
+    }
+
+    const rootElement =
+      (anchorElement.matches("[data-fx-select]") ? anchorElement : anchorElement.closest<HTMLElement>("[data-fx-select]")) ?? null;
+
+    return {
+      root: rootElement,
+      anchor: anchorElement,
+      id,
+    };
+  }
+
+  const id = select.getAttribute("data-select-id") || select.id || "";
+  if (!id) {
+    throw new Error("Invalid select root element");
+  }
+
+  const rootElement = (select.matches("[data-fx-select]") ? select : select.closest<HTMLElement>("[data-fx-select]")) ?? null;
+
+  return {
+    root: rootElement,
+    anchor: select,
+    id,
+  };
+};
+
 export class Select implements SelectCore {
-  private root: HTMLElement;
+  private registryElement: HTMLElement;
   private controller: SelectController;
   private destroyConnection: (() => void) | null = null;
 
   constructor(select: string | HTMLElement, options: SelectInstanceOptions = {}) {
-    const root = typeof select === "string" ? $(select) : select;
-    if (!(root instanceof HTMLElement)) {
-      throw new Error("Invalid select root element");
-    }
+    const target = resolveSelectTarget(select);
+    const registryElement = target.anchor ?? target.root;
+    if (!(registryElement instanceof HTMLElement)) throw new Error("Invalid select root element");
 
-    const existingInstance = FlexillaManager.getInstance("select", root);
+    const existingInstance = FlexillaManager.getInstance("select", registryElement);
     if (existingInstance) {
       return existingInstance;
     }
 
-    const multiple = options.multiple ?? getBooleanAttr(root, "data-multiple") ?? false;
-    this.root = root;
+    const multiple =
+      options.multiple ??
+      getBooleanAttr(target.root, "data-multiple") ??
+      getBooleanAttr(target.anchor, "data-multiple") ??
+      getBooleanAttr(document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${target.id}"]`), "data-multiple") ??
+      false;
+    this.registryElement = registryElement;
     this.controller = createSelect({ ...options, multiple });
-    this.destroyConnection = this.controller.connect({ root });
+    this.destroyConnection = this.controller.connect(target);
 
-    FlexillaManager.register("select", root, this);
+    FlexillaManager.register("select", registryElement, this);
   }
 
   open = () => this.controller.open();
@@ -508,7 +598,7 @@ export class Select implements SelectCore {
   cleanup = () => {
     this.destroyConnection?.();
     this.destroyConnection = null;
-    FlexillaManager.removeInstance("select", this.root);
+    FlexillaManager.removeInstance("select", this.registryElement);
   };
 
   static init = (select: string | HTMLElement, options: SelectInstanceOptions = {}) => new Select(select, options);

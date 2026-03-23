@@ -1,8 +1,11 @@
-import type { SelectCore } from "@flexilla/select-core";
+import type { SelectCore, SelectItem } from "@flexilla/select-core";
 import type { Placement } from "flexipop/create-overlay";
 
 export type SelectOptions = {
   multiple?: boolean;
+  checkIcon?: string;
+  indicatorPosition?: "start" | "end";
+  filter?: (query: string, item: SelectItem) => boolean;
   placement?: Placement;
   offsetDistance?: number;
   preventFromCloseOutside?: boolean;
@@ -18,7 +21,9 @@ export type SelectOptions = {
 };
 
 export type SelectDom = {
-  root: HTMLElement;
+  root?: HTMLElement;
+  id?: string;
+  anchor?: HTMLElement;
 };
 
 export type SelectController = SelectCore & {
