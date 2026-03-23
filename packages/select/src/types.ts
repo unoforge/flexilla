@@ -1,4 +1,4 @@
-import type { SelectCore, SelectItem } from "@flexilla/select-core";
+import type { SelectCore, SelectItem, SelectSummaryOptions } from "@flexilla/select-core";
 import type { Placement } from "flexipop/create-overlay";
 
 export type SelectOptions = {
@@ -6,6 +6,7 @@ export type SelectOptions = {
   checkIcon?: string;
   indicatorPosition?: "start" | "end";
   filter?: (query: string, item: SelectItem) => boolean;
+  summary?: SelectSummaryOptions;
   placement?: Placement;
   offsetDistance?: number;
   preventFromCloseOutside?: boolean;

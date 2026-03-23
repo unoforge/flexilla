@@ -14,15 +14,3 @@ export { initScrollToTop } from "./scroll-to-top"
 export { domTeleporter } from "./dom-teleport"
 
 export { flexiTheme, getSystemTheme, type ThemeOptions } from "./theme"
-export {
-    DEFAULT_SELECT_CHECK_ICON,
-    setupSelectItemIndicator,
-    syncSelectItemIndicator
-} from "./select-indicator"
-export {
-    getSelectPresentationMarkup,
-    renderSelectedValues,
-    setupSelectPresentationItem,
-    setupSelectValueContainer,
-    syncSelectEmptyState
-} from "./select-presentation"

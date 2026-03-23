@@ -175,6 +175,56 @@
 
     <div class="space-y-6">
       <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select summaries</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Instead of rendering chips, the trigger can show a count or a compact summary.</p>
+      </div>
+      <div class="grid gap-8 max-w-xl">
+        <div class="relative space-y-2">
+          <button data-fx-select data-multiple data-select-trigger data-select-id="demo-select-count" class="w-full b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg flex justify-between text-left text-sm">
+            <span data-selected-value data-select-id="demo-select-count" data-select-summary-mode="count" data-select-summary-count-singular="{count} user selected" data-select-summary-count-plural="{count} users selected" class="flex-1 text-left">
+              <span data-placeholder>No user selected</span>
+            </span>
+            <span class="text-xs opacity-70">⌄</span>
+          </button>
+          <div data-select-content data-select-id="demo-select-count" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+            <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+              <li data-select-item="john" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">John</li>
+              <li data-select-item="virgil" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Virgil</li>
+              <li data-select-item="jacques" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Jacques</li>
+              <li data-select-item="enot" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Enot</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="relative space-y-2">
+          <button data-fx-select data-multiple data-select-trigger data-select-id="demo-select-compact" class="w-full b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg flex justify-between text-left text-sm">
+            <span
+              data-selected-value
+              data-select-id="demo-select-compact"
+              data-select-summary-mode="compact"
+              data-select-summary-limit="2"
+              data-select-summary-compact-text="{labels} and {remaining} other users"
+              class="flex-1 text-left"
+            >
+              <span data-placeholder>No reviewer selected</span>
+            </span>
+            <span class="text-xs opacity-70">⌄</span>
+          </button>
+          <div data-select-content data-select-id="demo-select-compact" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+            <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+              <li data-select-item="john" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">John</li>
+              <li data-select-item="virgil" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Virgil</li>
+              <li data-select-item="jacques" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Jacques</li>
+              <li data-select-item="enot" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Enot</li>
+              <li data-select-item="jade" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Jade</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="space-y-3">
         <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Single select with custom value template</h2>
         <p class="text-sm text-zinc-600 dark:text-zinc-400">Uses `data-select-template` and `data-select-rich-content` to render a compact selected summary.</p>
       </div>
