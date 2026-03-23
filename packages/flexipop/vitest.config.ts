@@ -1,15 +1,19 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vite';
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vitest/config";
+
+const packageRoot = fileURLToPath(new URL("./", import.meta.url));
 
 export default defineConfig({
+  root: packageRoot,
   test: {
     globals: true,
-    environment: 'jsdom', // Use jsdom for DOM-like environment
-    setupFiles: [], // Optional: if you need setup files
-    include: ['src/**/*.test.{ts,tsx}'], // Pattern to find test files
+    environment: "jsdom",
+    setupFiles: [],
+    include: ["src/**/*.test.{ts,tsx}"],
     coverage: {
-      reporter: ['text', 'json', 'html'],
-      reportsDirectory: './coverage',
+      reporter: ["text", "json", "html"],
+      reportsDirectory: "./coverage",
     },
   },
 });

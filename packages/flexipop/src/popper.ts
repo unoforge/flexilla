@@ -76,7 +76,8 @@ class CreatePopper {
     /**
      * Set Style Property
      */
-    private setPopperStyleProperty = (x: number, y: number) => {
+    private setPopperStyleProperty = (x: number, y: number, placement: Placement) => {
+        this.popper.setAttribute("data-show-placement", placement)
         this.popper.style.setProperty("--fx-popper-placement-x", `${x}px`)
         this.popper.style.setProperty("--fx-popper-placement-y", `${y}px`)
     }
@@ -86,13 +87,49 @@ class CreatePopper {
         this.popper.style.setProperty("--fx-popper-placement-y", "")
     };
 
+    private resetReadjustHeightStyles = (): void => {
+        this.popper.style.maxHeight = ""
+        this.popper.style.overflowY = ""
+    }
+
+    private applyReadjustHeight = (maxHeight?: number): void => {
+        if (!maxHeight) {
+            this.resetReadjustHeightStyles()
+            return
+        }
+
+        this.popper.style.maxHeight = `${maxHeight}px`
+        this.popper.style.overflowY = "auto"
+    }
+
     private initPlacement = (): void => {
         this.validateElements();
         this.setInitialStyles();
+        this.resetReadjustHeightStyles();
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
+        const initialDimensions = getDimensions({ reference: this.reference, popper: this.popper });
+        const initialPosition = determinePosition(
+            {
+                placement: this.placement,
+                refWidth: initialDimensions.refWidth,
+                refTop: initialDimensions.refTop,
+                refLeft: initialDimensions.refLeft,
+                popperWidth: initialDimensions.popperWidth,
+                refHeight: initialDimensions.refHeight,
+                popperHeight: initialDimensions.popperHeight,
+                windowHeight,
+                windowWidth,
+                offsetDistance: this.offsetDistance,
+                minHeight: this.minHeight,
+                readjustHeight: this.readjustHeight
+            }
+        );
+
+        this.applyReadjustHeight(initialPosition.maxHeight)
+
         const { popperHeight, popperWidth, refHeight, refWidth, refLeft, refTop } = getDimensions({ reference: this.reference, popper: this.popper });
-        const { x, y } = determinePosition(
+        const { x, y, resolvedPlacement } = determinePosition(
             {
                 placement: this.placement,
                 refWidth,
@@ -109,7 +146,7 @@ class CreatePopper {
             }
         );
 
-        this.setPopperStyleProperty(x, y)
+        this.setPopperStyleProperty(x, y, resolvedPlacement)
         this.onUpdate?.({ x, y, placement: this.placement })
 
     };
@@ -144,6 +181,7 @@ class CreatePopper {
      */
     resetPosition = () => {
         this.setInitialStyles()
+        this.resetReadjustHeightStyles()
     }
 
     /**
@@ -178,6 +216,7 @@ class CreatePopper {
      */
     cleanupEvents = (): void => {
         this.setInitialStyles()
+        this.resetReadjustHeightStyles()
         this.removeWindowEvents()
     };
 

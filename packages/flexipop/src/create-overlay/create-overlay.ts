@@ -1,8 +1,8 @@
 import type { EventEffect, OverlayOptions } from "./types"
 import { CreatePopper, type Placement } from './../index'
-import { $, afterTransition, dispatchCustomEvent } from "@flexilla/utilities"
 
 import { updateOverlayState } from "./helpers"
+import { afterTransition, $, dispatchCustomEvent } from "@flexilla/utilities"
 
 
 /**
@@ -37,6 +37,8 @@ class CreateOverlay {
     private preventFromCloseInside: boolean
     private options: OverlayOptions
     private defaultState: "open" | "close"
+    private readjustHeight: boolean
+    private minHeight: number
     private popper: CreatePopper
     private eventEffect: EventEffect | undefined
 
@@ -64,13 +66,17 @@ class CreateOverlay {
         this.preventFromCloseInside = this.options.preventCloseFromInside || false
         this.defaultState = this.options.defaultState || "close";
         this.eventEffect = this.options.popper?.eventEffect
+        this.readjustHeight = this.options.readjustHeight || false
+        this.minHeight = this.options.minHeight || 140
         this.popper = new CreatePopper(
             this.triggerElement,
             this.contentElement,
             {
                 placement: this.placement,
                 offsetDistance: this.offsetDistance,
-                eventEffect: this.eventEffect
+                eventEffect: this.eventEffect,
+                readjustHeight: this.readjustHeight,
+                minHeight: this.minHeight
             }
         )
         this.initInstance()

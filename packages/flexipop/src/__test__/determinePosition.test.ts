@@ -78,21 +78,21 @@ describe('determinePosition', () => {
     // Popper near edge, should be clipped
     const clippingTestCases: TestCase[] = [
       // Top edge
-      { placement: 'top', ref: { refTop: 5 }, popper: { popperHeight: 20 }, offset: 0, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: 0 }, description: 'Pushed to top viewport edge' },
-      { placement: 'top', ref: { refTop: 25 }, popper: { popperHeight: 20 }, offset: 10, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: 0 }, description: 'Pushed to top viewport edge by offset' },
+      { placement: 'top', ref: { refTop: 5 }, popper: { popperHeight: 20 }, offset: 0, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: 105 }, description: 'Falls back to bottom when top does not fit' },
+      { placement: 'top', ref: { refTop: 25 }, popper: { popperHeight: 20 }, offset: 10, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: 135 }, description: 'Falls back to bottom when top does not fit by offset' },
       // Left edge
-      { placement: 'left', ref: { refLeft: 5 }, popper: { popperWidth: 20 }, offset: 0, expected: { x: 0, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Pushed to left viewport edge' },
-      { placement: 'left', ref: { refLeft: 25 }, popper: { popperWidth: 20 }, offset: 10, expected: { x: 0, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Pushed to left viewport edge by offset' },
+      { placement: 'left', ref: { refLeft: 5 }, popper: { popperWidth: 20 }, offset: 0, expected: { x: 105, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Falls back to right when left does not fit' },
+      { placement: 'left', ref: { refLeft: 25 }, popper: { popperWidth: 20 }, offset: 10, expected: { x: 135, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Falls back to right when left does not fit by offset' },
       // Bottom edge
-      { placement: 'bottom', ref: { refTop: defaultWindow.windowHeight - 5 - defaultReference.refHeight }, popper: { popperHeight: 20 }, offset: 0, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: defaultWindow.windowHeight - 20 }, description: 'Pushed to bottom viewport edge' },
-      { placement: 'bottom', ref: { refTop: defaultWindow.windowHeight - defaultReference.refHeight - 25 }, popper: { popperHeight: 20 }, offset: 10, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: defaultWindow.windowHeight - 20 }, description: 'Pushed to bottom viewport edge by offset' },
+      { placement: 'bottom', ref: { refTop: defaultWindow.windowHeight - 5 - defaultReference.refHeight }, popper: { popperHeight: 20 }, offset: 0, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: 875 }, description: 'Falls back to top when bottom does not fit' },
+      { placement: 'bottom', ref: { refTop: defaultWindow.windowHeight - defaultReference.refHeight - 25 }, popper: { popperHeight: 20 }, offset: 10, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: 845 }, description: 'Falls back to top when bottom does not fit by offset' },
       // Right edge
-      { placement: 'right', ref: { refLeft: defaultWindow.windowWidth - 5 - defaultReference.refWidth }, popper: { popperWidth: 20 }, offset: 0, expected: { x: defaultWindow.windowWidth - 20, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Pushed to right viewport edge' },
-      { placement: 'right', ref: { refLeft: defaultWindow.windowWidth - defaultReference.refWidth - 25 }, popper: { popperWidth: 20 }, offset: 10, expected: { x: defaultWindow.windowWidth - 20, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Pushed to right viewport edge by offset' },
+      { placement: 'right', ref: { refLeft: defaultWindow.windowWidth - 5 - defaultReference.refWidth }, popper: { popperWidth: 20 }, offset: 0, expected: { x: 875, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Falls back to left when right does not fit' },
+      { placement: 'right', ref: { refLeft: defaultWindow.windowWidth - defaultReference.refWidth - 25 }, popper: { popperWidth: 20 }, offset: 10, expected: { x: 845, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Falls back to left when right does not fit by offset' },
     
       // Popper larger than viewport
-      { placement: 'top', popper: { popperHeight: defaultWindow.windowHeight + 100 }, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: 0}, description: 'Popper taller than viewport, aligns top' },
-      { placement: 'left', popper: { popperWidth: defaultWindow.windowWidth + 100 }, expected: { x: 0, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Popper wider than viewport, aligns left' },
+      { placement: 'top', popper: { popperHeight: defaultWindow.windowHeight + 100 }, expected: { x: defaultReference.refLeft + defaultReference.refWidth / 2 - defaultPopper.popperWidth / 2, y: -650}, description: 'Popper taller than viewport stays anchored to top side' },
+      { placement: 'left', popper: { popperWidth: defaultWindow.windowWidth + 100 }, expected: { x: -650, y: defaultReference.refTop + defaultReference.refHeight / 2 - defaultPopper.popperHeight / 2 }, description: 'Popper wider than viewport stays anchored to left side' },
     
       // Test alignment clipping when primary placement is fine but alignment pushes it out
       // Example: 'left-end' where ref is high, popper is tall
@@ -102,8 +102,8 @@ describe('determinePosition', () => {
       },
        // Example: 'right-start' where ref is low, popper is tall
       { placement: 'right-start', ref: { refTop: defaultWindow.windowHeight - 60, refHeight: 50 }, popper: { popperHeight: 100 }, offset: 0, 
-        expected: { x: defaultReference.refLeft + defaultReference.refWidth + 0, y: defaultWindow.windowHeight - 100 /* clips to bottom as refTop(940) -> clipped to 900 */ }, 
-        description: 'right-start, popper top clipped by viewport bottom'
+        expected: { x: defaultReference.refLeft + defaultReference.refWidth + 0, y: 668 }, 
+        description: 'right-start remains visible at the bottom edge'
       }
     ];
 
@@ -160,6 +160,151 @@ describe('determinePosition', () => {
         expect(result.x).toBeCloseTo(expected.x);
         expect(result.y).toBeCloseTo(expected.y);
       });
+    });
+  });
+
+  describe('Readjust Height', () => {
+    it('should anchor to top when top wins the fallback for a bottom placement', () => {
+      const result = determinePosition({
+        ...defaultWindow,
+        ...defaultReference,
+        placement: 'bottom',
+        popperWidth: 80,
+        popperHeight: 1982,
+        refWidth: 100,
+        refHeight: 124,
+        refLeft: 450,
+        refTop: 509,
+        offsetDistance: 0,
+      });
+
+      expect(result.resolvedPlacement).toBe('top');
+      expect(result.y).toBe(-1473);
+    });
+
+    it('should expose a constrained maxHeight for the side that wins the fallback', () => {
+      const result = determinePosition({
+        ...defaultWindow,
+        ...defaultReference,
+        placement: 'bottom',
+        popperWidth: 80,
+        popperHeight: 600,
+        refWidth: 100,
+        refHeight: 100,
+        refLeft: 450,
+        refTop: 300,
+        offsetDistance: 0,
+        readjustHeight: true,
+        minHeight: 140,
+      });
+
+      expect(result.resolvedPlacement).toBe('bottom');
+      expect(result.maxHeight).toBeUndefined();
+      expect(result.y).toBeCloseTo(400);
+    });
+
+    it('should not expose maxHeight when the available space is below minHeight', () => {
+      const result = determinePosition({
+        ...defaultWindow,
+        ...defaultReference,
+        placement: 'bottom',
+        popperWidth: 80,
+        popperHeight: 600,
+        refWidth: 100,
+        refHeight: 100,
+        refLeft: 450,
+        refTop: 100,
+        offsetDistance: 0,
+        readjustHeight: true,
+        minHeight: 140,
+      });
+
+      expect(result.maxHeight).toBeUndefined();
+    });
+
+    it('should move left-start upward before resizing when the panel can fit in the viewport', () => {
+      const result = determinePosition({
+        ...defaultWindow,
+        windowHeight: 800,
+        ...defaultReference,
+        placement: 'left-start',
+        popperWidth: 120,
+        popperHeight: 430,
+        refWidth: 100,
+        refHeight: 100,
+        refLeft: 700,
+        refTop: 520,
+        offsetDistance: 0,
+        readjustHeight: true,
+        minHeight: 140,
+      });
+
+      expect(result.resolvedPlacement).toBe('left');
+      expect(result.y).toBe(338);
+      expect(result.maxHeight).toBeUndefined();
+    });
+
+    it('should move right-end downward before resizing when the panel can fit in the viewport', () => {
+      const result = determinePosition({
+        ...defaultWindow,
+        ...defaultReference,
+        placement: 'right-end',
+        popperWidth: 120,
+        popperHeight: 380,
+        refWidth: 100,
+        refHeight: 100,
+        refLeft: 100,
+        refTop: 140,
+        offsetDistance: 0,
+        readjustHeight: true,
+        minHeight: 140,
+      });
+
+      expect(result.resolvedPlacement).toBe('right');
+      expect(result.y).toBe(0);
+      expect(result.maxHeight).toBeUndefined();
+    });
+
+    it('should only resize right-middle when it is taller than the viewport', () => {
+      const result = determinePosition({
+        ...defaultWindow,
+        ...defaultReference,
+        placement: 'right-middle',
+        popperWidth: 120,
+        popperHeight: 1200,
+        refWidth: 100,
+        refHeight: 100,
+        refLeft: 100,
+        refTop: 250,
+        offsetDistance: 0,
+        readjustHeight: true,
+        minHeight: 140,
+      });
+
+      expect(result.resolvedPlacement).toBe('right');
+      expect(result.y).toBe(0);
+      expect(result.maxHeight).toBe(1000);
+    });
+
+    it('should keep following an offscreen trigger for right-start', () => {
+      const result = determinePosition({
+        ...defaultWindow,
+        ...defaultReference,
+        placement: 'right-start',
+        popperWidth: 120,
+        popperHeight: 500,
+        refWidth: 100,
+        refHeight: 100,
+        refLeft: 100,
+        refTop: -40,
+        offsetDistance: 0,
+        readjustHeight: true,
+        minHeight: 140,
+      });
+
+      expect(result.resolvedPlacement).toBe('right');
+      expect(result.y).toBe(-40);
+      expect(result.maxHeight).toBeUndefined();
     });
   });
 });

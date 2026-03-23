@@ -12,9 +12,6 @@ describe('getDimensions', () => {
     // Create mock elements for each test
     mockReferenceEl = document.createElement('div');
     mockPopperEl = document.createElement('div');
-
-    // Reset mocks for getBoundingClientRect
-    HTMLElement.prototype.getBoundingClientRect = vi.fn();
   });
 
   afterEach(() => {
@@ -47,8 +44,8 @@ describe('getDimensions', () => {
       toJSON: () => JSON.stringify(this),
     };
 
-    (mockReferenceEl.getBoundingClientRect as ReturnType<typeof vi.fn>).mockReturnValue(refRect);
-    (mockPopperEl.getBoundingClientRect as ReturnType<typeof vi.fn>).mockReturnValue(popperRect);
+    const refSpy = vi.spyOn(mockReferenceEl, 'getBoundingClientRect').mockReturnValue(refRect as DOMRect);
+    const popperSpy = vi.spyOn(mockPopperEl, 'getBoundingClientRect').mockReturnValue(popperRect as DOMRect);
 
     const dimensions = getDimensions({ reference: mockReferenceEl, popper: mockPopperEl });
 
@@ -62,8 +59,8 @@ describe('getDimensions', () => {
       refRight: refRect.right,
     });
 
-    expect(mockReferenceEl.getBoundingClientRect).toHaveBeenCalledTimes(1);
-    expect(mockPopperEl.getBoundingClientRect).toHaveBeenCalledTimes(1);
+    expect(refSpy).toHaveBeenCalledTimes(1);
+    expect(popperSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an error if elements are null or undefined', () => {
@@ -75,12 +72,12 @@ describe('getDimensions', () => {
     );
   });
 
-  it('should cache dimensions and call getBoundingClientRect only once per element', () => {
+  it('should measure both elements on each call', () => {
     const refRect = { height: 50, width: 100, left: 10, top: 20, right: 110, bottom: 70, x: 10, y: 20, toJSON: () => '' };
     const popperRect = { height: 30, width: 60, left: 0, top: 0, right: 60, bottom: 30, x: 0, y: 0, toJSON: () => '' };
 
-    const refSpy = vi.spyOn(mockReferenceEl, 'getBoundingClientRect').mockReturnValue(refRect);
-    const popperSpy = vi.spyOn(mockPopperEl, 'getBoundingClientRect').mockReturnValue(popperRect);
+    const refSpy = vi.spyOn(mockReferenceEl, 'getBoundingClientRect').mockReturnValue(refRect as DOMRect);
+    const popperSpy = vi.spyOn(mockPopperEl, 'getBoundingClientRect').mockReturnValue(popperRect as DOMRect);
 
     // First call
     getDimensions({ reference: mockReferenceEl, popper: mockPopperEl });
@@ -89,21 +86,19 @@ describe('getDimensions', () => {
 
     // Second call with same elements
     getDimensions({ reference: mockReferenceEl, popper: mockPopperEl });
-    expect(refSpy).toHaveBeenCalledTimes(1); // Should still be 1 due to caching
-    expect(popperSpy).toHaveBeenCalledTimes(1); // Should still be 1 due to caching
+    expect(refSpy).toHaveBeenCalledTimes(2);
+    expect(popperSpy).toHaveBeenCalledTimes(2);
 
-    // Third call, forcing a different reference to ensure cache is not global in a wrong way
     const mockReferenceEl2 = document.createElement('div');
     const ref2Rect = { height: 10, width: 10, left: 1, top: 1, right: 11, bottom: 11, x:1, y:1, toJSON: () => '' };
-    const ref2Spy = vi.spyOn(mockReferenceEl2, 'getBoundingClientRect').mockReturnValue(ref2Rect);
+    const ref2Spy = vi.spyOn(mockReferenceEl2, 'getBoundingClientRect').mockReturnValue(ref2Rect as DOMRect);
     
     getDimensions({ reference: mockReferenceEl2, popper: mockPopperEl });
     expect(ref2Spy).toHaveBeenCalledTimes(1);
-    expect(popperSpy).toHaveBeenCalledTimes(1); // Popper was already cached, so still 1
+    expect(popperSpy).toHaveBeenCalledTimes(3);
     
-    // Call again with the new reference and original popper
     getDimensions({ reference: mockReferenceEl2, popper: mockPopperEl });
-    expect(ref2Spy).toHaveBeenCalledTimes(1); // Should still be 1
-    expect(popperSpy).toHaveBeenCalledTimes(1); // Should still be 1
+    expect(ref2Spy).toHaveBeenCalledTimes(2);
+    expect(popperSpy).toHaveBeenCalledTimes(4);
   });
 });
