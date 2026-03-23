@@ -1,52 +1,132 @@
 ---
 title: Introduction
-description: The headless interactive component library.
+description: Understand Flexilla's mental model before you start building with it.
 ---
 
-## Introduction
+Flexilla is a headless, framework-agnostic library for interactive UI components such as accordions, tabs, dropdowns, modals, tooltips, and more.
 
-Flexilla is a headless, CSS framework-agnostic library designed to manage interactive components like dropdowns, collapses, and tabs. 
+Headless means Flexilla gives you behavior, state management, and accessibility-oriented wiring, while you stay in control of the markup and styling.
 
-It provides seamless integration with any CSS framework, including TailwindCSS and UnoCSS.
+## The mental model
 
-To delve deeper into the motivation behind Flexilla, check out [this article](https://dev.to/unoforge/my-journey-to-building-flexilla-headless-interactive-component-library-46gp).
+When you use Flexilla, there are three parts working together:
 
+1. Your HTML structure
+2. Flexilla's JavaScript behavior
+3. Your CSS or utility classes reacting to state
 
-## Principles
+Flexilla does not try to own your design system. Instead, it updates attributes such as:
 
-Flexilla doesn't use any CSS Framework, it just updates states via data attributes, you can directly specify style on the component according to its state (for an accordion: each item has a data-open attribute which can be close or open, and each item has a trigger `aria-expanded="true"` or `aria-expanded="false"` and content `data-state="open"` or `data-state="close"`) 
+- `data-state`
+- `aria-expanded`
+- component-specific `data-*` attributes
+
+You then use those attributes to style the component however you want.
+
+## What Flexilla gives you
+
+- interaction logic for common UI patterns
+- state updates through `data-*` attributes
+- keyboard and accessibility-friendly behavior for supported components
+- framework-agnostic usage for server-rendered and vanilla projects
+
+## What you provide
+
+- the HTML markup
+- the classes and visual design
+- the selectors used for initialization
+- any custom animations or transitions
+
+## A simple example of the pattern
+
+If Flexilla changes an element from `data-state="close"` to `data-state="open"`, your CSS can respond immediately:
+
+```css
+[data-state="close"] {
+  display: none;
+}
+
+[data-state="open"] {
+  display: block;
+}
+```
+
+That same pattern works with plain CSS, UnoCSS, or Tailwind CSS.
+
+## Choose the right entry point
+
+- Use `@flexilla/flexilla` if you want one package for multiple components.
+- Use individual packages such as `@flexilla/accordion` or `@flexilla/modal` if you only need a few pieces.
+- Use lower-level packages when you want more advanced composition later.
+
+## Manual init vs auto init
+
+Flexilla supports both patterns:
+
+- manual initialization when you want explicit control
+- `autoInit()` when you want Flexilla to find matching elements on the page
+
+Manual init example:
+
+```js
+import { Accordion } from "@flexilla/accordion";
+
+new Accordion("#faq");
+```
+
+Auto init example:
+
+```js
+import { Accordion } from "@flexilla/accordion";
+
+Accordion.autoInit();
+```
+
+## Best fit for Flexilla
+
+Flexilla is especially useful when:
+
+- you are not using a heavy UI framework
+- you want interactive components in server-rendered pages
+- you want to keep full control over styling
+- you are working in Astro, Laravel, Symfony, Vue, static sites, or similar environments
+
+## Before you jump into components
+
+There are two important things to remember:
+
+1. Flexilla components still need the correct HTML structure and attributes.
+2. Because Flexilla is headless, a component may be functional before it looks complete.
+
+That is expected. Behavior comes from Flexilla, presentation comes from you.
+
+## Suggested reading order
+
+1. [Installation](/docs/getting-started/installation)
+2. [UnoCSS](/docs/styling/unocss) or [Tailwind CSS](/docs/styling/tailwind) or [Pure CSS](/docs/styling/css)
+3. The component page you want to use first
 
 ## FAQ
 
 <FaqBox>
     <FaqItem>
-**Are components accessible?**
+**Are Flexilla components accessible?**
 
-Yes, all components are designed with accessibility in mind.
+They are designed with accessibility-oriented behavior in mind, but you should still use proper semantic markup and test the final experience in your own UI.
     </FaqItem>
     <FaqItem>
-**Can I use this in production?**
+**Can I use Flexilla in production?**
 
-Absolutely! Flexilla is production-ready and is currently deployed on this website.
+Yes. Flexilla is intended for real projects, especially where you want interactive behavior without giving up control of styling and markup.
     </FaqItem>
     <FaqItem>
-**When can I use it?**
+**Do I need Tailwind or UnoCSS?**
 
-You can use Flexilla in projects where you prefer not to rely on a JS framework while still needing interactive components with accessibility considerations. Recommended environments include AstroJS, PHP and its frameworks, Flask, Django, Ruby on Rails, and static websites.
+No. Flexilla works with plain CSS too. Tailwind and UnoCSS simply make state-based styling more convenient.
     </FaqItem>
     <FaqItem>
-**Can I use it with ReactJS?**
+**Can I use Flexilla with framework-based apps?**
 
-While it’s possible to integrate Flexilla with ReactJS, we recommend using [React Aria Components](https://react-spectrum.adobe.com/react-aria/index.html) for better compatibility.
-    </FaqItem>
-    <FaqItem>
-**Can I use it with VueJS?**
-
-Yes, Flexilla is compatible with VueJS, but we suggest using [Radix-Vue](https://www.radix-vue.com/) for a more tailored experience.
-    </FaqItem>
-    <FaqItem>
-**Can I use it with Bootstrap?**
-
-Certainly! However, some customization of CSS classes and HTML structure will be necessary.
+Yes, especially in projects where you still want DOM-first, headless component behavior. The fit is strongest in environments where HTML and progressive enhancement are important.
     </FaqItem>
 </FaqBox>

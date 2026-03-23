@@ -1,91 +1,184 @@
 ---
-title: AstroJS Guide
-description: This guide will show How to install Flexilla In your AstroJS Project
+title: Astro Guide
+description: Use Flexilla in Astro by rendering component markup in .astro files and initializing it on the client.
 ---
 
+Astro is a strong fit for Flexilla because both work well with HTML-first, progressively enhanced pages.
 
-This guide will help you to use Flexilla in your new or existing Astro project.
+In Astro, the most important thing is deciding where your markup lives and where the client-side initialization should run.
 
-## Install via npm
+## Create an Astro project
 
-<Stepper>
-<Step>
-### Create a new Project
-Create a new project if you don't have one.
-<BoxCodeLang text={"Shell"} icon={"shell"}>
 ```bash
-npm create astro@latest astro-example
-cd astro-example
+npm create astro@latest flexilla-astro
+cd flexilla-astro
+npm install
 ```
-</BoxCodeLang>
-</Step>
-<Step>
-### Install flexilla
+
+## Install Flexilla
+
 <TabCodeGroup
   values={[
-    { text: "npm", value: "npm-tab", icon: "npm"},
-    { text: "yarn", value: "yarn-tab", icon: "yarn"},
+    { text: "Full library", value: "full-tab", icon: "npm" },
+    { text: "Single package", value: "single-tab", icon: "npm" },
   ]}
   autoHeight
   showCopyBlock
 >
-  <TabPanel value="npm-tab" active={true}>
-```bash 
+  <TabPanel value="full-tab" active={true}>
+```bash
 npm i @flexilla/flexilla
 ```
   </TabPanel>
-  <TabPanel value="yarn-tab">
-```bash 
-yarn add @flexilla/flexilla
+  <TabPanel value="single-tab">
+```bash
+npm i @flexilla/accordion
 ```
   </TabPanel>
 </TabCodeGroup>
-</Step>
-<Step>
-### Usage
-<BoxCodeLang text={"script"} icon={"js"}>
-```js
-import {Accordion, Tabs} from "@flexilla/flexilla"
 
-const accordion = new Accordion("#my-accordion")
+## Where things go in Astro
 
-const tabs = new  Tabs("#my-tabs",{ 
-    // options
-})
+A simple pattern is:
+
+- render the component markup inside a page or Astro component
+- import your CSS globally or in the layout
+- initialize Flexilla inside a client-side module
+
+## Example Astro component
+
+Create a component such as `src/components/FaqAccordion.astro`.
+
+```astro
+<div id="astro-accordion" data-fx-accordion data-accordion-type="single">
+  <div data-accordion-item data-accordion-value="item-1">
+    <button type="button" data-accordion-trigger class="accordion-trigger">
+      Is Flexilla a design system?
+    </button>
+    <div data-accordion-content class="accordion-content">
+      No. Flexilla is headless, so you bring the styling and visual language.
+    </div>
+  </div>
+
+  <div data-accordion-item data-accordion-value="item-2">
+    <button type="button" data-accordion-trigger class="accordion-trigger">
+      Why does Astro work well with it?
+    </button>
+    <div data-accordion-content class="accordion-content">
+      Because Astro lets you ship mostly HTML and add JavaScript only where needed.
+    </div>
+  </div>
+</div>
 ```
-</BoxCodeLang>
-</Step>
-</Stepper>
 
+## Example styling
 
-## Using CDN
+Add styles in a global stylesheet such as `src/styles/global.css`.
 
-<Stepper>
-<Step>
-### Import the library via CDN
-<BoxCodeLang text={".../SomeComponent.astro"} icon={"astro"}>
-```html
-<script type="module"> // [!code ++]
-  import * as Flexilla from 'https://esm.run/@flexilla/flexilla'; // [!code ++]
-</script> // [!code ++]
+```css
+#astro-accordion {
+  max-width: 42rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.accordion-trigger {
+  width: 100%;
+  padding: 1rem;
+  border: 0;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.accordion-trigger[aria-expanded="true"] {
+  background: #f4f4f5;
+}
+
+.accordion-content {
+  height: 0;
+  overflow: hidden;
+  padding-inline: 1rem;
+}
+
+.accordion-content[data-state="open"] {
+  height: auto;
+  padding-block: 0 1rem;
+}
 ```
-</BoxCodeLang>
-</Step>
-<Step>
-### Usage
-<BoxCodeLang text={".../SomeComponent.astro"} icon={"astro"}>
-```html
+
+## Client-side initialization
+
+Create a small client module, for example `src/scripts/flexilla.ts`.
+
+<TabCodeGroup
+  values={[
+    { text: "Manual init", value: "manual-tab", icon: "ts" },
+    { text: "Auto init", value: "auto-tab", icon: "ts" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="manual-tab" active={true}>
+```ts
+import { Accordion } from "@flexilla/flexilla";
+
+new Accordion("#astro-accordion");
+```
+  </TabPanel>
+  <TabPanel value="auto-tab">
+```ts
+import { Accordion } from "@flexilla/accordion";
+
+Accordion.autoInit();
+```
+  </TabPanel>
+</TabCodeGroup>
+
+Then load that script on the page where the markup exists:
+
+```astro
+---
+import "../styles/global.css";
+import FaqAccordion from "../components/FaqAccordion.astro";
+---
+
+<FaqAccordion />
+<script type="module" src="../scripts/flexilla.ts"></script>
+```
+
+## Important Astro note
+
+Flexilla should run in the browser after the markup exists in the DOM. If the component markup is rendered on the page, load your initialization script on that page or layout.
+
+## CDN usage in Astro
+
+If you do not want to bundle Flexilla, you can also import it directly in a `<script type="module">` block:
+
+```astro
+<FaqAccordion />
+
 <script type="module">
-  new Flexilla.Tabs("[data-tabs-el]") // [!code ++]
-  Flexilla.Accordion.AutoInit(".accordion-el") // [!code ++]
+  import { Accordion } from "https://cdn.jsdelivr.net/npm/@flexilla/accordion@latest/+esm";
+
+  new Accordion("#astro-accordion");
 </script>
 ```
-</BoxCodeLang>
-</Step>
-</Stepper>
 
+## Styling options
 
+Astro projects can use:
 
-## Quick Start Examples
+- plain CSS
+- [UnoCSS](/docs/styling/unocss)
+- [Tailwind CSS](/docs/styling/tailwind)
 
-Check out these quick start examples to get a feel of Flexilla + Astro [here](https://github.com/unoforge/flexilla/tree/main/examples/astro-example)
+## Next step
+
+Once this pattern works in Astro, reuse it for other components:
+
+1. render markup in `.astro`
+2. style the states
+3. initialize the component on the client

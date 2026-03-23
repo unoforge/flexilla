@@ -1,65 +1,182 @@
 ---
 title: Vue Guide
-description: This guide will show How to install Flexilla In your VueJS Project
+description: Use Flexilla in Vue by rendering DOM-first markup and initializing it after the component mounts.
 ---
 
+Flexilla can be used in Vue when you want DOM-first, headless component behavior without replacing your styling approach.
 
-This guide will help you to use Flexilla in your new or existing VueJS Project
+The key idea is simple: let Vue render the markup, initialize Flexilla after mount, and clean it up when the component unmounts.
 
-## Install via npm
+## Create a Vue project
 
-<Stepper>
-<Step>
-### Create a new Project
-Create a new project if you don't have one.
-<BoxCodeLang text={"Shell"} icon={"shell"}>
 ```bash
-npm create vue@latest vue-example
-cd vue-example
+npm create vue@latest flexilla-vue
+cd flexilla-vue
+npm install
 ```
-</BoxCodeLang>
-</Step>
-<Step>
-### Install flexilla
+
+## Install Flexilla
+
 <TabCodeGroup
   values={[
-    { text: "npm", value: "npm-tab", icon: "npm"},
-    { text: "yarn", value: "yarn-tab", icon: "yarn"},
+    { text: "Full library", value: "full-tab", icon: "npm" },
+    { text: "Single package", value: "single-tab", icon: "npm" },
   ]}
   autoHeight
   showCopyBlock
 >
-  <TabPanel value="npm-tab" active={true}>
-```bash 
+  <TabPanel value="full-tab" active={true}>
+```bash
 npm i @flexilla/flexilla
 ```
   </TabPanel>
-  <TabPanel value="yarn-tab">
-```bash 
-yarn add @flexilla/flexilla
+  <TabPanel value="single-tab">
+```bash
+npm i @flexilla/accordion
 ```
   </TabPanel>
 </TabCodeGroup>
-</Step>
-<Step>
-### Usage
-<BoxCodeLang text={".../AccordionEx.vue"} icon={"vue"}>
-```html
+
+## Example Vue component
+
+Create a component such as `src/components/FaqAccordion.vue`.
+
+```vue
+<template>
+  <div id="vue-accordion" data-fx-accordion data-accordion-type="single">
+    <div data-accordion-item data-accordion-value="item-1">
+      <button type="button" data-accordion-trigger class="accordion-trigger">
+        Who renders the markup?
+      </button>
+      <div data-accordion-content class="accordion-content">
+        Vue renders the markup, then Flexilla enhances it.
+      </div>
+    </div>
+
+    <div data-accordion-item data-accordion-value="item-2">
+      <button type="button" data-accordion-trigger class="accordion-trigger">
+        Who controls the visual design?
+      </button>
+      <div data-accordion-content class="accordion-content">
+        You do. Flexilla stays headless and only manages behavior and state.
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { onMounted } from 'vue' // [!code ++]
-import { Accordion } from "@flexilla/flexilla" // [!code ++]
-onMounted(() => { // [!code ++]
-    new Accordion("[data-fx-accordion]") // [!code ++]
-}) // [!code ++]
+import { onMounted, onUnmounted } from "vue";
+import { Accordion } from "@flexilla/flexilla";
+
+let accordion: Accordion | null = null;
+
+onMounted(() => {
+  accordion = new Accordion("#vue-accordion");
+});
+
+onUnmounted(() => {
+  accordion?.cleanup();
+  accordion = null;
+});
+</script>
+
+<style>
+#vue-accordion {
+  max-width: 42rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.accordion-trigger {
+  width: 100%;
+  padding: 1rem;
+  border: 0;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.accordion-trigger[aria-expanded="true"] {
+  background: #f4f4f5;
+}
+
+.accordion-content {
+  height: 0;
+  overflow: hidden;
+  padding-inline: 1rem;
+}
+
+.accordion-content[data-state="open"] {
+  height: auto;
+  padding-block: 0 1rem;
+}
+</style>
+```
+
+## Why `onMounted()` matters
+
+Flexilla needs the rendered DOM to exist before initialization. In Vue, that usually means:
+
+- use `onMounted()` for manual initialization
+- use `nextTick()` as an extra guard if the DOM is conditionally rendered
+
+## Why cleanup matters
+
+Vue components can mount and unmount many times during navigation and conditional rendering. Because Flexilla instances attach event listeners, you should clean them up in `onUnmounted()`.
+
+Every component should follow this pattern:
+
+1. create the instance in `onMounted()`
+2. call `cleanup()` in `onUnmounted()`
+
+That keeps listeners and instance state from leaking across remounts.
+
+## Single-package version
+
+```vue
+<script setup lang="ts">
+import { onMounted, onUnmounted } from "vue";
+import { Accordion } from "@flexilla/accordion";
+
+let accordion: Accordion | null = null;
+
+onMounted(() => {
+  accordion = new Accordion("#vue-accordion");
+});
+
+onUnmounted(() => {
+  accordion?.cleanup();
+  accordion = null;
+});
 </script>
 ```
-</BoxCodeLang>
-</Step>
-</Stepper>
 
+## When to use auto init in Vue
 
+`autoInit()` can work in Vue, but manual initialization is usually clearer because Vue controls when nodes appear and disappear.
 
+Prefer manual initialization when:
 
-## Quick Start Examples
+- the component lives inside a Vue component
+- the markup can re-render
+- you want explicit lifecycle control
+- you want to clean up listeners with `cleanup()` during unmount
 
-Check out these quick start examples to get a feel of Flexilla + VueJS [here](https://github.com/unoforge/flexilla/tree/main/examples/vue-example)
+## Styling options
+
+Vue does not change the Flexilla styling model. You can still use:
+
+- plain CSS in `<style>`
+- [UnoCSS](/docs/styling/unocss)
+- [Tailwind CSS](/docs/styling/tailwind)
+
+## Next step
+
+Once this works for one component, keep the same pattern for others:
+
+1. render the required markup in the template
+2. initialize Flexilla in `onMounted()`
+3. clean up with `cleanup()` in `onUnmounted()`
+4. style the states

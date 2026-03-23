@@ -1,90 +1,192 @@
 ---
 title: Vite Guide
-description: This guide will show How to install Flexilla In your ViteJS Project
+description: Use Flexilla in a Vite project with a clear entry file, component markup, and state-based styling.
 ---
 
-This guide will help you to use Flexilla in your new or existing ViteJS Project
+Vite is one of the simplest ways to use Flexilla because you control exactly where your HTML, CSS, and JavaScript live.
 
-## Install via npm
+This guide assumes a vanilla Vite project, but the same structure applies to other Vite-based setups too.
 
-<Stepper>
-<Step>
-### Create a new Project
-Create a new project if you don't have one.
-<BoxCodeLang text={"Shell"} icon={"shell"}>
+## Create a Vite project
+
 ```bash
-npm create vite@latest vite-example -- --template vanilla-ts
-cd vite-example
+npm create vite@latest flexilla-vite -- --template vanilla-ts
+cd flexilla-vite
+npm install
 ```
-</BoxCodeLang>
-</Step>
-<Step>
-### Install flexilla
+
+## Install Flexilla
+
 <TabCodeGroup
   values={[
-    { text: "npm", value: "npm-tab", icon: "npm"},
-    { text: "yarn", value: "yarn-tab", icon: "yarn"},
+    { text: "Full library", value: "full-tab", icon: "npm" },
+    { text: "Single package", value: "single-tab", icon: "npm" },
   ]}
   autoHeight
   showCopyBlock
 >
-  <TabPanel value="npm-tab" active={true}>
-```bash 
+  <TabPanel value="full-tab" active={true}>
+```bash
 npm i @flexilla/flexilla
 ```
   </TabPanel>
-  <TabPanel value="yarn-tab">
-```bash 
-yarn add @flexilla/flexilla
+  <TabPanel value="single-tab">
+```bash
+npm i @flexilla/accordion
 ```
   </TabPanel>
 </TabCodeGroup>
-</Step>
-<Step>
-### Usage
-<BoxCodeLang text={"script"} icon={"js"}>
-```js
-import {Accordion, Tabs} from "@flexilla/flexilla"
 
-const accordion = new Accordion("#my-accordion")
+## Project structure
 
-const tabs = new  Tabs("#my-tabs",{ 
-    // options
-})
-```
-</BoxCodeLang>
-</Step>
-</Stepper>
+In a default Vite project, the most common places are:
 
+- `index.html` for the markup
+- `src/main.ts` for initialization
+- `src/style.css` for component styling
 
-## Using CDN
+## Example markup
 
-<Stepper>
-<Step>
-### Import the library via CDN
-<BoxCodeLang text={"index.html"} icon={"html"}>
+Place this in `index.html`.
+
 ```html
-<script type="module"> // [!code ++]
-  import * as Flexilla from 'https://esm.run/@flexilla/flexilla'; // [!code ++]
-</script> // [!code ++]
+<div id="app">
+  <div id="vite-accordion" data-fx-accordion data-accordion-type="single">
+    <div data-accordion-item data-accordion-value="item-1">
+      <button type="button" data-accordion-trigger class="accordion-trigger">
+        What does Flexilla handle?
+      </button>
+      <div data-accordion-content class="accordion-content">
+        Flexilla handles behavior, state, and accessibility-oriented wiring.
+      </div>
+    </div>
+
+    <div data-accordion-item data-accordion-value="item-2">
+      <button type="button" data-accordion-trigger class="accordion-trigger">
+        What do I still control?
+      </button>
+      <div data-accordion-content class="accordion-content">
+        You control markup, layout, colors, spacing, and animations.
+      </div>
+    </div>
+  </div>
+</div>
 ```
-</BoxCodeLang>
-</Step>
-<Step>
-### Usage
-<BoxCodeLang text={"index.html"} icon={"html"}>
-```html
-<script type="module">
-  new Flexilla.Tabs("[data-tabs-el]") // [!code ++]
-  Flexilla.Accordion.AutoInit(".accordion-el") // [!code ++]
-</script>
+
+## Example styling
+
+Place this in `src/style.css`.
+
+```css
+body {
+  font-family: system-ui, sans-serif;
+  padding: 2rem;
+}
+
+#vite-accordion {
+  max-width: 42rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.accordion-trigger {
+  width: 100%;
+  padding: 1rem;
+  border: 0;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.accordion-trigger[aria-expanded="true"] {
+  background: #f4f4f5;
+}
+
+.accordion-content {
+  height: 0;
+  overflow: hidden;
+  padding-inline: 1rem;
+}
+
+.accordion-content[data-state="open"] {
+  height: auto;
+  padding-block: 0 1rem;
+}
 ```
-</BoxCodeLang>
-</Step>
-</Stepper>
 
+## Initialize Flexilla
 
+Place this in `src/main.ts`.
 
-## Quick Start Examples
+<TabCodeGroup
+  values={[
+    { text: "Full library", value: "full-js-tab", icon: "ts" },
+    { text: "Single package", value: "single-js-tab", icon: "ts" },
+    { text: "Auto init", value: "auto-js-tab", icon: "ts" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="full-js-tab" active={true}>
+```ts
+import "./style.css";
+import { Accordion } from "@flexilla/flexilla";
 
-Check out these quick start examples to get a feel of Flexilla + ViteJS [here](https://github.com/unoforge/flexilla/tree/main/examples/vite-example)
+new Accordion("#vite-accordion");
+```
+  </TabPanel>
+  <TabPanel value="single-js-tab">
+```ts
+import "./style.css";
+import { Accordion } from "@flexilla/accordion";
+
+new Accordion("#vite-accordion");
+```
+  </TabPanel>
+  <TabPanel value="auto-js-tab">
+```ts
+import "./style.css";
+import { Accordion } from "@flexilla/accordion";
+
+Accordion.autoInit();
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Run the project
+
+```bash
+npm run dev
+```
+
+## When to use auto init in Vite
+
+Use `autoInit()` when:
+
+- your page contains many Flexilla components
+- selectors follow the default `data-fx-*` pattern
+- you want to avoid creating each instance manually
+
+Use manual initialization when:
+
+- you want explicit control
+- you need custom options per component
+- components are mounted conditionally
+
+## Styling in Vite
+
+You can style Flexilla components with any of these approaches:
+
+- plain CSS in `src/style.css`
+- [UnoCSS](/docs/styling/unocss)
+- [Tailwind CSS](/docs/styling/tailwind)
+
+## Next step
+
+After the Vite setup is working, open the component page you want next and reuse the same pattern:
+
+1. copy the required HTML structure
+2. style the states
+3. initialize the component in `main.ts`

@@ -1,33 +1,48 @@
 ---
 title: Framework Guide
-description: Explore the framework-specific guides to learn how to install Flexilla with various frameworks/build tools.
+description: Choose the setup pattern that matches your app and initialize Flexilla in the right place.
 ---
 
-## Framework Guide
+Flexilla works best in projects where HTML is still close to the final UI and JavaScript enhances that markup.
 
-This guide shows how to use Flexilla With Your Framework
+These guides show where to place your markup, where to initialize Flexilla, and how to think about styling in each environment.
 
-Here's a list of supported frameworks and how to get started:
+## Before choosing a guide
+
+No matter which framework or build tool you use, the Flexilla workflow stays the same:
+
+1. Render the required HTML structure
+2. Add styles for the states Flexilla controls
+3. Initialize the component after the DOM is available
+
+## Available guides
 
 <CardTechBox>
     <CardTech href="/docs/framework-guide/astro-guide" icon="astro">
-### AstroJS
-Follow this Guide for Astro framework integration
+### Astro
+Best when you render mostly static or server-driven pages and enhance them with small JavaScript islands.
     </CardTech>
     <CardTech href="/docs/framework-guide/vite-guide" icon="vite">
-### ViteJS
-Follow this Guide for Vite tool
+### Vite
+Best for plain HTML, TypeScript, or lightweight app setups where you control the entry file directly.
+    </CardTech>
+    <CardTech href="/docs/framework-guide/vue-guide" icon="vue">
+### Vue
+Use Flexilla from Vue when you still want DOM-first components and initialize them after mount.
     </CardTech>
     <CardTech href="/docs/framework-guide/laravel-guide" icon="laravel">
 ### Laravel
-Follow this Guide for Laravel framework integration
+Good for Blade-driven applications where Flexilla enhances server-rendered markup.
     </CardTech>
     <CardTech href="/docs/framework-guide/symfony-guide" icon="symfony">
 ### Symfony
-Follow this Guide for Symfony framework
-    </CardTech>
-    <CardTech href="/docs/framework-guide/vue-guide" icon="vue">
-### VueJS
-Follow this Guide for VueJS framework
+Good for Twig-based applications where you want interactive components without adopting a full UI framework.
     </CardTech>
 </CardTechBox>
+
+## Recommended reading order
+
+1. [Installation](/docs/getting-started/installation)
+2. Your framework guide
+3. [UnoCSS](/docs/styling/unocss), [Tailwind CSS](/docs/styling/tailwind), or [Pure CSS](/docs/styling/css)
+4. The component page you want to build

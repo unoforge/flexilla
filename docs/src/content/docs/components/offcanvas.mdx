@@ -215,9 +215,9 @@ A callback function that triggers when the offcanvas is hidden.
 Here’s an example of initializing an offcanvas with custom options:
 
 ```js
-import { Offcanvas } from '@flexilla/offcanvas';
+import { OffCanvas } from '@flexilla/offcanvas';
 
-const offcanvas = new Offcanvas('#myOffcanvas', {
+const offcanvas = new OffCanvas('#myOffcanvas', {
   staticBackdrop: true,
   allowBodyScroll: false,
   backdrop: 'custom-backdrop-class',
@@ -239,18 +239,88 @@ const offcanvas = new Offcanvas('#myOffcanvas', {
 
 ## Methods
 
-### `show()`
+### `open()`
 
 Programmatically opens the offcanvas.
 
 ```js
-offcanvas.show();
+offcanvas.open();
 ```
 
-### `hide()`
+### `close()`
 
 Programmatically closes the offcanvas.
 
 ```js
-offcanvas.hide();
+offcanvas.close();
+```
+
+### `setOptions()`
+
+Update supported runtime options after initialization.
+
+```js
+offcanvas.setOptions({
+  allowBodyscroll: true,
+});
+```
+
+### `cleanup()`
+
+Remove the event listeners attached by the component when the instance is no longer needed.
+
+```js
+offcanvas.cleanup();
+```
+
+### `autoInit()`
+
+Initialize all matching offcanvas elements. By default, `OffCanvas.autoInit()` looks for `[data-fx-offcanvas]`.
+
+```js
+import { OffCanvas } from "@flexilla/offcanvas";
+
+OffCanvas.autoInit();
+// or
+OffCanvas.autoInit(".my-offcanvas");
+```
+
+## Events
+
+The offcanvas element dispatches custom events you can listen to in your app logic.
+
+### `offcanvas-before-hide`
+
+Fires right before the offcanvas closes.
+
+### `offcanvas-open`
+
+Fires when the offcanvas is opened.
+
+### `offcanvas-close`
+
+Fires when the offcanvas is closed.
+
+```js
+const offcanvasEl = document.querySelector("#myOffcanvas");
+const offcanvas = new OffCanvas(offcanvasEl);
+
+offcanvasEl.addEventListener("offcanvas-open", (event) => {
+  console.log("Opened", event.detail.offcanvasId);
+});
+
+offcanvasEl.addEventListener("offcanvas-before-hide", (event) => {
+  const shouldPreventClose = false;
+
+  if (shouldPreventClose) {
+    event.detail.setExitAction(true);
+  }
+});
+```
+
+You can also trigger open and close actions through document events when the component is initialized:
+
+```js
+document.dispatchEvent(new Event("sheet:myOffcanvas:open"));
+document.dispatchEvent(new Event("sheet:myOffcanvas:close"));
 ```

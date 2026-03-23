@@ -1,0 +1,123 @@
+---
+title: Pin Input
+description: Build PIN and OTP inputs with automatic focus movement, paste support, and validation.
+---
+
+`@flexilla/pin-input` is a lightweight component for PIN and OTP entry.
+
+It is useful when you want:
+
+- one character per field
+- automatic focus movement
+- paste support
+- keyboard navigation
+- simple validation rules
+
+## Installation
+
+<TabCodeGroup
+  values={[
+    { text: "npm", value: "npm-tab", icon: "npm" },
+    { text: "yarn", value: "yarn-tab", icon: "yarn" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="npm-tab" active={true}>
+```bash
+npm i @flexilla/pin-input
+```
+  </TabPanel>
+  <TabPanel value="yarn-tab">
+```bash
+yarn add @flexilla/pin-input
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Markup
+
+Wrap the inputs in a container and add `data-pin-input` to each field.
+
+```html
+<div id="otp-input" class="pin-group">
+  <input data-pin-input maxlength="1" />
+  <input data-pin-input maxlength="1" />
+  <input data-pin-input maxlength="1" />
+  <input data-pin-input maxlength="1" />
+</div>
+```
+
+## Basic usage
+
+```js
+import { PinInput } from "@flexilla/pin-input";
+
+const pinInput = new PinInput("#otp-input");
+```
+
+## Custom validation
+
+By default, the component accepts any single character that matches your validation rule. You can pass a custom regular expression:
+
+```js
+import { PinInput } from "@flexilla/pin-input";
+
+const pinInput = new PinInput("#otp-input", {
+  validation: /\d/,
+});
+```
+
+## Reading the value
+
+```js
+pinInput.onChange((value) => {
+  console.log("Current value:", value);
+
+  if (pinInput.isComplete) {
+    console.log("Ready to submit");
+  }
+});
+```
+
+Available properties:
+
+- `value`
+- `isComplete`
+
+## Features
+
+- automatic focus movement to the next input
+- paste support across multiple fields
+- left and right arrow navigation
+- backspace navigation to previous fields
+- optional validation with a regular expression
+
+## Lifecycle
+
+Call `cleanup()` when the wrapper is being removed from the page.
+
+```js
+const pinInput = new PinInput("#otp-input");
+
+// Later
+pinInput.cleanup();
+```
+
+## Auto init
+
+The package also exposes `PinInput.autoInit()`, but because it relies on a selector, manual construction is usually easier to reason about:
+
+```js
+PinInput.autoInit();
+```
+
+## Best fit
+
+Use `pin-input` for:
+
+- OTP verification flows
+- PIN entry
+- short confirmation codes
+
+It is a focused input utility rather than a large form system.

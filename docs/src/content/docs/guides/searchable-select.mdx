@@ -1,0 +1,98 @@
+---
+title: Searchable Select
+description: Build a searchable selection experience using autocomplete or the lower-level select-core engine.
+references:
+    - Autocomplete: /docs/components/autocomplete
+    - Select: /docs/components/select
+    - Select Core: /docs/helpers/select-core
+---
+
+There are two main ways to build a searchable select in Flexilla:
+
+1. use `@flexilla/autocomplete` when you want DOM bindings already handled
+2. use `@flexilla/select-core` when you want to render and wire everything yourself
+
+## Fastest path: autocomplete
+
+If your UI already fits the common pattern of:
+
+- input field
+- dropdown list of matching items
+- selected value display
+
+then `@flexilla/autocomplete` is the fastest way to get there.
+
+```js
+import { createAutocomplete } from "@flexilla/autocomplete";
+
+const root = document.querySelector("#framework-autocomplete");
+const autocomplete = createAutocomplete({
+  filter: (query, item) => {
+    return item.label?.toLowerCase().includes(query.toLowerCase()) ?? false;
+  },
+});
+
+autocomplete.connect({ root });
+```
+
+This approach is best when you want a practical, DOM-first searchable select with minimal boilerplate.
+
+## Lower-level path: select-core
+
+Use `select-core` when you want more control over:
+
+- where items render
+- how search is applied
+- how highlighting looks
+- how selected values are shown
+
+```js
+import { createSelectCore } from "@flexilla/select-core";
+
+const select = createSelectCore();
+
+[
+  { value: "astro", label: "Astro" },
+  { value: "vue", label: "Vue" },
+  { value: "laravel", label: "Laravel" },
+].forEach((item) => select.registerItem(item));
+
+select.subscribe((state) => {
+  const query = state.search.toLowerCase();
+  const visibleItems = state.items.filter((item) =>
+    (item.label ?? item.value).toLowerCase().includes(query)
+  );
+
+  console.log(visibleItems);
+});
+```
+
+## Deciding between them
+
+- Use `autocomplete` when you want an end-user search field and a DOM-first setup.
+- Use `select-core` when you are building a custom framework abstraction or a special UI pattern.
+
+## Good UX details
+
+Searchable selects feel much better when you also provide:
+
+- clear placeholder text
+- a clear button
+- highlighted active options
+- keyboard navigation
+- feedback when no items match
+
+Those details are often the difference between “works” and “pleasant to use.”
+
+## Related patterns
+
+This same foundation can power:
+
+- framework pickers
+- country selectors
+- user search
+- command-like suggestion lists
+
+## Next step
+
+Start with [Autocomplete](/docs/components/autocomplete) if you want the quickest result, then move to [Select Core](/docs/helpers/select-core) if you outgrow the default DOM bindings.

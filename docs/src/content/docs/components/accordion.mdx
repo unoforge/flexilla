@@ -49,7 +49,7 @@ yarn add @flexilla/accordion
   </DemoCompBoxInTab>
   </TabPanel>
   <TabPanel value="Code">
-    <CodeLoader source="accordionDefault"/>
+    <CodeLoader source="AccordionExample1"/>
   </TabPanel>
 </Tabs>
 
@@ -152,7 +152,7 @@ Use `aria-expanded` and `data-state` to visually indicate the active accordion a
   </DemoCompBoxInTab>
   </TabPanel>
   <TabPanel value="Code">
-    <CodeLoader source="accordionIndicator"/>
+    <CodeLoader source="AccordionIndicator"/>
   </TabPanel>
 </Tabs>
 
@@ -220,8 +220,8 @@ Options can also be passed via `data-*` attributes. [View examples here](https:/
 const options = {
   accordionType: "multiple", // default is "single"
   defaultValue: "item-3",
-  allowTriggerOnFocus: false, // default is false
   preventClosingAll: true, // default is false
+  allowCloseFromContent: false, // default is false
   onChangeItem: ({ expandedItem }) => {
     // handle expanded item
   }
@@ -238,6 +238,9 @@ const options = {
   <BoxTableRow title="preventClosingAll" attribute="data-prevent-closing-all" type="boolean | undefined">
     Prevents all items from being closed. If `true`, at least one item must remain open. The default is `false`.
   </BoxTableRow>
+  <BoxTableRow title="allowCloseFromContent" attribute="data-allow-close-from-content" type="boolean | undefined">
+    Allows the content element to close the current item when clicked.
+  </BoxTableRow>
   <BoxTableRow title="onChangeItem" type="method">
     A callback function that receives the last triggered item, including its `trigger`, `content`, and state.
   </BoxTableRow>
@@ -245,19 +248,47 @@ const options = {
 
 ## Methods
 
-### Show Item
+### `show(id)`
 
-To show a specific item in the accordion, use the `showItem` method.
+To show a specific item in the accordion, use `show(id)`.
 
 ```js
 import { Accordion } from "@flexilla/accordion";
 
 const myAccordion = new Accordion("[data-accordion-example]");
 
-myAccordion.showItem("value-of-the-concerned-item");
+myAccordion.show("value-of-the-concerned-item");
 ```
 
-### Hide Item
+### `hide(id)`
+
+To hide a specific item, use `hide(id)`.
+
+```js
+myAccordion.hide("value-of-the-concerned-item");
+```
+
+### `cleanup()`
+
+Call `cleanup()` when the accordion is removed from the page.
+
+```js
+myAccordion.cleanup();
+```
+
+## Events
+
+The accordion dispatches `change-item` on the accordion root element whenever the active item changes.
+
+```js
+const faqEl = document.querySelector("#accordion-example");
+
+new Accordion(faqEl);
+
+faqEl.addEventListener("change-item", (event) => {
+  console.log(event.detail);
+});
+```
 
 To hide a specific item, use the `hideItem` method.
 

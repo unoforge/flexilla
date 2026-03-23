@@ -69,7 +69,7 @@ Here is an example of the basic HTML structure:
   </DemoCompBoxInTab>
   </TabPanel>
   <TabPanel value="Code">
-    <CodeLoader source="tabsDefault"/>
+    <CodeLoader source="TabsDefault"/>
   </TabPanel>
 </Tabs>
 
@@ -135,7 +135,7 @@ For custom indicators, specific CSS is needed. If you’re using UnoCSS or Tailw
   </DemoCompBoxInTab>
   </TabPanel>
   <TabPanel value="Code">
-    <CodeLoader source="tabsWithCustomIndicator"/>
+    <CodeLoader source="TabsIndicator"/>
   </TabPanel>
 </Tabs>
 
@@ -150,7 +150,7 @@ Flexilla Tabs support vertical orientation as well, making it versatile for diff
   </DemoCompBoxInTab>
   </TabPanel>
   <TabPanel value="Code">
-    <CodeLoader source="tabsVertical"/>
+    <CodeLoader source="TabsVertical"/>
   </TabPanel>
 </Tabs>
 
@@ -269,4 +269,26 @@ You can programmatically switch between tabs using the `changeTab` method:
 ```js
 const myTab = new Tabs(/* initialize here */);
 myTab.changeTab("aValidTabValue");
+```
+
+### Cleanup
+
+Call `cleanup()` when the tabs instance is no longer needed.
+
+```js
+myTab.cleanup();
+```
+
+## Events
+
+Tabs dispatch `change-tab` on the tabs root element whenever the active tab changes.
+
+```js
+const tabsEl = document.querySelector("[data-fx-tabs]");
+
+new Tabs(tabsEl);
+
+tabsEl.addEventListener("change-tab", (event) => {
+  console.log(event.detail.currentTrigger, event.detail.currentPanel);
+});
 ```

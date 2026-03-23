@@ -1,13 +1,148 @@
 ---
 title: Laravel Guide
-description: This guide will show How to install Flexilla In your Laravel Project
+description: Use Flexilla in Laravel by enhancing Blade-rendered markup from your frontend entry file.
 ---
 
-## Quick setup
+Laravel is a very good fit for Flexilla because Blade renders the markup and Flexilla enhances that markup in the browser.
 
-This guide will help you get started with Flexilla and Laravel
+This guide assumes you already have a Laravel app with a frontend entry such as `resources/js/app.js` or `resources/js/app.ts`.
 
-<Callout type="warning">
-We're currently working on this page.
-You can [Edit this page](https://github.com/unoforge/flexilla/blob/main/docs/src/content/docs/framework-guide/laravel-guide.mdx)
-</Callout>
+## Install Flexilla
+
+<TabCodeGroup
+  values={[
+    { text: "Full library", value: "full-tab", icon: "npm" },
+    { text: "Single package", value: "single-tab", icon: "npm" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="full-tab" active={true}>
+```bash
+npm i @flexilla/flexilla
+```
+  </TabPanel>
+  <TabPanel value="single-tab">
+```bash
+npm i @flexilla/accordion
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Blade markup example
+
+Place this in a Blade view such as `resources/views/welcome.blade.php`.
+
+```html
+<div id="laravel-accordion" data-fx-accordion data-accordion-type="single">
+    <div data-accordion-item data-accordion-value="item-1">
+        <button type="button" data-accordion-trigger class="accordion-trigger">
+            Can Flexilla work with Blade?
+        </button>
+        <div data-accordion-content class="accordion-content">
+            Yes. Blade renders the HTML, then Flexilla enhances it on the client.
+        </div>
+    </div>
+
+    <div data-accordion-item data-accordion-value="item-2">
+        <button type="button" data-accordion-trigger class="accordion-trigger">
+            Do I need a JS UI framework?
+        </button>
+        <div data-accordion-content class="accordion-content">
+            No. Flexilla is especially useful when your UI is still mostly server-rendered.
+        </div>
+    </div>
+</div>
+```
+
+## JavaScript entry
+
+Initialize Flexilla from your frontend entry file.
+
+Example: `resources/js/app.js`
+
+<TabCodeGroup
+  values={[
+    { text: "Manual init", value: "manual-tab", icon: "js" },
+    { text: "Auto init", value: "auto-tab", icon: "js" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="manual-tab" active={true}>
+```js
+import { Accordion } from "@flexilla/flexilla";
+
+new Accordion("#laravel-accordion");
+```
+  </TabPanel>
+  <TabPanel value="auto-tab">
+```js
+import { Accordion } from "@flexilla/accordion";
+
+Accordion.autoInit();
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Styling
+
+You can place the CSS in your normal Laravel frontend stylesheet.
+
+Example: `resources/css/app.css`
+
+```css
+#laravel-accordion {
+  max-width: 42rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.accordion-trigger {
+  width: 100%;
+  padding: 1rem;
+  border: 0;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.accordion-trigger[aria-expanded="true"] {
+  background: #f4f4f5;
+}
+
+.accordion-content {
+  height: 0;
+  overflow: hidden;
+  padding-inline: 1rem;
+}
+
+.accordion-content[data-state="open"] {
+  height: auto;
+  padding-block: 0 1rem;
+}
+```
+
+## Why Laravel works well with Flexilla
+
+- Blade already gives you server-rendered HTML
+- Flexilla enhances that HTML without forcing a new component model
+- state-driven styling fits well with utility CSS or standard stylesheets
+
+## Styling options
+
+Laravel projects can use:
+
+- plain CSS
+- [UnoCSS](/docs/styling/unocss)
+- [Tailwind CSS](/docs/styling/tailwind)
+
+## Next step
+
+After the first component works in Blade:
+
+1. keep your markup in the view
+2. keep initialization in the JS entry
+3. keep state styling in your main stylesheet

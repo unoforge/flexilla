@@ -1,0 +1,144 @@
+---
+title: Select
+description: Build a DOM-first select using Flexilla's select bindings on top of the headless select-core engine.
+references:
+    - Select Core: /docs/helpers/select-core
+    - Autocomplete: /docs/components/autocomplete
+---
+
+`@flexilla/select` gives you DOM bindings for the headless `@flexilla/select-core` engine.
+
+Use it when you want:
+
+- a selectable list rendered in the DOM
+- keyboard support and ARIA updates
+- a headless API without a framework dependency
+
+If you want the lower-level state engine without DOM wiring, use [Select Core](/docs/helpers/select-core).
+
+## Installation
+
+<TabCodeGroup
+  values={[
+    { text: "npm", value: "npm-tab", icon: "npm" },
+    { text: "yarn", value: "yarn-tab", icon: "yarn" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="npm-tab" active={true}>
+```bash
+npm i @flexilla/select
+```
+  </TabPanel>
+  <TabPanel value="yarn-tab">
+```bash
+yarn add @flexilla/select
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Markup structure
+
+The root element must have an `id`, because the controller uses it to connect triggers, content, and related elements.
+
+```html
+<div id="framework-select">
+  <button data-select-trigger data-select-id="framework-select" data-placeholder="Choose a framework">
+    Open select
+  </button>
+
+  <div data-select-content data-select-id="framework-select" hidden>
+    <button data-select-item="astro">Astro</button>
+    <button data-select-item="vue">Vue</button>
+    <button data-select-item="laravel">Laravel</button>
+  </div>
+
+  <div data-selected-value data-select-id="framework-select"></div>
+  <button data-select-clear data-select-id="framework-select">Clear</button>
+</div>
+```
+
+Common elements:
+
+- `data-select-trigger`
+- `data-select-content`
+- `data-select-item`
+- `data-selected-value`
+- `data-select-clear`
+- `data-select-clear-all`
+- `data-select-remove`
+- `data-select-input`
+
+## Basic usage
+
+```js
+import { createSelect } from "@flexilla/select";
+
+const root = document.querySelector("#framework-select");
+
+const select = createSelect();
+const { destroy } = select.connect({ root });
+```
+
+## Multiple selection
+
+```js
+import { createSelect } from "@flexilla/select";
+
+const root = document.querySelector("#framework-select");
+
+const select = createSelect({ multiple: true });
+select.connect({ root });
+```
+
+## State and methods
+
+The controller exposes the `select-core` methods directly, including:
+
+- `open()`
+- `close()`
+- `toggle()`
+- `select(value)`
+- `unselect(value)`
+- `clear()`
+- `toggleValue(value)`
+- `highlight(index)`
+- `highlightNext()`
+- `highlightPrev()`
+- `setSearch(query)`
+- `getState()`
+- `subscribe(listener)`
+
+Example:
+
+```js
+const select = createSelect();
+select.connect({ root: document.querySelector("#framework-select") });
+
+select.subscribe((state) => {
+  console.log(state.selectedValues);
+});
+```
+
+## Lifecycle
+
+`connect()` returns a cleanup object:
+
+```js
+const { destroy } = select.connect({ root });
+
+// Later
+destroy();
+```
+
+Use that in environments where the DOM can be mounted and unmounted repeatedly.
+
+## When to use Select vs Autocomplete
+
+- Use `select` when the user is choosing from a visible list of options.
+- Use [Autocomplete](/docs/components/autocomplete) when the main interaction starts from typed search input.
+
+## Next step
+
+If you want to customize the selection logic more deeply, read [Select Core](/docs/helpers/select-core).

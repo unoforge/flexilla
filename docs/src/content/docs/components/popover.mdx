@@ -274,3 +274,40 @@ Like `show()` method but here you can set the placement and offsetDistance if ne
 ```js
 myPopover.setShowOptions({ placement: Placement, offsetDistance: number })
 ```
+
+### `setOptions(/* options */)`
+
+Update the placement and offset without immediately showing the popover.
+
+```js
+myPopover.setOptions({ placement: Placement, offsetDistance: number });
+```
+
+### `cleanup()`
+
+Call `cleanup()` when the popover is removed from the page.
+
+```js
+myPopover.cleanup();
+```
+
+## Events
+
+The popover dispatches events on the popover content element:
+
+- `popover-show`
+- `popover-hide`
+
+```js
+const popoverEl = document.querySelector("#popover-example");
+
+new Popover(popoverEl);
+
+popoverEl.addEventListener("popover-show", (event) => {
+  console.log(event.detail.isHidden); // false
+});
+
+popoverEl.addEventListener("popover-hide", (event) => {
+  console.log(event.detail.isHidden); // true
+});
+```

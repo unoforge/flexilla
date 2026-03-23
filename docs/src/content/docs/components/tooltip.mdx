@@ -62,7 +62,7 @@ Here's the markup
   </DemoCompBoxInTab>
   </TabPanel>
   <TabPanel value="Code">
-    <CodeLoader source="tooltipDefault"/>
+    <CodeLoader source="TooltipDefaults"/>
   </TabPanel>
 </Tabs>
 
@@ -217,4 +217,33 @@ Like `show()` method but here you can set the placement and offsetDistance if ne
 
 ```js
 myTooltip.setShowOptions({ placement: Placement, offsetDistance: number })
+```
+
+### `cleanup()`
+
+Call `cleanup()` when the tooltip is removed from the page.
+
+```js
+myTooltip.cleanup();
+```
+
+## Events
+
+The tooltip dispatches events on the tooltip element:
+
+- `tooltip-show`
+- `tooltip-hide`
+
+```js
+const tooltipEl = document.querySelector("#tooltip1");
+
+new Tooltip(tooltipEl);
+
+tooltipEl.addEventListener("tooltip-show", (event) => {
+  console.log(event.detail.isHidden); // false
+});
+
+tooltipEl.addEventListener("tooltip-hide", (event) => {
+  console.log(event.detail.isHidden); // true
+});
 ```

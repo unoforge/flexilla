@@ -1,0 +1,142 @@
+---
+title: Autocomplete
+description: Build an autocomplete experience with search, filtering, and headless selection logic.
+references:
+    - Select Core: /docs/helpers/select-core
+    - Select: /docs/components/select
+---
+
+`@flexilla/autocomplete` builds on top of `@flexilla/select-core` and connects the search input, option list, and selected values in the DOM.
+
+Use it when you want:
+
+- typed search over a list of options
+- headless DOM bindings without a framework dependency
+- single or multiple selection
+
+## Installation
+
+<TabCodeGroup
+  values={[
+    { text: "npm", value: "npm-tab", icon: "npm" },
+    { text: "yarn", value: "yarn-tab", icon: "yarn" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="npm-tab" active={true}>
+```bash
+npm i @flexilla/autocomplete
+```
+  </TabPanel>
+  <TabPanel value="yarn-tab">
+```bash
+yarn add @flexilla/autocomplete
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Markup structure
+
+The root must have an `id`.
+
+```html
+<div id="framework-autocomplete">
+  <input
+    type="text"
+    data-select-input
+    data-autocomplete-id="framework-autocomplete"
+    placeholder="Search frameworks"
+  />
+
+  <div data-select-content data-select-id="framework-autocomplete" hidden>
+    <button data-select-item="astro">Astro</button>
+    <button data-select-item="vue">Vue</button>
+    <button data-select-item="laravel">Laravel</button>
+    <button data-select-item="symfony">Symfony</button>
+  </div>
+
+  <div data-selected-value data-select-id="framework-autocomplete"></div>
+  <button data-select-clear data-select-id="framework-autocomplete">Clear</button>
+</div>
+```
+
+## Basic usage
+
+```js
+import { createAutocomplete } from "@flexilla/autocomplete";
+
+const root = document.querySelector("#framework-autocomplete");
+
+const autocomplete = createAutocomplete();
+const { destroy } = autocomplete.connect({ root });
+```
+
+## Custom filtering
+
+You can provide your own filter function.
+
+```js
+import { createAutocomplete } from "@flexilla/autocomplete";
+
+const autocomplete = createAutocomplete({
+  filter: (query, item) => {
+    return item.label?.toLowerCase().startsWith(query.toLowerCase()) ?? false;
+  },
+});
+```
+
+## Multiple selection
+
+```js
+const autocomplete = createAutocomplete({ multiple: true });
+autocomplete.connect({ root: document.querySelector("#framework-autocomplete") });
+```
+
+## State and methods
+
+Like `select`, the controller exposes the `select-core` methods directly:
+
+- `open()`
+- `close()`
+- `toggle()`
+- `select(value)`
+- `unselect(value)`
+- `clear()`
+- `toggleValue(value)`
+- `highlight(index)`
+- `highlightNext()`
+- `highlightPrev()`
+- `setSearch(query)`
+- `getState()`
+- `subscribe(listener)`
+
+Example:
+
+```js
+autocomplete.subscribe((state) => {
+  console.log(state.search, state.selectedValues);
+});
+```
+
+## Lifecycle
+
+`connect()` returns a `destroy()` function:
+
+```js
+const { destroy } = autocomplete.connect({ root });
+
+// Later
+destroy();
+```
+
+That is especially useful in frameworks where the DOM subtree can be replaced or unmounted.
+
+## When to use Autocomplete vs Select
+
+- Use autocomplete when the user should filter options by typing.
+- Use [Select](/docs/components/select) when the options can stay visible without search.
+
+## Next step
+
+If you want to build your own search or selection UI from scratch, read [Select Core](/docs/helpers/select-core).
