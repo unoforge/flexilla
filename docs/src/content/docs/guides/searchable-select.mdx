@@ -32,7 +32,7 @@ const autocomplete = createAutocomplete({
   },
 });
 
-autocomplete.connect({ root });
+autocomplete.connect({ element: root });
 ```
 
 This approach is best when you want a practical, DOM-first searchable select with minimal boilerplate.

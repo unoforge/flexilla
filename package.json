@@ -10,11 +10,15 @@
     "docs"
   ],
   "scripts": {
-    "build": "bun run --filter '@flexilla/*' build",
-    "clean": "bun run --filter '@flexilla/*' clean",
-    "dev": "bun run --filter '@flexilla/*' dev",
+    "build": "bun run --filter 'flexipop' build && bun run --filter '@flexilla/*' build",
+    "clean": "bun run --filter 'flexipop' clean && bun run --filter '@flexilla/*' clean",
+    "release:version": "lerna version --no-private",
+    "release:version:yes": "lerna version --no-private --yes",
+    "release:publish": "lerna publish from-package --no-private",
+    "release:publish:yes": "lerna publish from-package --no-private --yes",
+    "release": "bun run build && bun run typecheck && bun run release:publish",
     "test": "bun test",
-    "typecheck": "bun run --filter '@flexilla/*' typecheck"
+    "typecheck": "bun run --filter 'flexipop' typecheck && bun run --filter '@flexilla/*' typecheck"
   },
   "devDependencies": {
     "@tsdown/css": "0.21.4",

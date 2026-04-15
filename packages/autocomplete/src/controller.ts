@@ -1,26 +1,36 @@
 import {
   createSelectCore,
-  DEFAULT_SELECT_CHECK_ICON,
   renderSelectedValues,
   setupSelectPresentationItem,
   setupSelectValueContainer,
-  setupSelectItemIndicator,
   syncSelectEmptyState,
-  syncSelectItemIndicator,
   type SelectCore,
   type SelectItem,
   type SelectState,
 } from "@flexilla/select-core";
+import { waitForFxComponents } from "@flexilla/utilities/dom-utilities";
+import { domTeleporter } from "@flexilla/utilities/dom-teleport";
 import { CreateOverlay } from "flexipop/create-overlay";
 import type { AutocompleteController, AutocompleteDom, AutocompleteOptions } from "./types";
-import { SELECT_CLEAR, SELECT_CLEAR_ALL, SELECT_CONTENT, SELECT_INPUT, SELECT_ITEM, SELECT_REMOVE, SELECT_TRIGGER, SELECT_VALUE } from "./constants";
-import { defaultFilter, resolveOverlayOptions } from "./helpers";
+import { AUTOCOMPLETE_HIDDEN_VALUE, SELECT_CLEAR, SELECT_CLEAR_ALL, SELECT_CONTENT, SELECT_INPUT, SELECT_ITEM, SELECT_REMOVE, SELECT_TRIGGER, SELECT_VALUE } from "./constants";
+import { collectItemData, defaultFilter, resolveOverlayOptions } from "./helpers";
+import { resolveAutocompleteTarget } from "./target";
+
+const defaultExperimentalOptions = {
+  teleport: true,
+  teleportMode: "move" as const,
+};
+
+type Teleporter = {
+  append: () => void;
+  remove: () => void;
+  restore: () => void;
+};
 
 export const createAutocomplete = (options: AutocompleteOptions = {}): AutocompleteController => {
   const core = createSelectCore({ multiple: options.multiple });
   const filter = options.filter ?? defaultFilter;
   let root: HTMLElement | null = null;
-  let anchor: HTMLElement | null = null;
   let selectId: string | null = null;
   let trigger: HTMLElement | null = null;
   let content: HTMLElement | null = null;
@@ -30,22 +40,98 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   let clearEls: HTMLElement[] = [];
   let clearAllEls: HTMLElement[] = [];
   let removeValueEls: HTMLElement[] = [];
+  let hiddenValueInput: HTMLInputElement | null = null;
   let placeholder = "Select";
   let initialInputValue = "";
   let unsubscribe: (() => void) | null = null;
   let overlay: CreateOverlay | null = null;
+  let teleporter: Teleporter | null = null;
   const cleanup: Array<() => void> = [];
   let renderedValues = new Set<string>();
   let lastSearch = core.getState().search;
   let syncingOverlay = false;
-  const checkIconMarkup = options.checkIcon || DEFAULT_SELECT_CHECK_ICON;
-  const indicatorPosition = options.indicatorPosition || "start";
+  const experimentalOptions = { ...defaultExperimentalOptions, ...(options.experimental || {}) };
   type ItemMeta = { item: SelectItem; element: HTMLElement };
   let itemsMeta: ItemMeta[] = [];
   const itemsByValue = new Map<string, ItemMeta>();
   const boundElements = new WeakSet<HTMLElement>();
 
-  const getScopeElement = () => root ?? anchor ?? content ?? trigger ?? input;
+  const getScopeElement = () => root ?? content ?? trigger ?? input;
+
+  const queryById = <T extends HTMLElement>(selector: string, attribute = "data-select-id") =>
+    Array.from(document.querySelectorAll<T>(`${selector}[${attribute}="${selectId}"]`));
+
+  const parseDefaultValues = (value: string | null | undefined) =>
+    (value || "")
+      .split(",")
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+
+  const serializeSelectedValues = (selectedValues: string[]) => {
+    if (options.multiple) return selectedValues.join(",");
+    return selectedValues[0] ?? "";
+  };
+
+  const syncHiddenValueInput = (selectedValues: string[]) => {
+    if (!(hiddenValueInput instanceof HTMLInputElement)) return;
+    const nextValue = serializeSelectedValues(selectedValues);
+    if (hiddenValueInput.value === nextValue) return;
+    hiddenValueInput.value = nextValue;
+    hiddenValueInput.dispatchEvent(new Event("input", { bubbles: true }));
+    hiddenValueInput.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+
+  const resolveHiddenValueInput = () =>
+    document.querySelector<HTMLInputElement>(`${AUTOCOMPLETE_HIDDEN_VALUE}[data-select-id="${selectId}"]`) ??
+    document.querySelector<HTMLInputElement>(`${AUTOCOMPLETE_HIDDEN_VALUE}[data-autocomplete-id="${selectId}"]`);
+
+  const resolveInitialValue = () =>
+    options.defaultValue ??
+    content?.getAttribute("data-default-value") ??
+    hiddenValueInput?.value ??
+    "";
+
+  const applyInitialSelection = () => {
+    if (core.getState().selectedValues.length > 0) return;
+    const defaultValues = parseDefaultValues(resolveInitialValue());
+    if (!defaultValues.length) return;
+
+    const nextValues = options.multiple ? defaultValues : defaultValues.slice(0, 1);
+    nextValues.forEach((value) => core.select(value));
+  };
+
+  const resolveSingleElement = <T extends HTMLElement>({
+    selector,
+    role,
+    attribute = "data-select-id",
+    required = true,
+  }: {
+    selector: string;
+    role: string;
+    attribute?: string;
+    required?: boolean;
+  }): T | null => {
+    const matches = queryById<T>(selector, attribute);
+    if (matches.length > 1) {
+      throw new Error(`[autocomplete] expected one ${role} for "${selectId}", found ${matches.length}`);
+    }
+    if (!matches.length) {
+      if (required) throw new Error(`[autocomplete] ${role} is required for "${selectId}"`);
+      return null;
+    }
+    return matches[0] ?? null;
+  };
+
+  const setItemVisibility = (element: HTMLElement, visible: boolean) => {
+    if (visible) {
+      element.removeAttribute("hidden");
+      element.removeAttribute("data-hidden");
+      return;
+    }
+
+    element.setAttribute("hidden", "");
+    element.setAttribute("data-hidden", "");
+  };
 
   const ensureHighlighted = () => {
     const state = core.getState();
@@ -66,6 +152,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     const overlayState = content.dataset.state || "close";
     if (state.open && overlayState !== "open") {
       syncingOverlay = true;
+      restoreEl();
       overlay.show();
       syncingOverlay = false;
       return;
@@ -78,17 +165,15 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   };
 
   const parseDomItems = () => {
-    if (!selectId) return;
-    const sourceContainers = content ? [content] : root ? [root] : [];
-    const existingItems = sourceContainers.flatMap((container) => Array.from(container.querySelectorAll<HTMLElement>(SELECT_ITEM)));
-    if (!existingItems.length) return;
+    if (!(content instanceof HTMLElement)) return;
+    const existingItems = Array.from(content.querySelectorAll<HTMLElement>(SELECT_ITEM));
     itemsMeta = existingItems
       .map((element): ItemMeta | null => {
         const value = element.dataset.selectItem;
         if (!value) return null;
         const label = (element.getAttribute("data-label") || element.textContent || "").trim() || value;
         const disabled = element.getAttribute("aria-disabled") === "true" || element.hasAttribute("data-disabled");
-        return { item: { value, label, disabled }, element };
+        return { item: { value, label, disabled, data: collectItemData(element) }, element };
       })
       .filter((entry): entry is ItemMeta => Boolean(entry))
       .filter((entry) => {
@@ -103,7 +188,6 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       element.setAttribute("role", "option");
       if (item.disabled) element.setAttribute("aria-disabled", "true");
       setupSelectPresentationItem(element);
-      setupSelectItemIndicator({ element, fallbackIcon: checkIconMarkup });
     });
   };
 
@@ -118,14 +202,10 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     const filtered = itemsMeta.filter(({ item }) => filter(query, item));
     const nextValues = new Set(filtered.map(({ item }) => item.value));
 
-    renderedValues.forEach((value) => {
-      if (!nextValues.has(value)) core.unregisterItem(value);
-    });
-
     teardownItems();
 
     filtered.forEach(({ item, element }) => {
-      element.removeAttribute("hidden");
+      setItemVisibility(element, true);
       if (!boundElements.has(element)) {
         const clickHandler = (event: Event) => {
           event.preventDefault();
@@ -146,7 +226,9 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     });
 
     itemsMeta.forEach(({ item, element }) => {
-      if (!nextValues.has(item.value)) element.setAttribute("hidden", "");
+      if (nextValues.has(item.value)) return;
+      setItemVisibility(element, false);
+      element.removeAttribute("data-select-highlighted");
     });
 
     syncSelectEmptyState({
@@ -179,17 +261,11 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       if (isHighlighted) element.setAttribute("data-select-highlighted", "true");
       else element.removeAttribute("data-select-highlighted");
       element.setAttribute("aria-selected", String(isSelected));
-      syncSelectItemIndicator({
-        element,
-        isSelected,
-        fallbackIcon: checkIconMarkup,
-        root: getScopeElement(),
-        indicatorPosition,
-      });
     });
   };
 
   const updateSelectedDisplays = (state: SelectState) => {
+    syncHiddenValueInput(state.selectedValues);
     renderSelectedValues({
       containers: selectedValueEls,
       itemsByValue,
@@ -237,7 +313,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       }
       case "Escape": {
         core.close();
-        if (input) input.blur();
+        input?.blur();
         break;
       }
       default:
@@ -261,30 +337,70 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     updateFromSource(query);
   };
 
+  const bindClick = (el: HTMLElement, action: () => void) => {
+    const handler = (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      action();
+    };
+    el.addEventListener("click", handler);
+    cleanup.push(() => el.removeEventListener("click", handler));
+  };
+
+  const moveElOnInit = () => {
+    if (!teleporter || !experimentalOptions.teleport) return;
+    const currentTeleporter = teleporter;
+    waitForFxComponents(() => {
+      if (experimentalOptions.teleportMode === "detachable") currentTeleporter.remove();
+      else currentTeleporter.append();
+    });
+  };
+
+  const moveEl = () => {
+    if (!teleporter || !experimentalOptions.teleport || experimentalOptions.teleportMode !== "detachable") return;
+    teleporter.remove();
+  };
+
+  const restoreEl = () => {
+    if (!teleporter || !experimentalOptions.teleport || experimentalOptions.teleportMode !== "detachable") return;
+    teleporter.append();
+  };
+
   const bindDom = () => {
     if (!selectId) return;
-    trigger = document.querySelector<HTMLElement>(`${SELECT_TRIGGER}[data-autocomplete-id="${selectId}"]`) || root?.querySelector(SELECT_TRIGGER) || null;
-    content = document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${selectId}"]`) || root?.querySelector(SELECT_CONTENT) || null;
-    input = document.querySelector<HTMLInputElement>(`${SELECT_INPUT}[data-autocomplete-id="${selectId}"]`) || root?.querySelector<HTMLInputElement>(SELECT_INPUT) || null;
-    selectedValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_VALUE}[data-select-id="${selectId}"]`));
-    if (!selectedValueEls.length) {
-      selectedValueEls = root ? Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE)) : [];
+
+    trigger = resolveSingleElement<HTMLElement>({
+      selector: SELECT_TRIGGER,
+      role: "trigger",
+      attribute: "data-autocomplete-id",
+      required: false,
+    });
+    content = resolveSingleElement<HTMLElement>({ selector: SELECT_CONTENT, role: "content" });
+    input = resolveSingleElement<HTMLInputElement>({
+      selector: SELECT_INPUT,
+      role: "input",
+      attribute: "data-autocomplete-id",
+    });
+    hiddenValueInput = resolveHiddenValueInput();
+
+    if (!content || !input) {
+      throw new Error(`[autocomplete] input and content are required for "${selectId}"`);
     }
-    clearEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR}[data-select-id="${selectId}"]`));
-    if (!clearEls.length) clearEls = root ? Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR)) : [];
-    clearAllEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR_ALL}[data-select-id="${selectId}"]`));
-    if (!clearAllEls.length) clearAllEls = root ? Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR_ALL)) : [];
-    removeValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_REMOVE}[data-select-id="${selectId}"]`));
-    if (!removeValueEls.length) removeValueEls = root ? Array.from(root.querySelectorAll<HTMLElement>(SELECT_REMOVE)) : [];
+
+    teleporter = domTeleporter(content, document.body, experimentalOptions.teleportMode);
+    moveElOnInit();
+
+    selectedValueEls = queryById<HTMLElement>(SELECT_VALUE);
+    clearEls = queryById<HTMLElement>(SELECT_CLEAR);
+    clearAllEls = queryById<HTMLElement>(SELECT_CLEAR_ALL);
+    removeValueEls = queryById<HTMLElement>(SELECT_REMOVE);
 
     selectedValueEls.forEach((container) => setupSelectValueContainer(container));
 
-    const sourcePlaceholder = input?.getAttribute("data-placeholder") || input?.getAttribute("placeholder") || placeholder;
+    const sourcePlaceholder = input.getAttribute("data-placeholder") || input.getAttribute("placeholder") || placeholder;
     placeholder = sourcePlaceholder || placeholder;
-    if (input) initialInputValue = input.value;
-
-    if (!content) throw new Error("[autocomplete] data-select-content is required");
-    if (!input) throw new Error("[autocomplete] input element with data-autocomplete-id is required");
+    initialInputValue = input.value;
 
     if (trigger) {
       trigger.addEventListener("click", handleTriggerClick);
@@ -293,44 +409,30 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       cleanup.push(() => trigger?.removeEventListener("keydown", handleKeyDown));
     }
 
-    if (content) {
-      content.addEventListener("keydown", handleKeyDown);
-      cleanup.push(() => content?.removeEventListener("keydown", handleKeyDown));
-    }
+    content.addEventListener("keydown", handleKeyDown);
+    cleanup.push(() => content?.removeEventListener("keydown", handleKeyDown));
 
-    if (input) {
-      const focusHandler = () => core.open();
-      const clickHandler = (event: Event) => {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        core.open();
-      };
-      input.addEventListener("input", handleInput);
-      input.addEventListener("keydown", handleKeyDown);
-      input.addEventListener("focus", focusHandler);
-      input.addEventListener("click", clickHandler);
-      cleanup.push(() => input?.removeEventListener("input", handleInput));
-      cleanup.push(() => input?.removeEventListener("keydown", handleKeyDown));
-      cleanup.push(() => input?.removeEventListener("focus", focusHandler));
-      cleanup.push(() => input?.removeEventListener("click", clickHandler));
-    }
-
-    const bindClick = (el: HTMLElement, action: () => void) => {
-      const handler = (event: Event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        action();
-      };
-      el.addEventListener("click", handler);
-      cleanup.push(() => el.removeEventListener("click", handler));
+    const focusHandler = () => core.open();
+    const clickHandler = (event: Event) => {
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      core.open();
     };
+    input.addEventListener("input", handleInput);
+    input.addEventListener("keydown", handleKeyDown);
+    input.addEventListener("focus", focusHandler);
+    input.addEventListener("click", clickHandler);
+    cleanup.push(() => input?.removeEventListener("input", handleInput));
+    cleanup.push(() => input?.removeEventListener("keydown", handleKeyDown));
+    cleanup.push(() => input?.removeEventListener("focus", focusHandler));
+    cleanup.push(() => input?.removeEventListener("click", clickHandler));
 
     const clearSelection = () => {
       core.clear();
       core.highlight(null);
       core.setSearch("");
       if (input) input.value = initialInputValue;
+      updateFromSource("");
     };
 
     clearEls.forEach((el) => bindClick(el, clearSelection));
@@ -343,44 +445,53 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
     if (!itemsMeta.length) parseDomItems();
     updateFromSource(core.getState().search);
+    applyInitialSelection();
 
     const overlayTrigger = trigger ?? input;
-    if (overlayTrigger && content) {
-      const overlayOptions = resolveOverlayOptions({
-        root: getScopeElement() ?? overlayTrigger,
-        content,
-        options,
-      });
-
-      overlay = new CreateOverlay({
-        trigger: overlayTrigger,
-        content,
-        options: {
-          triggerStrategy: "manual",
-          placement: overlayOptions.placement,
-          offsetDistance: overlayOptions.offsetDistance,
-          preventFromCloseOutside: overlayOptions.preventFromCloseOutside,
-          preventCloseFromInside: overlayOptions.preventCloseFromInside,
-          readjustHeight: overlayOptions.readjustHeight,
-          minHeight: overlayOptions.minHeight,
-          popper: overlayOptions.popper,
-          onHide: () => {
-            if (core.getState().open) {
-              syncingOverlay = true;
-              core.close();
-              syncingOverlay = false;
-            }
+    const overlayOptions = resolveOverlayOptions({
+      root: getScopeElement() ?? overlayTrigger,
+      content,
+      options,
+    });
+    const popperOptions = overlayOptions.popper?.eventEffect
+      ? {
+          eventEffect: {
+            disableOnResize: overlayOptions.popper.eventEffect.disableOnResize,
+            disableOnScroll: overlayOptions.popper.eventEffect.disableOnScroll,
           },
+        }
+      : undefined;
+
+    overlay = new CreateOverlay({
+      trigger: overlayTrigger,
+      content,
+      options: {
+        triggerStrategy: "manual",
+        placement: overlayOptions.placement,
+        offsetDistance: overlayOptions.offsetDistance,
+        preventFromCloseOutside: overlayOptions.preventFromCloseOutside,
+        preventCloseFromInside: overlayOptions.preventCloseFromInside,
+        readjustHeight: overlayOptions.readjustHeight,
+        minHeight: overlayOptions.minHeight,
+        popper: popperOptions,
+        beforeShow: () => {},
+        onHide: () => {
+          if (core.getState().open) {
+            syncingOverlay = true;
+            core.close();
+            syncingOverlay = false;
+          }
+          moveEl();
         },
-      });
-      cleanup.push(() => overlay?.cleanup());
-    }
+      },
+    });
+    cleanup.push(() => overlay?.cleanup());
   };
 
   const render = (state: SelectState) => {
     if (state.search !== lastSearch) {
       lastSearch = state.search;
-      void updateFromSource(state.search);
+      updateFromSource(state.search);
     }
     updateAria(state);
     updateItemsState(state);
@@ -390,10 +501,10 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
   const destroy = () => {
     cleanup.splice(0).forEach((fn) => fn());
-    if (unsubscribe) unsubscribe();
+    unsubscribe?.();
     teardownItems();
     root = null;
-    anchor = null;
+    selectId = null;
     trigger = null;
     content = null;
     input = null;
@@ -401,18 +512,21 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     clearEls = [];
     clearAllEls = [];
     removeValueEls = [];
+    hiddenValueInput = null;
     itemsByValue.clear();
     itemsMeta = [];
     overlay = null;
+    teleporter?.restore();
+    teleporter = null;
+    unsubscribe = null;
   };
 
-  const connect = ({ root: rootElement, id, anchor: anchorElement }: AutocompleteDom) => {
-    root = rootElement ?? null;
-    anchor = anchorElement ?? rootElement ?? null;
-    selectId = id || root?.id || anchor?.getAttribute("data-autocomplete-id") || anchor?.getAttribute("data-select-id") || anchor?.id || null;
-    if (!selectId) throw new Error("[autocomplete] an id is required to connect input and content");
+  const connect = ({ element }: AutocompleteDom) => {
+    const target = resolveAutocompleteTarget(element);
+    root = target.element;
+    selectId = target.id;
     bindDom();
-    if (unsubscribe) unsubscribe();
+    unsubscribe?.();
     unsubscribe = core.subscribe(render);
     render(core.getState());
     return { destroy };

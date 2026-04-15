@@ -1,6 +1,6 @@
 ---
 title: Select
-description: Build a DOM-first select using Flexilla's select bindings on top of the headless select-core engine.
+description: Build a DOM-first select with searchable panels, rich selected content, and multi-select summaries.
 references:
     - Select Core: /docs/helpers/select-core
     - Autocomplete: /docs/components/autocomplete
@@ -10,11 +10,12 @@ references:
 
 Use it when you want:
 
-- a selectable list rendered in the DOM
-- keyboard support and ARIA updates
-- a headless API without a framework dependency
+- a visible option list controlled by a trigger button
+- single or multiple selection
+- optional search inside the panel
+- rich selected content in the trigger or multi tags
 
-If you want the lower-level state engine without DOM wiring, use [Select Core](/docs/helpers/select-core).
+If you only want the state engine without DOM wiring, use [Select Core](/docs/helpers/select-core).
 
 ## Installation
 
@@ -40,29 +41,32 @@ yarn add @flexilla/select
 
 ## Markup structure
 
-The root element must have an `id`. For the class-based API, add `data-fx-select` so you can use `Select.autoInit()`.
+`select` does not need a wrapper element. The trigger, content, and selected-value container only need to share the same id through `data-select-id`.
 
 ```html
-<div id="framework-select" data-fx-select>
-  <button data-select-trigger data-select-id="framework-select" data-placeholder="Choose a framework">
-    Open select
-  </button>
+<button
+  data-fx-select
+  data-select-trigger
+  data-select-id="framework-select"
+>
+  <span data-selected-value data-select-id="framework-select">
+    Choose a framework
+  </span>
+</button>
 
-  <div
-    data-select-content
-    data-select-id="framework-select"
-    data-placement="bottom-start"
-    class="ui-popper"
-    hidden
-  >
-    <button data-select-item="astro">Astro</button>
-    <button data-select-item="vue">Vue</button>
-    <button data-select-item="laravel">Laravel</button>
-  </div>
-
-  <div data-selected-value data-select-id="framework-select"></div>
-  <button data-select-clear data-select-id="framework-select">Clear</button>
+<div
+  data-select-content
+  data-select-id="framework-select"
+  data-placement="bottom-start"
+  class="ui-popper"
+  hidden
+>
+  <button data-select-item="astro">Astro</button>
+  <button data-select-item="vue">Vue</button>
+  <button data-select-item="laravel">Laravel</button>
 </div>
+
+<button data-select-clear data-select-id="framework-select">Clear</button>
 ```
 
 Common elements:
@@ -85,6 +89,14 @@ Useful overlay attributes on `data-select-content`:
 - `data-readjust-height`
 - `data-min-height`
 
+The popper content also receives `--trigger-width`, so you can use:
+
+```css
+[data-select-content] {
+  width: var(--trigger-width);
+}
+```
+
 ## Basic usage
 
 ### Class API
@@ -92,8 +104,17 @@ Useful overlay attributes on `data-select-content`:
 ```js
 import { Select } from "@flexilla/select";
 
-const select = new Select("#framework-select");
+const select = new Select('[data-select-content][data-select-id="framework-select"]');
 ```
+
+You can also pass the element directly:
+
+```js
+const content = document.querySelector('[data-select-content][data-select-id="framework-select"]');
+const select = new Select(content);
+```
+
+The constructor now expects a real selector or a real `HTMLElement`. It resolves the rest of the select by reading the id from that element.
 
 ### Auto init
 
@@ -103,39 +124,195 @@ import { Select } from "@flexilla/select";
 Select.autoInit();
 ```
 
+`Select.autoInit()` looks for `[data-fx-select]`, which is usually a select element you want to use as the entry point.
+
 ### Controller API
 
 ```js
 import { createSelect } from "@flexilla/select";
 
-const root = document.querySelector("#framework-select");
-const select = createSelect();
-const { destroy } = select.connect({ root });
+const select = createSelect({ multiple: true });
+const { destroy } = select.connect({
+  element: '[data-select-content][data-select-id="framework-select"]',
+});
+```
+
+You can also connect with an existing element:
+
+```js
+const content = document.querySelector('[data-select-content][data-select-id="framework-select"]');
+
+select.connect({ element: content });
+```
+
+## Search inside a select
+
+If the content contains `data-select-input`, the list becomes searchable.
+
+```html
+<button data-fx-select data-select-trigger data-select-id="owner-select">
+  <span data-selected-value data-select-id="owner-select">Choose an owner</span>
+</button>
+
+<div data-select-content data-select-id="owner-select" hidden>
+  <input
+    data-select-input
+    data-select-id="owner-select"
+    type="text"
+    placeholder="Search team members"
+  />
+
+  <button data-select-item="alice" data-label="Alice Johnson">Alice Johnson</button>
+  <button data-select-item="marc" data-label="Marc Dupont">Marc Dupont</button>
+
+  <template data-select-empty>
+    <div>
+      No team member found for "<span data-select-empty-query></span>"
+    </div>
+  </template>
+</div>
+```
+
+When a select contains a search input:
+
+- clicks inside the panel stay open so the input remains usable
+- choosing an item in single mode still closes the select
+- empty states can be rendered with `data-select-empty`
+
+You can also provide your own filter:
+
+```js
+import { createSelect } from "@flexilla/select";
+
+const select = createSelect({
+  filter: (query, item) => {
+    return item.label?.toLowerCase().includes(query.toLowerCase()) ?? false;
+  },
+});
+```
+
+## Custom selected templates
+
+`data-selected-value` can define a reusable selected model with `template[data-selected-model]`.
+
+Use:
+
+- `data-bind` to inject text content from item data
+- `data-bind-src`, `data-bind-alt`, `data-bind-title`, `data-bind-href` for attributes
+- `data-bind-style` for inline styles
+- `data-select-label` to inject the label
+- `data-select-value` to inject the raw value
+- `data-select-remove` to remove a selected item in multiple mode
+
+```html
+<div data-selected-value data-select-id="reviewers">
+  <template data-selected-model>
+    <span class="inline-flex items-center gap-2">
+      <span
+        class="size-5 rounded-full"
+        data-bind-style="badgeStyle"
+        data-bind="initials"
+      ></span>
+      <span data-bind="label"></span>
+      <button data-select-remove>×</button>
+    </span>
+  </template>
+  <span data-placeholder>No reviewer selected</span>
+</div>
+
+<li
+  data-select-item="alice"
+  data-label="Alice Johnson"
+  data-initials="AJ"
+  data-badge-style="background-color:#fde68a;color:#78350f"
+>
+  ...
+</li>
 ```
 
 ## Multiple selection
 
+Enable multiple mode with options:
+
 ```js
 import { Select } from "@flexilla/select";
 
-const select = new Select("#framework-select", {
+const select = new Select('[data-select-content][data-select-id="reviewers"]', {
   multiple: true,
 });
 ```
 
-You can also declare it in markup:
+Or in markup:
 
 ```html
-<div id="framework-select" data-fx-select data-multiple>
-  ...
-</div>
+<button
+  data-fx-select
+  data-multiple
+  data-select-trigger
+  data-select-id="reviewers"
+>
+  Assign reviewers
+</button>
 ```
 
-For multiple selects, clicks inside the option panel stay open by default so users can keep selecting items.
+In multiple mode:
+
+- clicking items toggles them on and off
+- clicks inside the panel stay open by default
+- removing a selected item does not close the panel
+- the selected output can render chips, counts, or compact summaries
+
+## Multi-select summaries
+
+Instead of rendering chips, `data-selected-value` can render a text summary.
+
+Supported modes:
+
+- `chips`
+- `count`
+- `compact`
+
+```html
+<span
+  data-selected-value
+  data-select-id="reviewers"
+  data-select-summary-mode="count"
+  data-select-summary-count-singular="{count} user selected"
+  data-select-summary-count-plural="{count} users selected"
+>
+  <span data-placeholder>No user selected</span>
+</span>
+```
+
+Compact summaries can limit visible labels:
+
+```html
+<span
+  data-selected-value
+  data-select-id="reviewers"
+  data-select-summary-mode="compact"
+  data-select-summary-limit="2"
+  data-select-summary-compact-text="{labels} and {remaining} other users"
+>
+  <span data-placeholder>No reviewer selected</span>
+</span>
+```
+
+## Empty state
+
+`select` can render an empty state when search returns no visible items.
+
+```html
+<template data-select-empty>
+  <div>
+    No results found for "<span data-select-empty-query></span>"
+  </div>
+</template>
+```
 
 ## State and methods
 
-The controller exposes the `select-core` methods directly, including:
+The controller exposes the `select-core` methods directly:
 
 - `open()`
 - `close()`
@@ -155,7 +332,9 @@ Example:
 
 ```js
 const select = createSelect();
-select.connect({ root: document.querySelector("#framework-select") });
+select.connect({
+  element: '[data-select-content][data-select-id="framework-select"]',
+});
 
 select.subscribe((state) => {
   console.log(state.selectedValues);
@@ -167,7 +346,7 @@ select.subscribe((state) => {
 The class API exposes `cleanup()`:
 
 ```js
-const select = new Select("#framework-select");
+const select = new Select('[data-select-content][data-select-id="framework-select"]');
 
 // Later
 select.cleanup();
@@ -176,19 +355,21 @@ select.cleanup();
 The controller API still returns a cleanup object from `connect()`:
 
 ```js
-const { destroy } = select.connect({ root });
+const { destroy } = select.connect({
+  element: '[data-select-content][data-select-id="framework-select"]',
+});
 
 // Later
 destroy();
 ```
 
-Use that in environments where the DOM can be mounted and unmounted repeatedly.
+Use cleanup when the DOM can be mounted and unmounted repeatedly.
 
 ## When to use Select vs Autocomplete
 
-- Use `select` when the user is choosing from a visible list of options.
-- Use [Autocomplete](/docs/components/autocomplete) when the main interaction starts from typed search input.
+- Use `select` when the main interaction starts from a trigger button and a visible option list.
+- Use [Autocomplete](/docs/components/autocomplete) when the main interaction starts from typed input.
 
 ## Next step
 
-If you want to customize the selection logic more deeply, read [Select Core](/docs/helpers/select-core).
+If you want lower-level selection state without DOM bindings, read [Select Core](/docs/helpers/select-core).

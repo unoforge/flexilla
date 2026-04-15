@@ -1,20 +1,23 @@
 import type { SelectItem } from "./types";
 
-const SELECT_TEMPLATE = "[data-select-template]";
 const SELECT_LABEL = "[data-select-label]";
 const SELECT_VALUE = "[data-select-value]";
 const SELECT_REMOVE = "[data-select-remove]";
 const SELECT_CHIP_REMOVE = "[data-select-chip-remove]";
 const SELECT_PLACEHOLDER = "[data-placeholder]";
-const SELECT_RICH_CONTENT = "[data-select-rich-content]";
 const SELECT_EMPTY = "[data-select-empty]";
 const SELECT_EMPTY_QUERY = "[data-select-empty-query]";
 const SELECT_EMPTY_RENDERED = "data-select-empty-rendered";
 const SELECT_RENDERED = "data-select-rendered";
-const SELECT_TAG_CONTENT_ATTR = "data-select-tag-content-html";
-const SELECT_TRIGGER_CONTENT_ATTR = "data-select-trigger-content-html";
-const SELECT_DISPLAY_CONTENT_ATTR = "data-select-display-content-html";
-const SELECT_TEMPLATE_ATTR = "data-select-template-html";
+const SELECT_MODEL = "template[data-selected-model]";
+const SELECT_MODEL_ATTR = "data-selected-model-html";
+const SELECT_BIND = "[data-bind]";
+const SELECT_BIND_HTML = "[data-bind-html]";
+const SELECT_BIND_SRC = "[data-bind-src]";
+const SELECT_BIND_ALT = "[data-bind-alt]";
+const SELECT_BIND_TITLE = "[data-bind-title]";
+const SELECT_BIND_HREF = "[data-bind-href]";
+const SELECT_BIND_STYLE = "[data-bind-style]";
 const DEFAULT_COUNT_SINGULAR_TEXT = "{count} item selected";
 const DEFAULT_COUNT_PLURAL_TEXT = "{count} items selected";
 const DEFAULT_COMPACT_TEXT = "{labels} and {remaining} others";
@@ -51,6 +54,8 @@ type SyncEmptyStateOptions = {
   query?: string;
 };
 
+type TemplateRecord = Record<string, string>;
+
 const replaceSummaryTokens = (template: string, values: Record<string, string | number>) =>
   Object.entries(values).reduce((output, [key, value]) => output.replaceAll(`{${key}}`, String(value)), template);
 
@@ -68,50 +73,6 @@ const getContainerSummaryOptions = (container: HTMLElement, summary?: SelectSumm
   };
 };
 
-const stripSelectionArtifacts = (node: HTMLElement) => {
-  node
-    .querySelectorAll<HTMLElement>('[data-select-indicator], [data-slot="icon"]')
-    .forEach((el) => el.remove());
-  node.removeAttribute("data-select-tag-content");
-  node.removeAttribute("data-select-trigger-content");
-  node.removeAttribute("data-select-display-content");
-  return node;
-};
-
-const captureMarkedContent = ({
-  element,
-  selector,
-  attribute,
-}: {
-  element: HTMLElement;
-  selector: string;
-  attribute: string;
-}) => {
-  const marked = element.querySelector<HTMLElement>(selector);
-  if (!(marked instanceof HTMLElement)) return;
-  const clone = stripSelectionArtifacts(marked.cloneNode(true) as HTMLElement);
-  element.setAttribute(attribute, clone.outerHTML.trim());
-  marked.remove();
-};
-
-export const setupSelectPresentationItem = (element: HTMLElement) => {
-  captureMarkedContent({
-    element,
-    selector: "[data-select-tag-content]",
-    attribute: SELECT_TAG_CONTENT_ATTR,
-  });
-  captureMarkedContent({
-    element,
-    selector: "[data-select-trigger-content]",
-    attribute: SELECT_TRIGGER_CONTENT_ATTR,
-  });
-  captureMarkedContent({
-    element,
-    selector: "[data-select-display-content]",
-    attribute: SELECT_DISPLAY_CONTENT_ATTR,
-  });
-};
-
 const createNodeFromHtml = (html: string) => {
   const template = document.createElement("template");
   template.innerHTML = html.trim();
@@ -120,63 +81,131 @@ const createNodeFromHtml = (html: string) => {
     : null;
 };
 
+const getBindingValue = (record: TemplateRecord, key: string | null) => {
+  if (!key) return "";
+  return record[key] ?? "";
+};
+
+const collectBoundElements = (node: HTMLElement, selector: string) => {
+  const elements = Array.from(node.querySelectorAll<HTMLElement>(selector));
+  if (node.matches(selector)) elements.unshift(node);
+  return elements;
+};
+
+const applyBindingAttribute = ({
+  node,
+  selector,
+  attribute,
+  record,
+}: {
+  node: HTMLElement;
+  selector: string;
+  attribute: string;
+  record: TemplateRecord;
+}) => {
+  collectBoundElements(node, selector).forEach((el) => {
+    const key = el.getAttribute(attribute);
+    const value = getBindingValue(record, key);
+    if (value) {
+      el.setAttribute(attribute.replace("data-bind-", ""), value);
+    } else {
+      el.removeAttribute(attribute.replace("data-bind-", ""));
+    }
+  });
+};
+
+const fillBindings = (node: HTMLElement, record: TemplateRecord) => {
+  collectBoundElements(node, SELECT_BIND).forEach((el) => {
+    el.textContent = getBindingValue(record, el.getAttribute("data-bind"));
+  });
+
+  collectBoundElements(node, SELECT_BIND_HTML).forEach((el) => {
+    el.innerHTML = getBindingValue(record, el.getAttribute("data-bind-html"));
+  });
+
+  applyBindingAttribute({ node, selector: SELECT_BIND_SRC, attribute: "data-bind-src", record });
+  applyBindingAttribute({ node, selector: SELECT_BIND_ALT, attribute: "data-bind-alt", record });
+  applyBindingAttribute({ node, selector: SELECT_BIND_TITLE, attribute: "data-bind-title", record });
+  applyBindingAttribute({ node, selector: SELECT_BIND_HREF, attribute: "data-bind-href", record });
+
+  collectBoundElements(node, SELECT_BIND_STYLE).forEach((el) => {
+    const value = getBindingValue(record, el.getAttribute("data-bind-style"));
+    if (value) {
+      el.setAttribute("style", value);
+    } else {
+      el.removeAttribute("style");
+    }
+  });
+};
+
+const createTemplateRecord = ({
+  item,
+  value,
+  fallbackLabel,
+}: {
+  item?: SelectPresentationItem;
+  value: string;
+  fallbackLabel?: string;
+}): TemplateRecord => {
+  const label = item?.item.label ?? fallbackLabel ?? value;
+  return {
+    value,
+    label,
+    ...(item?.item.data || {}),
+  };
+};
+
+export const setupSelectPresentationItem = (_element: HTMLElement) => {};
+
 export const setupSelectValueContainer = (container: HTMLElement) => {
-  if (container.getAttribute(SELECT_TEMPLATE_ATTR)) return;
-  const template = container.querySelector<HTMLElement>(SELECT_TEMPLATE);
-  if (!(template instanceof HTMLElement)) return;
-  container.setAttribute(SELECT_TEMPLATE_ATTR, template.outerHTML);
+  if (container.getAttribute(SELECT_MODEL_ATTR)) return;
+  const template = container.querySelector<HTMLTemplateElement>(SELECT_MODEL);
+  if (!(template instanceof HTMLTemplateElement)) return;
+  container.setAttribute(SELECT_MODEL_ATTR, template.innerHTML.trim());
   template.remove();
 };
 
 export const getSelectPresentationMarkup = ({
   element,
-  mode,
+  mode: _mode,
 }: {
   element?: HTMLElement | null;
   mode: SelectPresentationMode;
 }) => {
   if (!(element instanceof HTMLElement)) return "";
-
-  const preferred =
-    (mode === "tag"
-      ? element.getAttribute(SELECT_TAG_CONTENT_ATTR) || element.getAttribute(SELECT_DISPLAY_CONTENT_ATTR)
-      : element.getAttribute(SELECT_TRIGGER_CONTENT_ATTR) || element.getAttribute(SELECT_DISPLAY_CONTENT_ATTR)) || "";
-  if (preferred) return preferred;
-
-  const clone = stripSelectionArtifacts(element.cloneNode(true) as HTMLElement);
-  return clone.innerHTML.trim();
+  return element.innerHTML.trim();
 };
 
 const fillTemplate = ({
   node,
   item,
   value,
-  richContent,
+  fallbackLabel,
   onRemove,
   registerCleanup,
 }: {
   node: HTMLElement;
-  item: SelectPresentationItem | undefined;
+  item?: SelectPresentationItem;
   value: string;
-  richContent: string;
+  fallbackLabel?: string;
   onRemove: (value: string) => void;
   registerCleanup: (cleanup: () => void) => void;
 }) => {
-  const label = item?.item.label ?? value;
+  const record = createTemplateRecord({ item, value, fallbackLabel });
+  const label = record.label || fallbackLabel || value;
 
-  node.querySelectorAll<HTMLElement>(SELECT_LABEL).forEach((el) => {
+  collectBoundElements(node, SELECT_LABEL).forEach((el) => {
     el.textContent = label;
   });
-  node.querySelectorAll<HTMLElement>(SELECT_VALUE).forEach((el) => {
+  collectBoundElements(node, SELECT_VALUE).forEach((el) => {
     el.textContent = value;
   });
-  node.querySelectorAll<HTMLElement>(SELECT_RICH_CONTENT).forEach((el) => {
-    el.innerHTML = richContent || label;
-  });
+
+  fillBindings(node, record);
 
   const removeTarget =
-    node.querySelector<HTMLElement>(SELECT_REMOVE) ??
-    node.querySelector<HTMLElement>(SELECT_CHIP_REMOVE) ??
+    (node.matches(SELECT_REMOVE) ? node : node.querySelector<HTMLElement>(SELECT_REMOVE)) ??
+    (node.matches(SELECT_CHIP_REMOVE) ? node : node.querySelector<HTMLElement>(SELECT_CHIP_REMOVE)) ??
     null;
 
   if (removeTarget) {
@@ -196,31 +225,24 @@ const createRenderedNode = ({
   container,
   item,
   value,
-  multiple,
   onRemove,
   registerCleanup,
 }: {
   container: HTMLElement;
-  item: SelectPresentationItem | undefined;
+  item?: SelectPresentationItem;
   value: string;
-  multiple: boolean;
   onRemove: (value: string) => void;
   registerCleanup: (cleanup: () => void) => void;
 }) => {
-  const template = createNodeFromHtml(container.getAttribute(SELECT_TEMPLATE_ATTR) || "");
-  const mode: SelectPresentationMode = multiple ? "tag" : "trigger";
-  const richContent = getSelectPresentationMarkup({ element: item?.element, mode });
+  const template = createNodeFromHtml(container.getAttribute(SELECT_MODEL_ATTR) || "");
 
   if (template) {
     const node = template.cloneNode(true) as HTMLElement;
-    node.removeAttribute("data-select-template");
-    node.style.removeProperty("display");
     node.setAttribute(SELECT_RENDERED, "");
     fillTemplate({
       node,
       item,
       value,
-      richContent,
       onRemove,
       registerCleanup,
     });
@@ -229,11 +251,7 @@ const createRenderedNode = ({
 
   const node = document.createElement("span");
   node.setAttribute(SELECT_RENDERED, "");
-  if (richContent) {
-    node.innerHTML = richContent;
-  } else {
-    node.textContent = item?.item.label ?? value;
-  }
+  node.textContent = item?.item.label ?? value;
   return node;
 };
 
@@ -270,16 +288,15 @@ const createSummaryNode = ({
       : visibleLabels.join(", ");
   }
 
-  const template = createNodeFromHtml(container.getAttribute(SELECT_TEMPLATE_ATTR) || "");
+  const template = createNodeFromHtml(container.getAttribute(SELECT_MODEL_ATTR) || "");
   if (template) {
-    template.removeAttribute("data-select-template");
-    template.style.removeProperty("display");
     template.setAttribute(SELECT_RENDERED, "");
-    template.querySelectorAll<HTMLElement>(SELECT_LABEL).forEach((el) => {
-      el.textContent = text;
-    });
-    template.querySelectorAll<HTMLElement>(SELECT_RICH_CONTENT).forEach((el) => {
-      el.textContent = text;
+    fillTemplate({
+      node: template,
+      value: text,
+      fallbackLabel: text,
+      onRemove: () => {},
+      registerCleanup: () => {},
     });
     return template;
   }
@@ -302,7 +319,7 @@ export const renderSelectedValues = ({
 }: RenderSelectedValuesOptions) => {
   containers.forEach((container) => {
     setupSelectValueContainer(container);
-    const template = createNodeFromHtml(container.getAttribute(SELECT_TEMPLATE_ATTR) || "");
+    const template = createNodeFromHtml(container.getAttribute(SELECT_MODEL_ATTR) || "");
     const placeholderEl = container.querySelector<HTMLElement>(SELECT_PLACEHOLDER);
     const resolvedSummary = getContainerSummaryOptions(container, summary);
 
@@ -321,14 +338,13 @@ export const renderSelectedValues = ({
 
       if (template) {
         const node = template.cloneNode(true) as HTMLElement;
-        node.removeAttribute("data-select-template");
-        node.style.removeProperty("display");
         node.setAttribute(SELECT_RENDERED, "");
-        node.querySelectorAll<HTMLElement>(SELECT_LABEL).forEach((el) => {
-          el.textContent = placeholder;
-        });
-        node.querySelectorAll<HTMLElement>(SELECT_RICH_CONTENT).forEach((el) => {
-          el.textContent = placeholder;
+        fillTemplate({
+          node,
+          value: placeholder,
+          fallbackLabel: placeholder,
+          onRemove,
+          registerCleanup,
         });
         container.appendChild(node);
         return;
@@ -345,7 +361,6 @@ export const renderSelectedValues = ({
         container,
         item,
         value,
-        multiple,
         onRemove,
         registerCleanup,
       });
@@ -376,7 +391,6 @@ export const renderSelectedValues = ({
         container,
         item,
         value,
-        multiple,
         onRemove,
         registerCleanup,
       });

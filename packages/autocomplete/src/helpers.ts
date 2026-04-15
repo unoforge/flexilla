@@ -2,6 +2,17 @@ import type { SelectItem } from "@flexilla/select-core";
 import type { Placement } from "flexipop/create-overlay";
 import type { AutocompleteOptions } from "./types";
 
+const OMITTED_ITEM_DATA_KEYS = new Set(["selectItem", "label", "disabled", "selectId"]);
+
+export const collectItemData = (element: HTMLElement) => {
+  const data: Record<string, string> = {};
+  Object.entries(element.dataset).forEach(([key, value]) => {
+    if (!value || OMITTED_ITEM_DATA_KEYS.has(key)) return;
+    data[key] = value;
+  });
+  return data;
+};
+
 export const defaultFilter = (query: string, item: SelectItem) => {
   if (!query) return true;
   const text = `${item.label ?? item.value}`.toLowerCase();

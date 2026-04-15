@@ -1,5 +1,5 @@
 import { Tabs, Collapse, Dismissible, Popover, Dropdown, Accordion, Tooltip, Modal, OffCanvas, AutoResizeTextArea } from "@flexilla/flexilla";
-import { $, $$, actionToggler } from "@flexilla/utilities";
+import { $,  actionToggler } from "@flexilla/utilities";
 
 
 const initTableOfContent = () => {

@@ -56,6 +56,9 @@ export type DropdownOptions = {
      */
     onToggle?: ({ isHidden }: { isHidden?: boolean }) => void,
 
+    readjustHeight?:boolean,
+    minHeight?:number,
+
     experimental?: ExperimentalOptions
 
 }

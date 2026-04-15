@@ -1,10 +1,14 @@
 import type { SelectCore, SelectItem, SelectSummaryOptions } from "@flexilla/select-core";
 import type { Placement } from "flexipop/create-overlay";
 
+export type SelectExperimentalOptions = {
+  teleport: boolean;
+  teleportMode?: "move" | "detachable";
+};
+
 export type SelectOptions = {
   multiple?: boolean;
-  checkIcon?: string;
-  indicatorPosition?: "start" | "end";
+  defaultValue?: string;
   filter?: (query: string, item: SelectItem) => boolean;
   summary?: SelectSummaryOptions;
   placement?: Placement;
@@ -19,12 +23,11 @@ export type SelectOptions = {
       disableOnScroll?: boolean;
     };
   };
+  experimental?: SelectExperimentalOptions;
 };
 
 export type SelectDom = {
-  root?: HTMLElement;
-  id?: string;
-  anchor?: HTMLElement;
+  element: string | HTMLElement;
 };
 
 export type SelectController = SelectCore & {

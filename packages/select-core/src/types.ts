@@ -2,6 +2,7 @@ export type SelectItem = {
   value: string;
   label?: string;
   disabled?: boolean;
+  data?: Record<string, string>;
 };
 
 export type SelectState = {

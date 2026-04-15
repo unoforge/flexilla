@@ -1,5 +1,4 @@
 import type { SelectCore, SelectItem, SelectState } from "@flexilla/select-core";
-import { $$ } from "@flexilla/utilities";
 import { FlexillaManager } from "@flexilla/manager";
 import { createSelect } from "./controller";
 import { SELECT_CONTENT } from "./constants";
@@ -14,14 +13,13 @@ type SelectInstanceOptions = SelectOptions & {
 export { createSelect };
 
 export class Select implements SelectCore {
-  private registryElement: HTMLElement;
-  private controller: SelectController;
-  private destroyConnection: (() => void) | null = null;
+  private registryElement!: HTMLElement;
+  private controller!: SelectController;
+  private destroyConnection: { destroy: () => void } | null = null;
 
   constructor(select: string | HTMLElement, options: SelectInstanceOptions = {}) {
     const target = resolveSelectTarget(select);
-    const registryElement = target.anchor ?? target.root;
-    if (!(registryElement instanceof HTMLElement)) throw new Error("Invalid select root element");
+    const registryElement = target.element;
 
     const existingInstance = FlexillaManager.getInstance("select", registryElement);
     if (existingInstance) {
@@ -30,14 +28,13 @@ export class Select implements SelectCore {
 
     const multiple =
       options.multiple ??
-      getBooleanAttr(target.root, "data-multiple") ??
-      getBooleanAttr(target.anchor, "data-multiple") ??
+      getBooleanAttr(target.element, "data-multiple") ??
       getBooleanAttr(document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${target.id}"]`), "data-multiple") ??
       false;
 
     this.registryElement = registryElement;
     this.controller = createSelect({ ...options, multiple });
-    this.destroyConnection = this.controller.connect(target);
+    this.destroyConnection = this.controller.connect({ element: target.element });
 
     FlexillaManager.register("select", registryElement, this);
   }
@@ -59,7 +56,7 @@ export class Select implements SelectCore {
   subscribe = (listener: (state: Readonly<SelectState>) => void) => this.controller.subscribe(listener);
 
   cleanup = () => {
-    this.destroyConnection?.();
+    this.destroyConnection?.destroy();
     this.destroyConnection = null;
     FlexillaManager.removeInstance("select", this.registryElement);
   };
@@ -67,7 +64,7 @@ export class Select implements SelectCore {
   static init = (select: string | HTMLElement, options: SelectInstanceOptions = {}) => new Select(select, options);
 
   static autoInit = (selector = "[data-fx-select]") => {
-    const roots = $$(selector);
+    const roots = document.querySelectorAll<HTMLElement>(selector);
     for (const root of roots) {
       new Select(root);
     }

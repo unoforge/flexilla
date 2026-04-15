@@ -1,43 +1,31 @@
-import { SELECT_CONTENT, SELECT_TRIGGER } from "./constants";
-
 const normalizeSelectId = (value: string) => value.replace(/^#/, "");
 
-export const resolveSelectTarget = (select: string | HTMLElement) => {
-  if (typeof select === "string") {
-    const element = document.querySelector<HTMLElement>(select);
-    if (element instanceof HTMLElement) {
-      return resolveSelectTarget(element);
-    }
+const resolveElement = (target: string | HTMLElement) => {
+  if (target instanceof HTMLElement) return target;
 
-    const id = normalizeSelectId(select);
-    const trigger = document.querySelector<HTMLElement>(`${SELECT_TRIGGER}[data-select-id="${id}"]`);
-    const content = document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${id}"]`);
-    const anchorElement = trigger ?? content;
+  const matchedElement = document.querySelector<HTMLElement>(target);
+  if (matchedElement instanceof HTMLElement) return matchedElement;
 
-    if (!anchorElement) {
-      throw new Error(`Invalid select target: ${select}`);
-    }
+  const normalizedId = normalizeSelectId(target);
+  return (
+    document.getElementById(normalizedId) ||
+    document.querySelector<HTMLElement>(`[data-select-id="${normalizedId}"]`)
+  );
+};
 
-    const rootElement =
-      (anchorElement.matches("[data-fx-select]") ? anchorElement : anchorElement.closest<HTMLElement>("[data-fx-select]")) ?? null;
-
-    return {
-      root: rootElement,
-      anchor: anchorElement,
-      id,
-    };
+export const resolveSelectTarget = (target: string | HTMLElement) => {
+  const element = resolveElement(target);
+  if (!(element instanceof HTMLElement)) {
+    throw new Error(`[select] invalid target: ${String(target)}`);
   }
 
-  const id = select.getAttribute("data-select-id") || select.id || "";
+  const id = element.getAttribute("data-select-id") || element.id || "";
   if (!id) {
-    throw new Error("Invalid select root element");
+    throw new Error("[select] target element must provide data-select-id or id");
   }
-
-  const rootElement = (select.matches("[data-fx-select]") ? select : select.closest<HTMLElement>("[data-fx-select]")) ?? null;
 
   return {
-    root: rootElement,
-    anchor: select,
+    element,
     id,
   };
 };

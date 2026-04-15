@@ -5,10 +5,8 @@ new Dropdown("[data-drop-down-1]", {
     // reajustSize: true
 })
 new Dropdown("[data-drop-down-resize-demo]", {
-    reajustSize: true,
-    // minHeight: 140,
-    // placement: "left-middle",
-    // interactionLock:true
+    readjustHeight: true,
+    minHeight: 140
 })
 
 new Dropdown("[data-drop-down-2]")

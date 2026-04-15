@@ -1,5 +1,4 @@
 import type { SelectCore, SelectItem, SelectState } from "@flexilla/select-core";
-import { $$ } from "@flexilla/utilities";
 import { FlexillaManager } from "@flexilla/manager";
 import { createAutocomplete } from "./controller";
 import { SELECT_CONTENT } from "./constants";
@@ -14,14 +13,13 @@ type AutocompleteInstanceOptions = AutocompleteOptions & {
 export { createAutocomplete };
 
 export class Autocomplete implements SelectCore {
-  private registryElement: HTMLElement;
-  private controller: AutocompleteController;
-  private destroyConnection: (() => void) | null = null;
+  private registryElement!: HTMLElement;
+  private controller!: AutocompleteController;
+  private destroyConnection: { destroy: () => void } | null = null;
 
   constructor(autocomplete: string | HTMLElement, options: AutocompleteInstanceOptions = {}) {
     const target = resolveAutocompleteTarget(autocomplete);
-    const registryElement = target.anchor ?? target.root;
-    if (!(registryElement instanceof HTMLElement)) throw new Error("Invalid autocomplete root element");
+    const registryElement = target.element;
 
     const existingInstance = FlexillaManager.getInstance("autocomplete", registryElement);
     if (existingInstance) {
@@ -30,14 +28,13 @@ export class Autocomplete implements SelectCore {
 
     const multiple =
       options.multiple ??
-      getBooleanAttr(target.root, "data-multiple") ??
-      getBooleanAttr(target.anchor, "data-multiple") ??
+      getBooleanAttr(target.element, "data-multiple") ??
       getBooleanAttr(document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${target.id}"]`), "data-multiple") ??
       false;
 
     this.registryElement = registryElement;
     this.controller = createAutocomplete({ ...options, multiple });
-    this.destroyConnection = this.controller.connect(target);
+    this.destroyConnection = this.controller.connect({ element: target.element });
 
     FlexillaManager.register("autocomplete", registryElement, this);
   }
@@ -59,7 +56,7 @@ export class Autocomplete implements SelectCore {
   subscribe = (listener: (state: Readonly<SelectState>) => void) => this.controller.subscribe(listener);
 
   cleanup = () => {
-    this.destroyConnection?.();
+    this.destroyConnection?.destroy();
     this.destroyConnection = null;
     FlexillaManager.removeInstance("autocomplete", this.registryElement);
   };
@@ -67,7 +64,7 @@ export class Autocomplete implements SelectCore {
   static init = (autocomplete: string | HTMLElement, options: AutocompleteInstanceOptions = {}) => new Autocomplete(autocomplete, options);
 
   static autoInit = (selector = "[data-fx-autocomplete]") => {
-    const roots = $$(selector);
+    const roots = document.querySelectorAll<HTMLElement>(selector);
     for (const root of roots) {
       new Autocomplete(root);
     }

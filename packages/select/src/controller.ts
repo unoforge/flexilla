@@ -1,29 +1,39 @@
 import {
   createSelectCore,
-  DEFAULT_SELECT_CHECK_ICON,
   renderSelectedValues,
   setupSelectPresentationItem,
   setupSelectValueContainer,
-  setupSelectItemIndicator,
   syncSelectEmptyState,
-  syncSelectItemIndicator,
   type SelectCore,
   type SelectItem,
   type SelectState,
 } from "@flexilla/select-core";
+import { waitForFxComponents } from "@flexilla/utilities/dom-utilities";
+import { domTeleporter } from "@flexilla/utilities/dom-teleport";
 import { CreateOverlay } from "flexipop/create-overlay";
 import type { SelectController, SelectDom, SelectOptions } from "./types";
-import { SELECT_CLEAR, SELECT_CLEAR_ALL, SELECT_CONTENT, SELECT_INPUT, SELECT_ITEM, SELECT_REMOVE, SELECT_TRIGGER, SELECT_VALUE } from "./constants";
+import { SELECT_CLEAR, SELECT_CLEAR_ALL, SELECT_CONTENT, SELECT_HIDDEN_VALUE, SELECT_INPUT, SELECT_ITEM, SELECT_REMOVE, SELECT_TRIGGER, SELECT_VALUE } from "./constants";
 import { defaultFilter, parseItem, resolveOverlayOptions } from "./helpers";
+import { resolveSelectTarget } from "./target";
+
+const defaultExperimentalOptions = {
+  teleport: true,
+  teleportMode: "move" as const,
+};
+
+type Teleporter = {
+  append: () => void;
+  remove: () => void;
+  restore: () => void;
+};
 
 export const createSelect = (options: SelectOptions = {}): SelectController => {
   const core = createSelectCore({ multiple: options.multiple });
   const filter = options.filter ?? defaultFilter;
   let root: HTMLElement | null = null;
-  let anchor: HTMLElement | null = null;
   let selectId: string | null = null;
-  let triggers: HTMLElement[] = [];
-  let contents: HTMLElement[] = [];
+  let trigger: HTMLElement | null = null;
+  let content: HTMLElement | null = null;
   let input: HTMLInputElement | null = null;
   let itemElements: HTMLElement[] = [];
   type ItemMeta = { item: SelectItem; element: HTMLElement };
@@ -35,16 +45,86 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   let clearEls: HTMLElement[] = [];
   let clearAllEls: HTMLElement[] = [];
   let removeValueEls: HTMLElement[] = [];
+  let hiddenValueInput: HTMLInputElement | null = null;
   let overlay: CreateOverlay | null = null;
+  let teleporter: Teleporter | null = null;
   const cleanup: Array<() => void> = [];
   let unsubscribe: (() => void) | null = null;
   let placeholder = "Select";
   let syncingOverlay = false;
   let lastSearch = core.getState().search;
-  const checkIconMarkup = options.checkIcon || DEFAULT_SELECT_CHECK_ICON;
-  const indicatorPosition = options.indicatorPosition || "start";
+  const experimentalOptions = { ...defaultExperimentalOptions, ...(options.experimental || {}) };
 
-  const getScopeElement = () => root ?? anchor ?? contents[0] ?? triggers[0] ?? input;
+  const getScopeElement = () => root ?? content ?? trigger ?? input;
+
+  const queryById = <T extends HTMLElement>(selector: string) =>
+    Array.from(document.querySelectorAll<T>(`${selector}[data-select-id="${selectId}"]`));
+
+  const parseDefaultValues = (value: string | null | undefined) =>
+    (value || "")
+      .split(",")
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+
+  const serializeSelectedValues = (selectedValues: string[]) => {
+    if (options.multiple) return selectedValues.join(",");
+    return selectedValues[0] ?? "";
+  };
+
+  const syncHiddenValueInput = (selectedValues: string[]) => {
+    if (!(hiddenValueInput instanceof HTMLInputElement)) return;
+    const nextValue = serializeSelectedValues(selectedValues);
+    if (hiddenValueInput.value === nextValue) return;
+    hiddenValueInput.value = nextValue;
+    hiddenValueInput.dispatchEvent(new Event("input", { bubbles: true }));
+    hiddenValueInput.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+
+  const resolveInitialValue = () =>
+    options.defaultValue ??
+    content?.getAttribute("data-default-value") ??
+    hiddenValueInput?.value ??
+    "";
+
+  const applyInitialSelection = () => {
+    if (core.getState().selectedValues.length > 0) return;
+    const defaultValues = parseDefaultValues(resolveInitialValue());
+    if (!defaultValues.length) return;
+
+    const nextValues = options.multiple ? defaultValues : defaultValues.slice(0, 1);
+    nextValues.forEach((value) => core.select(value));
+  };
+
+  const setItemVisibility = (element: HTMLElement, visible: boolean) => {
+    if (visible) {
+      element.removeAttribute("hidden");
+      element.removeAttribute("data-hidden");
+      return;
+    }
+
+    element.setAttribute("hidden", "");
+    element.setAttribute("data-hidden", "");
+  };
+
+  const resolveSingleElement = <T extends HTMLElement>({
+    selector,
+    role,
+    required = true,
+  }: {
+    selector: string;
+    role: string;
+    required?: boolean;
+  }): T | null => {
+    const matches = queryById<T>(selector);
+    if (matches.length > 1) {
+      throw new Error(`[select] expected one ${role} for "${selectId}", found ${matches.length}`);
+    }
+    if (!matches.length) {
+      if (required) throw new Error(`[select] ${role} is required for "${selectId}"`);
+      return null;
+    }
+    return matches[0] ?? null;
+  };
 
   const ensureHighlighted = () => {
     const state = core.getState();
@@ -61,12 +141,11 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   };
 
   const syncOverlay = (state: SelectState) => {
-    if (!overlay || syncingOverlay) return;
-    const content = contents[0];
-    if (!(content instanceof HTMLElement)) return;
+    if (!overlay || syncingOverlay || !(content instanceof HTMLElement)) return;
     const overlayState = content.dataset.state || "close";
     if (state.open && overlayState !== "open") {
       syncingOverlay = true;
+      restoreEl();
       overlay.show();
       syncingOverlay = false;
       return;
@@ -85,11 +164,9 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   };
 
   const registerItems = () => {
-    if (!selectId) return;
-    const scope = getScopeElement();
-    const containers = contents.length ? contents : scope ? [scope] : [];
-    const existingItems = containers.flatMap((container) => Array.from(container.querySelectorAll<HTMLElement>(SELECT_ITEM)));
+    if (!(content instanceof HTMLElement)) return;
 
+    const existingItems = Array.from(content.querySelectorAll<HTMLElement>(SELECT_ITEM));
     itemsMeta = existingItems
       .filter((element) => {
         const itemId = element.getAttribute("data-select-id");
@@ -109,7 +186,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       element.setAttribute("role", "option");
       if (item.disabled) element.setAttribute("aria-disabled", "true");
       setupSelectPresentationItem(element);
-      setupSelectItemIndicator({ element, fallbackIcon: checkIconMarkup });
 
       if (boundElements.has(element)) return;
 
@@ -137,26 +213,22 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     teardownItems();
 
     filtered.forEach(({ item, element }) => {
-      element.removeAttribute("hidden");
+      setItemVisibility(element, true);
       itemElements.push(element);
       renderedValues.add(item.value);
       core.registerItem(item);
     });
 
     itemsMeta.forEach(({ item, element }) => {
-      if (!nextValues.has(item.value)) {
-        element.setAttribute("hidden", "");
-        element.removeAttribute("data-select-highlighted");
-      }
+      if (nextValues.has(item.value)) return;
+      setItemVisibility(element, false);
+      element.removeAttribute("data-select-highlighted");
     });
 
-    contents.forEach((panel) => {
-      const visibleCount = itemElements.filter((el) => panel.contains(el)).length;
-      syncSelectEmptyState({
-        content: panel,
-        visibleCount,
-        query,
-      });
+    syncSelectEmptyState({
+      content,
+      visibleCount: filtered.length,
+      query,
     });
 
     ensureHighlighted();
@@ -164,18 +236,19 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   };
 
   const updateAria = (state: SelectState) => {
-    triggers.forEach((btn) => {
-      btn.setAttribute("aria-haspopup", "listbox");
-      btn.setAttribute("aria-expanded", String(state.open));
-    });
-    contents.forEach((panel) => {
-      panel.setAttribute("role", "listbox");
-      if (state.open) panel.removeAttribute("hidden");
-      else panel.setAttribute("hidden", "");
-    });
+    if (trigger) {
+      trigger.setAttribute("aria-haspopup", "listbox");
+      trigger.setAttribute("aria-expanded", String(state.open));
+    }
+    if (content) {
+      content.setAttribute("role", "listbox");
+      if (state.open) content.removeAttribute("hidden");
+      else content.setAttribute("hidden", "");
+    }
   };
 
   const updateSelectedDisplays = (state: SelectState) => {
+    syncHiddenValueInput(state.selectedValues);
     renderSelectedValues({
       containers: selectedValueEls,
       itemsByValue,
@@ -198,13 +271,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       else element.removeAttribute("data-select-highlighted");
 
       element.setAttribute("aria-selected", String(isSelected));
-      syncSelectItemIndicator({
-        element,
-        isSelected,
-        fallbackIcon: checkIconMarkup,
-        root: getScopeElement(),
-        indicatorPosition,
-      });
     });
   };
 
@@ -237,7 +303,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       }
       case "Escape": {
         core.close();
-        if (triggers[0]) triggers[0].focus();
+        trigger?.focus();
         break;
       }
       default:
@@ -260,56 +326,76 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     updateFromSearch(query);
   };
 
+  const bindClick = (el: HTMLElement, action: () => void) => {
+    const handler = (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      action();
+    };
+    el.addEventListener("click", handler);
+    cleanup.push(() => el.removeEventListener("click", handler));
+  };
+
+  const moveElOnInit = () => {
+    if (!teleporter || !experimentalOptions.teleport) return;
+    const currentTeleporter = teleporter;
+    waitForFxComponents(() => {
+      if (experimentalOptions.teleportMode === "detachable") currentTeleporter.remove();
+      else currentTeleporter.append();
+    });
+  };
+
+  const moveEl = () => {
+    if (!teleporter || !experimentalOptions.teleport || experimentalOptions.teleportMode !== "detachable") return;
+    teleporter.remove();
+  };
+
+  const restoreEl = () => {
+    if (!teleporter || !experimentalOptions.teleport || experimentalOptions.teleportMode !== "detachable") return;
+    teleporter.append();
+  };
+
   const bindDom = () => {
     if (!selectId) return;
 
-    triggers = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_TRIGGER}[data-select-id="${selectId}"]`));
-    if (!triggers.length && root) triggers = Array.from(root.querySelectorAll<HTMLElement>(SELECT_TRIGGER));
+    trigger = resolveSingleElement<HTMLElement>({ selector: SELECT_TRIGGER, role: "trigger" });
+    content = resolveSingleElement<HTMLElement>({ selector: SELECT_CONTENT, role: "content" });
+    input = resolveSingleElement<HTMLInputElement>({ selector: SELECT_INPUT, role: "search input", required: false });
+    hiddenValueInput = document.querySelector<HTMLInputElement>(`${SELECT_HIDDEN_VALUE}[data-select-id="${selectId}"]`);
 
-    contents = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${selectId}"]`));
-    if (!contents.length) {
-      const contentInRoot = root?.querySelector<HTMLElement>(SELECT_CONTENT);
-      if (contentInRoot) contents = [contentInRoot];
+    selectedValueEls = queryById<HTMLElement>(SELECT_VALUE);
+    clearEls = queryById<HTMLElement>(SELECT_CLEAR);
+    clearAllEls = queryById<HTMLElement>(SELECT_CLEAR_ALL);
+    removeValueEls = queryById<HTMLElement>(SELECT_REMOVE);
+
+    const selectedValueSource =
+      trigger?.querySelector<HTMLElement>(SELECT_VALUE)?.textContent?.trim() ||
+      selectedValueEls[0]?.textContent?.trim() ||
+      "";
+    const triggerPlaceholder =
+      trigger?.getAttribute("data-placeholder") ||
+      selectedValueSource ||
+      trigger?.textContent?.trim() ||
+      placeholder;
+    placeholder = triggerPlaceholder || placeholder;
+
+    if (!trigger || !content) {
+      throw new Error(`[select] trigger and content are required for "${selectId}"`);
     }
 
-    input = document.querySelector<HTMLInputElement>(`${SELECT_INPUT}[data-select-id="${selectId}"]`) || root?.querySelector<HTMLInputElement>(SELECT_INPUT) || null;
-
-    selectedValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_VALUE}[data-select-id="${selectId}"]`));
-    if (!selectedValueEls.length && root) selectedValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_VALUE));
-    clearEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR}[data-select-id="${selectId}"]`));
-    if (!clearEls.length && root) clearEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR));
-    clearAllEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_CLEAR_ALL}[data-select-id="${selectId}"]`));
-    if (!clearAllEls.length && root) clearAllEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_CLEAR_ALL));
-    removeValueEls = Array.from(document.querySelectorAll<HTMLElement>(`${SELECT_REMOVE}[data-select-id="${selectId}"]`));
-    if (!removeValueEls.length && root) removeValueEls = Array.from(root.querySelectorAll<HTMLElement>(SELECT_REMOVE));
-
-    const sourceTrigger = triggers[0];
-    if (sourceTrigger) {
-      const selectedValueSource =
-        sourceTrigger.querySelector<HTMLElement>(SELECT_VALUE)?.textContent?.trim() ||
-        selectedValueEls[0]?.textContent?.trim() ||
-        "";
-      const triggerPlaceholder =
-        sourceTrigger.getAttribute("data-placeholder") ||
-        selectedValueSource ||
-        sourceTrigger.textContent?.trim() ||
-        placeholder;
-      placeholder = triggerPlaceholder || placeholder;
-    }
+    teleporter = domTeleporter(content, document.body, experimentalOptions.teleportMode);
+    moveElOnInit();
 
     selectedValueEls.forEach((container) => setupSelectValueContainer(container));
 
-    triggers.forEach((btn) => {
-      btn.addEventListener("click", handleTriggerClick);
-      btn.addEventListener("keydown", handleKeyDown);
-      cleanup.push(() => btn.removeEventListener("click", handleTriggerClick));
-      cleanup.push(() => btn.removeEventListener("keydown", handleKeyDown));
-    });
+    trigger.addEventListener("click", handleTriggerClick);
+    trigger.addEventListener("keydown", handleKeyDown);
+    cleanup.push(() => trigger?.removeEventListener("click", handleTriggerClick));
+    cleanup.push(() => trigger?.removeEventListener("keydown", handleKeyDown));
 
-    contents.forEach((panel) => {
-      panel.addEventListener("keydown", handleKeyDown);
-      cleanup.push(() => panel.removeEventListener("keydown", handleKeyDown));
-    });
+    content.addEventListener("keydown", handleKeyDown);
+    cleanup.push(() => content?.removeEventListener("keydown", handleKeyDown));
 
     if (input) {
       input.addEventListener("input", handleInput);
@@ -323,17 +409,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       core.highlight(null);
     };
 
-    const bindClick = (el: HTMLElement, action: () => void) => {
-      const handler = (event: Event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        action();
-      };
-      el.addEventListener("click", handler);
-      cleanup.push(() => el.removeEventListener("click", handler));
-    };
-
     clearEls.forEach((el) => bindClick(el, clearSelection));
     clearAllEls.forEach((el) => bindClick(el, clearSelection));
     removeValueEls.forEach((el) => {
@@ -342,39 +417,48 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       bindClick(el, () => core.unselect(value));
     });
 
-    if (triggers[0] && contents[0]) {
-      const overlayOptions = resolveOverlayOptions({
-        root: getScopeElement() ?? triggers[0],
-        content: contents[0],
-        options,
-      });
-
-      overlay = new CreateOverlay({
-        trigger: triggers[0],
-        content: contents[0],
-        options: {
-          triggerStrategy: "manual",
-          placement: overlayOptions.placement,
-          offsetDistance: overlayOptions.offsetDistance,
-          preventFromCloseOutside: overlayOptions.preventFromCloseOutside,
-          preventCloseFromInside: overlayOptions.preventCloseFromInside,
-          readjustHeight: overlayOptions.readjustHeight,
-          minHeight: overlayOptions.minHeight,
-          popper: overlayOptions.popper,
-          onHide: () => {
-            if (core.getState().open) {
-              syncingOverlay = true;
-              core.close();
-              syncingOverlay = false;
-            }
+    const overlayOptions = resolveOverlayOptions({
+      root: getScopeElement() ?? trigger,
+      content,
+      options,
+    });
+    const popperOptions = overlayOptions.popper?.eventEffect
+      ? {
+          eventEffect: {
+            disableOnResize: overlayOptions.popper.eventEffect.disableOnResize,
+            disableOnScroll: overlayOptions.popper.eventEffect.disableOnScroll,
           },
+        }
+      : undefined;
+
+    overlay = new CreateOverlay({
+      trigger,
+      content,
+      options: {
+        triggerStrategy: "manual",
+        placement: overlayOptions.placement,
+        offsetDistance: overlayOptions.offsetDistance,
+        preventFromCloseOutside: overlayOptions.preventFromCloseOutside,
+        preventCloseFromInside: overlayOptions.preventCloseFromInside,
+        readjustHeight: overlayOptions.readjustHeight,
+        minHeight: overlayOptions.minHeight,
+        popper: popperOptions,
+        beforeShow: () => {},
+        onHide: () => {
+          if (core.getState().open) {
+            syncingOverlay = true;
+            core.close();
+            syncingOverlay = false;
+          }
+          moveEl();
         },
-      });
-      cleanup.push(() => overlay?.cleanup());
-    }
+      },
+    });
+    cleanup.push(() => overlay?.cleanup());
 
     registerItems();
     updateFromSearch(core.getState().search);
+    applyInitialSelection();
   };
 
   const render = (state: SelectState) => {
@@ -391,12 +475,11 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   const destroy = () => {
     teardownItems();
     cleanup.splice(0).forEach((fn) => fn());
-    if (unsubscribe) unsubscribe();
+    unsubscribe?.();
     root = null;
-    anchor = null;
     selectId = null;
-    triggers = [];
-    contents = [];
+    trigger = null;
+    content = null;
     input = null;
     itemElements = [];
     itemsMeta = [];
@@ -405,16 +488,19 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     clearEls = [];
     clearAllEls = [];
     removeValueEls = [];
+    hiddenValueInput = null;
     overlay = null;
+    teleporter?.restore();
+    teleporter = null;
+    unsubscribe = null;
   };
 
-  const connect = ({ root: rootElement, id, anchor: anchorElement }: SelectDom) => {
-    root = rootElement ?? null;
-    anchor = anchorElement ?? rootElement ?? null;
-    selectId = id || root?.id || anchor?.getAttribute("data-select-id") || anchor?.id || null;
-    if (!selectId) throw new Error("[select] an id is required to connect trigger and content");
+  const connect = ({ element }: SelectDom) => {
+    const target = resolveSelectTarget(element);
+    root = target.element;
+    selectId = target.id;
     bindDom();
-    if (unsubscribe) unsubscribe();
+    unsubscribe?.();
     unsubscribe = core.subscribe(render);
     render(core.getState());
     return { destroy };

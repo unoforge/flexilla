@@ -3,10 +3,14 @@ import type { Placement } from "flexipop/create-overlay";
 
 export type AutocompleteSource = SelectItem[] | string[];
 
+export type AutocompleteExperimentalOptions = {
+  teleport: boolean;
+  teleportMode?: "move" | "detachable";
+};
+
 export type AutocompleteOptions = {
   multiple?: boolean;
-  checkIcon?: string;
-  indicatorPosition?: "start" | "end";
+  defaultValue?: string;
   source?: AutocompleteSource;
   filter?: (query: string, item: SelectItem) => boolean;
   placement?: Placement;
@@ -21,12 +25,11 @@ export type AutocompleteOptions = {
       disableOnScroll?: boolean;
     };
   };
+  experimental?: AutocompleteExperimentalOptions;
 };
 
 export type AutocompleteDom = {
-  root?: HTMLElement;
-  id?: string;
-  anchor?: HTMLElement;
+  element: string | HTMLElement;
 };
 
 export type AutocompleteController = SelectCore & {

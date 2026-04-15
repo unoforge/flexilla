@@ -3,6 +3,17 @@ import type { Placement } from "flexipop/create-overlay";
 import type { SelectOptions } from "./types";
 import { SELECT_INPUT } from "./constants";
 
+const OMITTED_ITEM_DATA_KEYS = new Set(["selectItem", "label", "disabled", "selectId"]);
+
+const collectItemData = (element: HTMLElement) => {
+  const data: Record<string, string> = {};
+  Object.entries(element.dataset).forEach(([key, value]) => {
+    if (!value || OMITTED_ITEM_DATA_KEYS.has(key)) return;
+    data[key] = value;
+  });
+  return data;
+};
+
 export const defaultFilter = (query: string, item: SelectItem) => {
   if (!query) return true;
   const text = `${item.label ?? item.value}`.toLowerCase();
@@ -14,7 +25,7 @@ export const parseItem = (element: HTMLElement): SelectItem | null => {
   if (!value) return null;
   const label = (element.getAttribute("data-label") || element.textContent || "").trim() || value;
   const disabled = element.getAttribute("aria-disabled") === "true" || element.hasAttribute("data-disabled");
-  return { value, label, disabled };
+  return { value, label, disabled, data: collectItemData(element) };
 };
 
 export const getBooleanAttr = (element: HTMLElement | null, attr: string): boolean | undefined => {

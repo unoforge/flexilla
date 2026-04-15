@@ -1,45 +1,32 @@
-import { SELECT_CONTENT, SELECT_INPUT, SELECT_TRIGGER } from "./constants";
-
 const normalizeAutocompleteId = (value: string) => value.replace(/^#/, "");
 
-export const resolveAutocompleteTarget = (autocomplete: string | HTMLElement) => {
-  if (typeof autocomplete === "string") {
-    const element = document.querySelector<HTMLElement>(autocomplete);
-    if (element instanceof HTMLElement) {
-      return resolveAutocompleteTarget(element);
-    }
+const resolveElement = (target: string | HTMLElement) => {
+  if (target instanceof HTMLElement) return target;
 
-    const id = normalizeAutocompleteId(autocomplete);
-    const input = document.querySelector<HTMLElement>(`${SELECT_INPUT}[data-autocomplete-id="${id}"]`);
-    const trigger = document.querySelector<HTMLElement>(`${SELECT_TRIGGER}[data-autocomplete-id="${id}"]`);
-    const content = document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${id}"]`);
-    const anchorElement = input ?? trigger ?? content;
+  const matchedElement = document.querySelector<HTMLElement>(target);
+  if (matchedElement instanceof HTMLElement) return matchedElement;
 
-    if (!anchorElement) {
-      throw new Error(`Invalid autocomplete target: ${autocomplete}`);
-    }
+  const normalizedId = normalizeAutocompleteId(target);
+  return (
+    document.getElementById(normalizedId) ||
+    document.querySelector<HTMLElement>(`[data-autocomplete-id="${normalizedId}"]`) ||
+    document.querySelector<HTMLElement>(`[data-select-id="${normalizedId}"]`)
+  );
+};
 
-    const rootElement =
-      (anchorElement.matches("[data-fx-autocomplete]") ? anchorElement : anchorElement.closest<HTMLElement>("[data-fx-autocomplete]")) ?? null;
-
-    return {
-      root: rootElement,
-      anchor: anchorElement,
-      id,
-    };
+export const resolveAutocompleteTarget = (target: string | HTMLElement) => {
+  const element = resolveElement(target);
+  if (!(element instanceof HTMLElement)) {
+    throw new Error(`[autocomplete] invalid target: ${String(target)}`);
   }
 
-  const id = autocomplete.getAttribute("data-autocomplete-id") || autocomplete.getAttribute("data-select-id") || autocomplete.id || "";
+  const id = element.getAttribute("data-autocomplete-id") || element.getAttribute("data-select-id") || element.id || "";
   if (!id) {
-    throw new Error("Invalid autocomplete root element");
+    throw new Error("[autocomplete] target element must provide data-autocomplete-id, data-select-id or id");
   }
-
-  const rootElement =
-    (autocomplete.matches("[data-fx-autocomplete]") ? autocomplete : autocomplete.closest<HTMLElement>("[data-fx-autocomplete]")) ?? null;
 
   return {
-    root: rootElement,
-    anchor: autocomplete,
+    element,
     id,
   };
 };
