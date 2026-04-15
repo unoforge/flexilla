@@ -33,10 +33,10 @@
     "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/manager": "workspace:*",
-    "@flexilla/popover": "workspace:*",
-    "@flexilla/utilities": "workspace:*",
-    "flexipop": "workspace:*"
+    "@flexilla/manager": "0.2.3",
+    "@flexilla/popover": "1.0.5",
+    "@flexilla/utilities": "2.5.4",
+    "flexipop": "0.3.3"
   },
   "devDependencies": {
     "typescript": "5.9.3"
@@ -60,5 +60,6 @@
     "url": "https://github.com/unoforge/flexilla/issues"
   },
   "license": "MIT",
-  "author": "johnkat-mj"
+  "author": "johnkat-mj",
+  "gitHead": "b642d6db4a3bb9d7d8193c4374b3d2fecbe6ed2e"
 }
