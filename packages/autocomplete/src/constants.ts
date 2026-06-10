@@ -1,9 +1,0 @@
-export const SELECT_TRIGGER = "[data-select-trigger]";
-export const SELECT_CONTENT = "[data-select-content]";
-export const SELECT_ITEM = "[data-select-item]";
-export const SELECT_INPUT = "[data-select-input]";
-export const SELECT_VALUE = "[data-selected-value]";
-export const AUTOCOMPLETE_HIDDEN_VALUE = 'input[type="hidden"][data-autocomplete-value]';
-export const SELECT_CLEAR = "[data-select-clear]";
-export const SELECT_CLEAR_ALL = "[data-select-clear-all]";
-export const SELECT_REMOVE = "[data-select-remove]";

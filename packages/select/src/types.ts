@@ -10,6 +10,7 @@ export type SelectOptions = {
   multiple?: boolean;
   defaultValue?: string;
   filter?: (query: string, item: SelectItem) => boolean;
+  searchDebounce?: number;
   summary?: SelectSummaryOptions;
   placement?: Placement;
   offsetDistance?: number;

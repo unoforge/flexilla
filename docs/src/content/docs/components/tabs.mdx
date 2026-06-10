@@ -37,6 +37,7 @@ yarn add @flexilla/tabs
 - `tabs-container`: Wraps all tab-related elements. Must include the `data-fx-tabs` attribute.
 - `tabs-list-wrapper` (optional): Wraps the `tab-list`. If used, it must include the `data-tabs-list-wrapper` attribute.
 - `tab-list`: Contains the individual `tab-trigger` elements, with the attribute `data-tab-list`.
+- `tab-indicator` (optional): A manually declared element with `data-tab-indicator`, placed inside `data-tab-list`.
 - `tabs-panel-container` (optional): Wraps the `tab-panel` elements and must include the `data-panels-container` attribute if used.
 - `tab-trigger`: Each clickable tab link, with the attributes `data-tabs-trigger` and `data-target` (where `data-target` is the `id` of the corresponding tab-panel).
 - `tab-panel`: The corresponding content for each tab, identified by `data-tab-panel` and `id`.
@@ -87,29 +88,23 @@ const myTabs = new Tabs('#tabs-container', {
 
 ## Custom Tab Indicator
 
-You can add a custom indicator to visually highlight the active tab. There are two ways to implement this:
+To use a custom indicator, declare it manually in the HTML markup inside `data-tab-list`. Tabs will only move an existing `[data-tab-indicator]`; they no longer create one for you.
 
-1. **Using the `data-attribute`**:
-   
-   Add the `data-indicator-class-name` attribute to the `tabs-container`:
+```html
+<ul data-tab-list role="tablist" class="relative">
+  <span
+    data-tab-indicator
+    aria-hidden="true"
+    class="ui-tabs-indicator bg-zinc-200 dark:bg-zinc-800 rounded"
+  ></span>
 
-   ```html
-   <div data-fx-tabs data-indicator-class-name="ui-tabs-indicator bg-zinc-200 dark:bg-zinc-800 flex rounded absolute ease-linear duration-200">
-       <!-- Tab content here -->
-   </div>
-   ```
+  <li role="presentation">
+    <a href="#tab1" data-tabs-trigger data-target="tab1">Tab 1</a>
+  </li>
+</ul>
+```
 
-2. **Using the options object**:
-
-   You can pass the indicator's class name through the `indicatorOptions` in the options object:
-
-   ```js
-   new Tabs('.yourTabs', {
-       indicatorOptions: {
-           className: "custom-indicator-classes"
-       }
-   });
-   ```
+The indicator should always stay inside `data-tab-list`. Its default component CSS already gives it `position: absolute`, so you only need to style its look.
 
 ### CSS Requirements
 
@@ -239,6 +234,13 @@ type TabsOptions = {
   indicatorOptions?: IndicatorOptions,
   onChange?: () => void,
   onChangeTab?: ({ currentTrigger, currentPanel }: { currentTrigger?: HTMLElement, currentPanel?: HTMLElement }) => void
+};
+```
+
+```ts
+type IndicatorOptions = {
+  transformDuration?: number,
+  transformEasing?: string,
 };
 ```
 

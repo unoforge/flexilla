@@ -1,19 +1,30 @@
 import {
   createSelectCore,
   renderSelectedValues,
-  setupSelectPresentationItem,
   setupSelectValueContainer,
   syncSelectEmptyState,
+  defaultFilter,
+  parseDefaultValues,
+  serializeSelectedValues,
+  setItemVisibility,
+  SELECT_CLEAR,
+  SELECT_CLEAR_ALL,
+  SELECT_HIDDEN_VALUE,
+  SELECT_INPUT,
+  SELECT_ITEM,
+  SELECT_REMOVE,
+  SELECT_TRIGGER,
+  SELECT_VALUE,
   type SelectCore,
   type SelectItem,
   type SelectState,
 } from "@flexilla/select-core";
+import { keyboardNavigation } from "@flexilla/utilities/accessibility";
 import { waitForFxComponents } from "@flexilla/utilities/dom-utilities";
 import { domTeleporter } from "@flexilla/utilities/dom-teleport";
 import { CreateOverlay } from "flexipop/create-overlay";
 import type { SelectController, SelectDom, SelectOptions } from "./types";
-import { SELECT_CLEAR, SELECT_CLEAR_ALL, SELECT_CONTENT, SELECT_HIDDEN_VALUE, SELECT_INPUT, SELECT_ITEM, SELECT_REMOVE, SELECT_TRIGGER, SELECT_VALUE } from "./constants";
-import { defaultFilter, parseItem, resolveOverlayOptions } from "./helpers";
+import { parseItem, resolveOverlayOptions } from "./helpers";
 import { resolveSelectTarget } from "./target";
 
 const defaultExperimentalOptions = {
@@ -48,11 +59,14 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   let hiddenValueInput: HTMLInputElement | null = null;
   let overlay: CreateOverlay | null = null;
   let teleporter: Teleporter | null = null;
+  let navigationKeys: { make: () => void; destroy: () => void } | null = null;
   const cleanup: Array<() => void> = [];
   let unsubscribe: (() => void) | null = null;
   let placeholder = "Select";
   let syncingOverlay = false;
+  const searchDebounce = options.searchDebounce ?? 100;
   let lastSearch = core.getState().search;
+  let searchTimer: ReturnType<typeof setTimeout> | null = null;
   const experimentalOptions = { ...defaultExperimentalOptions, ...(options.experimental || {}) };
 
   const getScopeElement = () => root ?? content ?? trigger ?? input;
@@ -60,20 +74,9 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   const queryById = <T extends HTMLElement>(selector: string) =>
     Array.from(document.querySelectorAll<T>(`${selector}[data-select-id="${selectId}"]`));
 
-  const parseDefaultValues = (value: string | null | undefined) =>
-    (value || "")
-      .split(",")
-      .map((entry) => entry.trim())
-      .filter(Boolean);
-
-  const serializeSelectedValues = (selectedValues: string[]) => {
-    if (options.multiple) return selectedValues.join(",");
-    return selectedValues[0] ?? "";
-  };
-
   const syncHiddenValueInput = (selectedValues: string[]) => {
     if (!(hiddenValueInput instanceof HTMLInputElement)) return;
-    const nextValue = serializeSelectedValues(selectedValues);
+    const nextValue = serializeSelectedValues(selectedValues, options.multiple ?? false);
     if (hiddenValueInput.value === nextValue) return;
     hiddenValueInput.value = nextValue;
     hiddenValueInput.dispatchEvent(new Event("input", { bubbles: true }));
@@ -95,17 +98,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     nextValues.forEach((value) => core.select(value));
   };
 
-  const setItemVisibility = (element: HTMLElement, visible: boolean) => {
-    if (visible) {
-      element.removeAttribute("hidden");
-      element.removeAttribute("data-hidden");
-      return;
-    }
-
-    element.setAttribute("hidden", "");
-    element.setAttribute("data-hidden", "");
-  };
-
   const resolveSingleElement = <T extends HTMLElement>({
     selector,
     role,
@@ -124,6 +116,24 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       return null;
     }
     return matches[0] ?? null;
+  };
+
+  const refreshKeyboardNavigation = () => {
+    navigationKeys?.destroy();
+    if (!(content instanceof HTMLElement)) {
+      navigationKeys = null;
+      return;
+    }
+
+    navigationKeys = keyboardNavigation({
+      containerElement: content,
+      targetChildren: itemElements,
+      direction: "up-down",
+    });
+
+    if (core.getState().open && navigationKeys) {
+      navigationKeys.make();
+    }
   };
 
   const ensureHighlighted = () => {
@@ -185,7 +195,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       itemsByValue.set(item.value, { item, element });
       element.setAttribute("role", "option");
       if (item.disabled) element.setAttribute("aria-disabled", "true");
-      setupSelectPresentationItem(element);
+      if (!element.hasAttribute("tabindex")) element.setAttribute("tabindex", "-1");
 
       if (boundElements.has(element)) return;
 
@@ -197,9 +207,17 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
         if (index >= 0) core.highlight(index);
         if (!options.multiple) core.close();
       };
+      const focusHandler = () => {
+        const index = itemElements.indexOf(element);
+        if (index >= 0) core.highlight(index);
+      };
 
       element.addEventListener("click", clickHandler);
+      element.addEventListener("focus", focusHandler);
+      element.addEventListener("keydown", handleContentKeyDown);
       cleanup.push(() => element.removeEventListener("click", clickHandler));
+      cleanup.push(() => element.removeEventListener("focus", focusHandler));
+      cleanup.push(() => element.removeEventListener("keydown", handleContentKeyDown));
       boundElements.add(element);
     });
   };
@@ -225,6 +243,8 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       element.removeAttribute("data-select-highlighted");
     });
 
+    refreshKeyboardNavigation();
+
     syncSelectEmptyState({
       content,
       visibleCount: filtered.length,
@@ -242,8 +262,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     }
     if (content) {
       content.setAttribute("role", "listbox");
-      if (state.open) content.removeAttribute("hidden");
-      else content.setAttribute("hidden", "");
     }
   };
 
@@ -274,22 +292,37 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     });
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleTriggerKeyDown = (event: KeyboardEvent) => {
     switch (event.key) {
       case "ArrowDown": {
         event.preventDefault();
+        navigationKeys?.make();
         core.open();
-        ensureHighlighted();
-        core.highlightNext();
         break;
       }
       case "ArrowUp": {
         event.preventDefault();
+        navigationKeys?.make();
         core.open();
-        ensureHighlighted();
-        core.highlightPrev();
         break;
       }
+      case "Enter":
+      case " ": {
+        event.preventDefault();
+        core.toggle();
+        break;
+      }
+      case "Escape": {
+        core.close();
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  const handleContentKeyDown = (event: KeyboardEvent) => {
+    switch (event.key) {
       case "Enter": {
         const state = core.getState();
         if (state.highlightedIndex !== null) {
@@ -321,9 +354,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
   const handleInput = (event: Event) => {
     const target = event.target as HTMLInputElement;
-    const query = target.value || "";
-    core.setSearch(query);
-    updateFromSearch(query);
+    core.setSearch(target.value || "");
   };
 
   const bindClick = (el: HTMLElement, action: () => void) => {
@@ -360,11 +391,17 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     if (!selectId) return;
 
     trigger = resolveSingleElement<HTMLElement>({ selector: SELECT_TRIGGER, role: "trigger" });
-    content = resolveSingleElement<HTMLElement>({ selector: SELECT_CONTENT, role: "content" });
+    content = root;
     input = resolveSingleElement<HTMLInputElement>({ selector: SELECT_INPUT, role: "search input", required: false });
     hiddenValueInput = document.querySelector<HTMLInputElement>(`${SELECT_HIDDEN_VALUE}[data-select-id="${selectId}"]`);
 
-    selectedValueEls = queryById<HTMLElement>(SELECT_VALUE);
+    // Find selected-value elements by explicit ID, plus those nested inside trigger (which inherits the ID)
+    const explicitSelectedValueEls = queryById<HTMLElement>(SELECT_VALUE);
+    const nestedSelectedValueEls = trigger
+      ? Array.from(trigger.querySelectorAll<HTMLElement>(`${SELECT_VALUE}:not([data-select-id])`))
+      : [];
+    selectedValueEls = [...explicitSelectedValueEls, ...nestedSelectedValueEls];
+
     clearEls = queryById<HTMLElement>(SELECT_CLEAR);
     clearAllEls = queryById<HTMLElement>(SELECT_CLEAR_ALL);
     removeValueEls = queryById<HTMLElement>(SELECT_REMOVE);
@@ -386,22 +423,23 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
     teleporter = domTeleporter(content, document.body, experimentalOptions.teleportMode);
     moveElOnInit();
+    refreshKeyboardNavigation();
 
     selectedValueEls.forEach((container) => setupSelectValueContainer(container));
 
     trigger.addEventListener("click", handleTriggerClick);
-    trigger.addEventListener("keydown", handleKeyDown);
+    trigger.addEventListener("keydown", handleTriggerKeyDown);
     cleanup.push(() => trigger?.removeEventListener("click", handleTriggerClick));
-    cleanup.push(() => trigger?.removeEventListener("keydown", handleKeyDown));
+    cleanup.push(() => trigger?.removeEventListener("keydown", handleTriggerKeyDown));
 
-    content.addEventListener("keydown", handleKeyDown);
-    cleanup.push(() => content?.removeEventListener("keydown", handleKeyDown));
+    content.addEventListener("keydown", handleContentKeyDown);
+    cleanup.push(() => content?.removeEventListener("keydown", handleContentKeyDown));
 
     if (input) {
       input.addEventListener("input", handleInput);
-      input.addEventListener("keydown", handleKeyDown);
+      input.addEventListener("keydown", handleContentKeyDown);
       cleanup.push(() => input?.removeEventListener("input", handleInput));
-      cleanup.push(() => input?.removeEventListener("keydown", handleKeyDown));
+      cleanup.push(() => input?.removeEventListener("keydown", handleContentKeyDown));
     }
 
     const clearSelection = () => {
@@ -424,11 +462,11 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     });
     const popperOptions = overlayOptions.popper?.eventEffect
       ? {
-          eventEffect: {
-            disableOnResize: overlayOptions.popper.eventEffect.disableOnResize,
-            disableOnScroll: overlayOptions.popper.eventEffect.disableOnScroll,
-          },
-        }
+        eventEffect: {
+          disableOnResize: overlayOptions.popper.eventEffect.disableOnResize,
+          disableOnScroll: overlayOptions.popper.eventEffect.disableOnScroll,
+        },
+      }
       : undefined;
 
     overlay = new CreateOverlay({
@@ -443,8 +481,11 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
         readjustHeight: overlayOptions.readjustHeight,
         minHeight: overlayOptions.minHeight,
         popper: popperOptions,
-        beforeShow: () => {},
+        beforeShow: () => {
+          navigationKeys?.make();
+        },
         onHide: () => {
+          navigationKeys?.destroy();
           if (core.getState().open) {
             syncingOverlay = true;
             core.close();
@@ -464,7 +505,11 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   const render = (state: SelectState) => {
     if (state.search !== lastSearch) {
       lastSearch = state.search;
-      updateFromSearch(state.search);
+      if (searchTimer) clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        updateFromSearch(state.search);
+        searchTimer = null;
+      }, searchDebounce);
     }
     updateAria(state);
     updateItemsState(state);
@@ -474,6 +519,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
   const destroy = () => {
     teardownItems();
+    if (searchTimer) clearTimeout(searchTimer);
     cleanup.splice(0).forEach((fn) => fn());
     unsubscribe?.();
     root = null;
@@ -492,6 +538,8 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     overlay = null;
     teleporter?.restore();
     teleporter = null;
+    navigationKeys?.destroy();
+    navigationKeys = null;
     unsubscribe = null;
   };
 
@@ -512,4 +560,4 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   };
 };
 
-export type SelectInstanceController = SelectCore;
+

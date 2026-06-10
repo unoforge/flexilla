@@ -26,7 +26,7 @@
         <input type="hidden" data-autocomplete-value data-select-id="demo-autocomplete-static" name="fruit" />
         <button data-select-clear data-select-id="demo-autocomplete-static" class="text-sm text-blue6 hover:text-blue7">Clear selection</button>
         <p data-selected-value data-select-id="demo-autocomplete-static" class="text-sm text-zinc-600 dark:text-zinc-400">Nothing selected</p>
-        <div data-select-content data-select-id="demo-autocomplete-static" data-default-value="banana" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+        <div data-select-content data-select-id="demo-autocomplete-static" data-default-value="banana" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
           <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
             <li data-select-item="apple" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded data-[hidden]:hidden">Apple</li>
             <li data-select-item="banana" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded data-[hidden]:hidden">Banana</li>
@@ -59,7 +59,7 @@
           </template>
           <span data-placeholder class="text-zinc-500">No owner selected</span>
         </div>
-        <div data-select-content data-select-id="demo-autocomplete-user" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+        <div data-select-content data-select-id="demo-autocomplete-user" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
           <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
             <li data-select-item="brenda" data-label="Brenda Stone" data-initials="BS" data-badge-style="background-color:#fecdd3;color:#881337" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center rounded cursor-pointer data-[hidden]:hidden">
               <div class="flex items-center gap-3">
@@ -101,7 +101,7 @@
         <div class="flex items-center gap-2">
           <button data-select-clear-all data-select-id="demo-autocomplete-multi" class="text-sm text-blue6 hover:text-blue7">Clear all</button>
         </div>
-        <div data-selected-value data-select-id="demo-autocomplete-multi" class="flex gap-2 flex-wrap text-sm text-zinc-800 dark:text-zinc-100">
+        <div data-selected-value data-select-id="demo-autocomplete-multi" data-select-summary-mode="chips" class="flex gap-2 flex-wrap text-sm text-zinc-800 dark:text-zinc-100">
           <template data-selected-model>
             <span class="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800">
               <span class="size-5 rounded-full inline-flex items-center justify-center text-[10px] font-semibold" data-bind-style="badgeStyle" data-bind="initials"></span>
@@ -111,7 +111,7 @@
           </template>
           <span class="text-zinc-500" data-placeholder>No one selected</span>
         </div>
-        <div data-select-content data-select-id="demo-autocomplete-multi" data-default-value="alice,nina" data-placement="bottom-start" data-readjust-height="false" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm" hidden>
+        <div data-select-content data-select-id="demo-autocomplete-multi" data-default-value="alice,nina" data-placement="bottom-start" data-readjust-height="false" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
           <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
             <li data-select-item="alice" data-label="Alice Johnson" data-initials="AJ" data-badge-style="background-color:#fde68a;color:#78350f" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center rounded cursor-pointer data-[hidden]:hidden">
               <div class="flex items-center gap-3">

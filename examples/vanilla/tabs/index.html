@@ -87,13 +87,11 @@
                 </p>
             </div>
             <div class="p10 rounded-lg bg-gradient-to-bl from-zinc6 via-neutral4 to-zinc6">
-                <div data-with-indicator data-fx-tabs
-                    data-indicator-class-name="ui-tabs-indicator bg-gray-200 dark-bg-gray-800 flex rd absolute ease-linear duration-200"
-                    class="wfull"
-                   >
+                <div data-with-indicator data-fx-tabs class="wfull">
                     <div data-tab-list-wrapper class="flex wfull">
                         <ul data-tab-list role="tablist"
                             class="flex items-center relative p0.5 bg-gray-100 dark:bg-gray-900/50 w-full rounded-md *:cursor-pointer">
+                            <span data-tab-indicator aria-hidden="true" class="ui-tabs-indicator bg-gray-200 dark-bg-gray-800 flex rd ease-linear duration-200"></span>
                             <li role="presentation" class="flex">
                                 <a href="#" role="tab" data-tabs-trigger data-target="tab1" data-state="active"
                                     tabindex="0"
@@ -131,11 +129,10 @@
                         <section role="tabpanel"
                             class="hidden fx-active:flex ring-offset-gray-950 p-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 border border-gray-200 dark:border-gray-800 rounded-md mt-2"
                             data-tab-panel id="tab3" aria-labelledby="tab3">
-                            <div data-tabs-nested2 data-fx-tabs
-                                data-indicator-class-name="ui-tabs-indicator bg-gray-200 dark-bg-gray-800 flex rd absolute ease-linear duration-200"
-                                wfull>
+                            <div data-tabs-nested2 data-fx-tabs wfull>
                                 <ul data-tab-list role="tablist"
                                     class="flex items-center relative p0.5 bg-gray-100 dark:bg-gray-900/50 w-full rounded-md *:cursor-pointer">
+                                    <span data-tab-indicator aria-hidden="true" class="ui-tabs-indicator bg-gray-200 dark-bg-gray-800 flex rd ease-linear duration-200"></span>
                                     <li role="presentation" class="flex">
                                         <a href="#" role="tab" data-tabs-trigger data-target="tab1"
                                             class="px-4 py-2 rounded text-gray-700 dark:text-gray-300 disabled:cursor-not-allowed disabled:opacity-80 relative z20">
@@ -235,6 +232,7 @@
                 <div data-vertical-tab-2 data-fx-tabs data-orientation="vertical" class="flex items-start wfull">
                     <ul data-tab-list role="tablist"
                         class="flex flex-col p0.5 wmax relative bg-gray-100 dark:bg-gray-900/50 rounded-md *:cursor-pointer">
+                        <span data-tab-indicator aria-hidden="true" class="ui-tabs-indicator bg-gray-200 dark-bg-gray-800 flex rd ease-linear duration-200"></span>
                         <li role="presentation" class="flex">
                             <a data-tabs-trigger data-target="tab1"
                                 class="px-4 py-2 rounded text-gray-700 dark:text-gray-300 disabled:cursor-not-allowed disabled:opacity-80 relative wfull">
@@ -282,6 +280,7 @@
                 <div data-tab-default-indicator data-fx-tabs data-default-value="tab2">
                     <ul data-tab-list role="tablist"
                         class="flex items-center relative h-12 px-1 bg-gray-100 dark:bg-gray-900/50 w-full rounded-md *:cursor-pointer">
+                        <span data-tab-indicator aria-hidden="true" class="ui-tabs-indicator bg-gray-200 dark-bg-gray-800 flex rd ease-linear duration-200"></span>
                         <li role="presentation" class="flex">
                             <a data-tabs-trigger data-target="tab1"
                                 class="px-4 py-2 rounded text-gray-700 dark:text-gray-300 disabled:cursor-not-allowed disabled:opacity-80 fx-active:bg-zinc2/3 dark:fx-active:bg-gray-800 outline outline-1 outline-transparent focus:outline-blue-500 dark:focus:outline-blue-400 relative z10">
@@ -325,12 +324,12 @@
             <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Show Panel With Animation : keyframes animation
             </h1>
-            <div class="p10 rounded-lg bg-gradient-to-bl from-zinc6 via-neutral4 to-zinc6 text-gray-700 dark:text-gray-300">
+                <div class="p10 rounded-lg bg-gradient-to-bl from-zinc6 via-neutral4 to-zinc6 text-gray-700 dark:text-gray-300">
                 <div data-tab-animated-key data-fx-tabs data-animated-panels
-                    data-show-animation="fadeIn .8s cubic-bezier(.48,1.55,.28,1)"
-                    data-indicator-class-name="ui-tabs-indicator bg-gray-200 dark-bg-gray-800 rd">
+                    data-show-animation="fadeIn .8s cubic-bezier(.48,1.55,.28,1)">
                     <ul data-tab-list role="tablist"
                         class="flex items-center relative p0.5 bg-gray-100 dark:bg-gray-900/50 w-full rounded-md *:cursor-pointer">
+                        <span data-tab-indicator aria-hidden="true" class="ui-tabs-indicator bg-gray-200 dark-bg-gray-800 rd ease-linear duration-200"></span>
                         <li role="presentation" class="flex">
                             <a data-tabs-trigger data-target="settingTab"
                                 class="px-4 py-2 flex items-center gap-x2 rounded text-gray-700 dark:text-gray-300 disabled:cursor-not-allowed disabled:opacity-80 relative z20">

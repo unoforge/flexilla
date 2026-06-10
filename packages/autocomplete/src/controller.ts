@@ -1,19 +1,31 @@
 import {
   createSelectCore,
   renderSelectedValues,
-  setupSelectPresentationItem,
   setupSelectValueContainer,
   syncSelectEmptyState,
+  defaultFilter,
+  parseDefaultValues,
+  serializeSelectedValues,
+  setItemVisibility,
+  collectItemData,
+  AUTOCOMPLETE_HIDDEN_VALUE,
+  SELECT_CLEAR,
+  SELECT_CLEAR_ALL,
+  SELECT_INPUT,
+  SELECT_ITEM,
+  SELECT_REMOVE,
+  SELECT_TRIGGER,
+  SELECT_VALUE,
   type SelectCore,
   type SelectItem,
   type SelectState,
 } from "@flexilla/select-core";
+import { keyboardNavigation } from "@flexilla/utilities/accessibility";
 import { waitForFxComponents } from "@flexilla/utilities/dom-utilities";
 import { domTeleporter } from "@flexilla/utilities/dom-teleport";
 import { CreateOverlay } from "flexipop/create-overlay";
 import type { AutocompleteController, AutocompleteDom, AutocompleteOptions } from "./types";
-import { AUTOCOMPLETE_HIDDEN_VALUE, SELECT_CLEAR, SELECT_CLEAR_ALL, SELECT_CONTENT, SELECT_INPUT, SELECT_ITEM, SELECT_REMOVE, SELECT_TRIGGER, SELECT_VALUE } from "./constants";
-import { collectItemData, defaultFilter, resolveOverlayOptions } from "./helpers";
+import { resolveOverlayOptions } from "./helpers";
 import { resolveAutocompleteTarget } from "./target";
 
 const defaultExperimentalOptions = {
@@ -46,9 +58,12 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   let unsubscribe: (() => void) | null = null;
   let overlay: CreateOverlay | null = null;
   let teleporter: Teleporter | null = null;
+  let navigationKeys: { make: () => void; destroy: () => void } | null = null;
   const cleanup: Array<() => void> = [];
   let renderedValues = new Set<string>();
+  const searchDebounce = options.searchDebounce ?? 100;
   let lastSearch = core.getState().search;
+  let searchTimer: ReturnType<typeof setTimeout> | null = null;
   let syncingOverlay = false;
   const experimentalOptions = { ...defaultExperimentalOptions, ...(options.experimental || {}) };
   type ItemMeta = { item: SelectItem; element: HTMLElement };
@@ -61,20 +76,9 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   const queryById = <T extends HTMLElement>(selector: string, attribute = "data-select-id") =>
     Array.from(document.querySelectorAll<T>(`${selector}[${attribute}="${selectId}"]`));
 
-  const parseDefaultValues = (value: string | null | undefined) =>
-    (value || "")
-      .split(",")
-      .map((entry) => entry.trim())
-      .filter(Boolean);
-
-  const serializeSelectedValues = (selectedValues: string[]) => {
-    if (options.multiple) return selectedValues.join(",");
-    return selectedValues[0] ?? "";
-  };
-
   const syncHiddenValueInput = (selectedValues: string[]) => {
     if (!(hiddenValueInput instanceof HTMLInputElement)) return;
-    const nextValue = serializeSelectedValues(selectedValues);
+    const nextValue = serializeSelectedValues(selectedValues, options.multiple ?? false);
     if (hiddenValueInput.value === nextValue) return;
     hiddenValueInput.value = nextValue;
     hiddenValueInput.dispatchEvent(new Event("input", { bubbles: true }));
@@ -122,15 +126,41 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     return matches[0] ?? null;
   };
 
-  const setItemVisibility = (element: HTMLElement, visible: boolean) => {
-    if (visible) {
-      element.removeAttribute("hidden");
-      element.removeAttribute("data-hidden");
+  const resolveContentElement = () => {
+    if (!(root instanceof HTMLElement)) return null;
+    if (!root.matches(SELECT_INPUT) && root.querySelector(SELECT_ITEM)) return root;
+
+    const matches = Array.from(document.querySelectorAll<HTMLElement>(`[data-select-id="${selectId}"]`))
+      .filter((element) => element !== root)
+      .filter((element) => element.querySelector(SELECT_ITEM));
+
+    if (matches.length > 1) {
+      throw new Error(`[autocomplete] expected one content for "${selectId}", found ${matches.length}`);
+    }
+
+    if (!matches.length) {
+      throw new Error(`[autocomplete] content is required for "${selectId}"`);
+    }
+
+    return matches[0] ?? null;
+  };
+
+  const refreshKeyboardNavigation = () => {
+    navigationKeys?.destroy();
+    if (!(content instanceof HTMLElement)) {
+      navigationKeys = null;
       return;
     }
 
-    element.setAttribute("hidden", "");
-    element.setAttribute("data-hidden", "");
+    navigationKeys = keyboardNavigation({
+      containerElement: content,
+      targetChildren: itemElements,
+      direction: "up-down",
+    });
+
+    if (core.getState().open && navigationKeys) {
+      navigationKeys.make();
+    }
   };
 
   const ensureHighlighted = () => {
@@ -187,7 +217,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       itemsByValue.set(item.value, { item, element });
       element.setAttribute("role", "option");
       if (item.disabled) element.setAttribute("aria-disabled", "true");
-      setupSelectPresentationItem(element);
+      if (!element.hasAttribute("tabindex")) element.setAttribute("tabindex", "-1");
     });
   };
 
@@ -215,8 +245,16 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
           if (index >= 0) core.highlight(index);
           if (!options.multiple) core.close();
         };
+        const focusHandler = () => {
+          const index = itemElements.indexOf(element);
+          if (index >= 0) core.highlight(index);
+        };
         element.addEventListener("click", clickHandler);
+        element.addEventListener("focus", focusHandler);
+        element.addEventListener("keydown", handleContentKeyDown);
         cleanup.push(() => element.removeEventListener("click", clickHandler));
+        cleanup.push(() => element.removeEventListener("focus", focusHandler));
+        cleanup.push(() => element.removeEventListener("keydown", handleContentKeyDown));
         boundElements.add(element);
       }
 
@@ -230,6 +268,8 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       setItemVisibility(element, false);
       element.removeAttribute("data-select-highlighted");
     });
+
+    refreshKeyboardNavigation();
 
     syncSelectEmptyState({
       content,
@@ -248,8 +288,6 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     }
     if (content) {
       content.setAttribute("role", "listbox");
-      if (state.open) content.removeAttribute("hidden");
-      else content.setAttribute("hidden", "");
     }
   };
 
@@ -284,22 +322,33 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleTriggerKeyDown = (event: KeyboardEvent) => {
     switch (event.key) {
       case "ArrowDown": {
         event.preventDefault();
+        navigationKeys?.make();
         core.open();
-        ensureHighlighted();
-        core.highlightNext();
         break;
       }
       case "ArrowUp": {
         event.preventDefault();
+        navigationKeys?.make();
         core.open();
-        ensureHighlighted();
-        core.highlightPrev();
         break;
       }
+      case "Enter":
+      case " ": {
+        event.preventDefault();
+        core.toggle();
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  const handleContentKeyDown = (event: KeyboardEvent) => {
+    switch (event.key) {
       case "Enter": {
         const state = core.getState();
         if (state.highlightedIndex !== null) {
@@ -321,6 +370,23 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     }
   };
 
+  const handleInputKeyDown = (event: KeyboardEvent) => {
+    switch (event.key) {
+      case "ArrowDown":
+      case "ArrowUp": {
+        event.preventDefault();
+        if (!core.getState().open) {
+          core.open();
+        }
+        navigationKeys?.make();
+        break;
+      }
+      default:
+        handleContentKeyDown(event);
+        break;
+    }
+  };
+
   const handleTriggerClick = (event: Event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -331,10 +397,9 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
   const handleInput = (event: Event) => {
     const target = event.target as HTMLInputElement;
-    const query = target.value || "";
-    core.setSearch(query);
+    navigationKeys?.destroy();
+    core.setSearch(target.value || "");
     core.open();
-    updateFromSource(query);
   };
 
   const bindClick = (el: HTMLElement, action: () => void) => {
@@ -376,7 +441,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
       attribute: "data-autocomplete-id",
       required: false,
     });
-    content = resolveSingleElement<HTMLElement>({ selector: SELECT_CONTENT, role: "content" });
+    content = resolveContentElement();
     input = resolveSingleElement<HTMLInputElement>({
       selector: SELECT_INPUT,
       role: "input",
@@ -390,6 +455,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
     teleporter = domTeleporter(content, document.body, experimentalOptions.teleportMode);
     moveElOnInit();
+    refreshKeyboardNavigation();
 
     selectedValueEls = queryById<HTMLElement>(SELECT_VALUE);
     clearEls = queryById<HTMLElement>(SELECT_CLEAR);
@@ -404,26 +470,30 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
     if (trigger) {
       trigger.addEventListener("click", handleTriggerClick);
-      trigger.addEventListener("keydown", handleKeyDown);
+      trigger.addEventListener("keydown", handleTriggerKeyDown);
       cleanup.push(() => trigger?.removeEventListener("click", handleTriggerClick));
-      cleanup.push(() => trigger?.removeEventListener("keydown", handleKeyDown));
+      cleanup.push(() => trigger?.removeEventListener("keydown", handleTriggerKeyDown));
     }
 
-    content.addEventListener("keydown", handleKeyDown);
-    cleanup.push(() => content?.removeEventListener("keydown", handleKeyDown));
+    content.addEventListener("keydown", handleContentKeyDown);
+    cleanup.push(() => content?.removeEventListener("keydown", handleContentKeyDown));
 
-    const focusHandler = () => core.open();
+    const focusHandler = () => {
+      navigationKeys?.destroy();
+      core.open();
+    };
     const clickHandler = (event: Event) => {
       event.stopPropagation();
       event.stopImmediatePropagation();
+      navigationKeys?.destroy();
       core.open();
     };
     input.addEventListener("input", handleInput);
-    input.addEventListener("keydown", handleKeyDown);
+    input.addEventListener("keydown", handleInputKeyDown);
     input.addEventListener("focus", focusHandler);
     input.addEventListener("click", clickHandler);
     cleanup.push(() => input?.removeEventListener("input", handleInput));
-    cleanup.push(() => input?.removeEventListener("keydown", handleKeyDown));
+    cleanup.push(() => input?.removeEventListener("keydown", handleInputKeyDown));
     cleanup.push(() => input?.removeEventListener("focus", focusHandler));
     cleanup.push(() => input?.removeEventListener("click", clickHandler));
 
@@ -476,6 +546,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
         popper: popperOptions,
         beforeShow: () => {},
         onHide: () => {
+          navigationKeys?.destroy();
           if (core.getState().open) {
             syncingOverlay = true;
             core.close();
@@ -491,7 +562,11 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   const render = (state: SelectState) => {
     if (state.search !== lastSearch) {
       lastSearch = state.search;
-      updateFromSource(state.search);
+      if (searchTimer) clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        updateFromSource(state.search);
+        searchTimer = null;
+      }, searchDebounce);
     }
     updateAria(state);
     updateItemsState(state);
@@ -501,6 +576,7 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
 
   const destroy = () => {
     cleanup.splice(0).forEach((fn) => fn());
+    if (searchTimer) clearTimeout(searchTimer);
     unsubscribe?.();
     teardownItems();
     root = null;
@@ -518,6 +594,8 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
     overlay = null;
     teleporter?.restore();
     teleporter = null;
+    navigationKeys?.destroy();
+    navigationKeys = null;
     unsubscribe = null;
   };
 
@@ -538,4 +616,4 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   };
 };
 
-export type AutocompleteInstanceController = SelectCore;
+

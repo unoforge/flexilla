@@ -3,7 +3,6 @@ import { highlight, highlightNext, highlightPrev } from "./navigation";
 import { clearSelection, selectValue, toggleValue, unselectValue } from "./selection";
 import { createSelectStore } from "./selectStore";
 import { setSearch } from "./search";
-import { subscribeToState } from "./events";
 import type { SelectItem, SelectOptions, SelectState, SelectListener } from "./types";
 
 export type SelectCore = {
@@ -20,6 +19,8 @@ export type SelectCore = {
   setSearch: (query: string) => void;
   registerItem: (item: SelectItem) => void;
   unregisterItem: (value: string) => void;
+  getItem: (value: string) => SelectItem | undefined;  // O(1) lookup
+  hasItem: (value: string) => boolean;                 // O(1) check
   getState: () => Readonly<SelectState>;
   subscribe: (listener: SelectListener) => () => void;
 };
@@ -52,7 +53,9 @@ export const createSelectCore = (options: SelectOptions = {}): SelectCore => {
     setSearch: (query: string) => setSearch(store, query),
     registerItem: (item: SelectItem) => registerItem(store, item),
     unregisterItem: (value: string) => unregisterItem(store, value),
+    getItem: store.getItem,
+    hasItem: store.hasItem,
     getState: store.getState,
-    subscribe: (listener: SelectListener) => subscribeToState(store, listener),
+    subscribe: store.subscribe,
   };
 };

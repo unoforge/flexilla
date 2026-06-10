@@ -41,7 +41,7 @@ yarn add @flexilla/select
 
 ## Markup structure
 
-`select` does not need a wrapper element. The trigger, content, and selected-value container only need to share the same id through `data-select-id`.
+Select does not need a wrapper. The trigger, content, and value elements only need to share the same `data-select-id`.
 
 ```html
 <button
@@ -69,27 +69,33 @@ yarn add @flexilla/select
 <button data-select-clear data-select-id="framework-select">Clear</button>
 ```
 
-Common elements:
+### DOM attributes
 
-- `data-select-trigger`
-- `data-select-content`
-- `data-select-item`
-- `data-selected-value`
-- `data-select-clear`
-- `data-select-clear-all`
-- `data-select-remove`
-- `data-select-input`
+| Attribute | Role |
+|-----------|------|
+| `data-select-trigger` | Button that opens/closes the panel |
+| `data-select-item` | Selectable option (value goes in the attribute) |
+| `data-selected-value` | Container that renders the current selection |
+| `data-select-input` | Search input inside the panel (optional) |
+| `data-select-clear` | Resets all selected values |
+| `data-select-clear-all` | Same as `data-select-clear` |
+| `data-select-remove` | Removes a specific value (`data-select-remove="value"`) |
+| `data-fx-select` | Auto-init selector (placed on the trigger) |
 
-Useful overlay attributes on `data-select-content`:
+### Overlay attributes
 
-- `data-placement`
-- `data-offset-distance`
-- `data-prevent-close-outside`
-- `data-prevent-close-inside`
-- `data-readjust-height`
-- `data-min-height`
+Put these on the content element to control positioning:
 
-The popper content also receives `--trigger-width`, so you can use:
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-placement` | `bottom-start` | Popper placement |
+| `data-offset-distance` | `6` | Gap between trigger and panel |
+| `data-prevent-close-outside` | `false` | Keep open when clicking outside |
+| `data-prevent-close-inside` | `true` (with search or multiple) | Keep open when clicking inside |
+| `data-readjust-height` | `true` | Recalculate position on scroll |
+| `data-min-height` | `140` | Minimum panel height |
+
+The panel also receives `--trigger-width`, so you can match the trigger width:
 
 ```css
 [data-select-content] {
@@ -104,17 +110,17 @@ The popper content also receives `--trigger-width`, so you can use:
 ```js
 import { Select } from "@flexilla/select";
 
-const select = new Select('[data-select-content][data-select-id="framework-select"]');
+new Select('[data-select-content][data-select-id="framework-select"]');
 ```
 
 You can also pass the element directly:
 
 ```js
-const content = document.querySelector('[data-select-content][data-select-id="framework-select"]');
-const select = new Select(content);
+const el = document.querySelector('[data-select-content][data-select-id="framework-select"]');
+new Select(el);
 ```
 
-The constructor now expects a real selector or a real `HTMLElement`. It resolves the rest of the select by reading the id from that element.
+The constructor expects a CSS selector or `HTMLElement`. It reads the `data-select-id` from that element and resolves the rest of the select automatically.
 
 ### Auto init
 
@@ -124,7 +130,7 @@ import { Select } from "@flexilla/select";
 Select.autoInit();
 ```
 
-`Select.autoInit()` looks for `[data-fx-select]`, which is usually a select element you want to use as the entry point.
+Looks for `[data-fx-select]` elements and initializes them.
 
 ### Controller API
 
@@ -137,23 +143,11 @@ const { destroy } = select.connect({
 });
 ```
 
-You can also connect with an existing element:
+## Search
 
-```js
-const content = document.querySelector('[data-select-content][data-select-id="framework-select"]');
-
-select.connect({ element: content });
-```
-
-## Search inside a select
-
-If the content contains `data-select-input`, the list becomes searchable.
+Add `data-select-input` inside the content to make the list searchable.
 
 ```html
-<button data-fx-select data-select-trigger data-select-id="owner-select">
-  <span data-selected-value data-select-id="owner-select">Choose an owner</span>
-</button>
-
 <div data-select-content data-select-id="owner-select" hidden>
   <input
     data-select-input
@@ -173,36 +167,49 @@ If the content contains `data-select-input`, the list becomes searchable.
 </div>
 ```
 
-When a select contains a search input:
+When a search input is present:
 
 - clicks inside the panel stay open so the input remains usable
-- choosing an item in single mode still closes the select
-- empty states can be rendered with `data-select-empty`
+- choosing an item in single mode still closes the panel
+- use `data-select-empty` to show a message when nothing matches
 
-You can also provide your own filter:
+Custom filter:
 
 ```js
-import { createSelect } from "@flexilla/select";
-
-const select = createSelect({
+createSelect({
   filter: (query, item) => {
     return item.label?.toLowerCase().includes(query.toLowerCase()) ?? false;
   },
 });
 ```
 
-## Custom selected templates
+Search debounce (default 100ms):
 
-`data-selected-value` can define a reusable selected model with `template[data-selected-model]`.
+```js
+createSelect({
+  searchDebounce: 250, // ms
+});
+```
 
-Use:
+Set to `0` for immediate filtering on every keystroke.
 
-- `data-bind` to inject text content from item data
-- `data-bind-src`, `data-bind-alt`, `data-bind-title`, `data-bind-href` for attributes
-- `data-bind-style` for inline styles
-- `data-select-label` to inject the label
-- `data-select-value` to inject the raw value
-- `data-select-remove` to remove a selected item in multiple mode
+## Selected value templates
+
+`data-selected-value` can define a reusable template with `template[data-selected-model]`.
+
+Template bindings:
+
+| Attribute | Description |
+|-----------|-------------|
+| `data-bind` | Injects text from item data |
+| `data-bind-src` | Sets `src` attribute |
+| `data-bind-alt` | Sets `alt` attribute |
+| `data-bind-title` | Sets `title` attribute |
+| `data-bind-href` | Sets `href` attribute |
+| `data-bind-style` | Sets inline styles from item data |
+| `data-select-label` | Injects the item label |
+| `data-select-value` | Injects the raw value |
+| `data-select-remove` | Adds a remove button (multiple mode) |
 
 ```html
 <div data-selected-value data-select-id="reviewers">
@@ -232,25 +239,16 @@ Use:
 
 ## Multiple selection
 
-Enable multiple mode with options:
+Enable with the `multiple` option:
 
 ```js
-import { Select } from "@flexilla/select";
-
-const select = new Select('[data-select-content][data-select-id="reviewers"]', {
-  multiple: true,
-});
+new Select('[data-select-content][data-select-id="reviewers"]', { multiple: true });
 ```
 
 Or in markup:
 
 ```html
-<button
-  data-fx-select
-  data-multiple
-  data-select-trigger
-  data-select-id="reviewers"
->
+<button data-fx-select data-multiple data-select-trigger data-select-id="reviewers">
   Assign reviewers
 </button>
 ```
@@ -258,19 +256,14 @@ Or in markup:
 In multiple mode:
 
 - clicking items toggles them on and off
-- clicks inside the panel stay open by default
-- removing a selected item does not close the panel
-- the selected output can render chips, counts, or compact summaries
+- the panel stays open after selection
+- removing a selected item keeps the panel open
 
-## Multi-select summaries
+### Multi-select summaries
 
-Instead of rendering chips, `data-selected-value` can render a text summary.
+Instead of rendering full templates, `data-selected-value` can show a summary.
 
-Supported modes:
-
-- `chips`
-- `count`
-- `compact`
+Modes: `chips`, `count`, `compact`.
 
 ```html
 <span
@@ -284,7 +277,7 @@ Supported modes:
 </span>
 ```
 
-Compact summaries can limit visible labels:
+Compact mode limits visible labels:
 
 ```html
 <span
@@ -300,7 +293,7 @@ Compact summaries can limit visible labels:
 
 ## Empty state
 
-`select` can render an empty state when search returns no visible items.
+Rendered when search returns no visible items.
 
 ```html
 <template data-select-empty>
@@ -312,29 +305,13 @@ Compact summaries can limit visible labels:
 
 ## State and methods
 
-The controller exposes the `select-core` methods directly:
+The controller exposes select-core methods directly:
 
-- `open()`
-- `close()`
-- `toggle()`
-- `select(value)`
-- `unselect(value)`
-- `clear()`
-- `toggleValue(value)`
-- `highlight(index)`
-- `highlightNext()`
-- `highlightPrev()`
-- `setSearch(query)`
-- `getState()`
-- `subscribe(listener)`
-
-Example:
+`open()` `close()` `toggle()` `select(value)` `unselect(value)` `clear()` `toggleValue(value)` `highlight(index)` `highlightNext()` `highlightPrev()` `setSearch(query)` `getState()` `subscribe(listener)`
 
 ```js
 const select = createSelect();
-select.connect({
-  element: '[data-select-content][data-select-id="framework-select"]',
-});
+select.connect({ element: '...' });
 
 select.subscribe((state) => {
   console.log(state.selectedValues);
@@ -343,33 +320,22 @@ select.subscribe((state) => {
 
 ## Lifecycle
 
-The class API exposes `cleanup()`:
+Class API:
 
 ```js
-const select = new Select('[data-select-content][data-select-id="framework-select"]');
-
-// Later
+const select = new Select('...');
 select.cleanup();
 ```
 
-The controller API still returns a cleanup object from `connect()`:
+Controller API:
 
 ```js
-const { destroy } = select.connect({
-  element: '[data-select-content][data-select-id="framework-select"]',
-});
-
-// Later
+const { destroy } = select.connect({ element: '...' });
 destroy();
 ```
 
-Use cleanup when the DOM can be mounted and unmounted repeatedly.
+## Select vs Autocomplete
 
-## When to use Select vs Autocomplete
-
-- Use `select` when the main interaction starts from a trigger button and a visible option list.
-- Use [Autocomplete](/docs/components/autocomplete) when the main interaction starts from typed input.
-
-## Next step
-
-If you want lower-level selection state without DOM bindings, read [Select Core](/docs/helpers/select-core).
+- Use **Select** when interaction starts from a trigger button and a visible option list.
+- Use **[Autocomplete](/docs/components/autocomplete)** when interaction starts from typed input.
+- Use **[Select Core](/docs/helpers/select-core)** when you want the state engine without DOM bindings.

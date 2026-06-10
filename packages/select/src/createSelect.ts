@@ -1,8 +1,7 @@
 import type { SelectCore, SelectItem, SelectState } from "@flexilla/select-core";
+import { getBooleanAttr } from "@flexilla/select-core";
 import { FlexillaManager } from "@flexilla/manager";
 import { createSelect } from "./controller";
-import { SELECT_CONTENT } from "./constants";
-import { getBooleanAttr } from "./helpers";
 import { resolveSelectTarget } from "./target";
 import type { SelectController, SelectOptions } from "./types";
 
@@ -29,11 +28,10 @@ export class Select implements SelectCore {
     const multiple =
       options.multiple ??
       getBooleanAttr(target.element, "data-multiple") ??
-      getBooleanAttr(document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${target.id}"]`), "data-multiple") ??
       false;
 
     this.registryElement = registryElement;
-    this.controller = createSelect({ ...options, multiple });
+    this.controller = createSelect({ ...options, multiple, });
     this.destroyConnection = this.controller.connect({ element: target.element });
 
     FlexillaManager.register("select", registryElement, this);
@@ -52,6 +50,8 @@ export class Select implements SelectCore {
   setSearch = (query: string) => this.controller.setSearch(query);
   registerItem = (item: SelectItem) => this.controller.registerItem(item);
   unregisterItem = (value: string) => this.controller.unregisterItem(value);
+  getItem = (value: string) => this.controller.getItem(value);
+  hasItem = (value: string) => this.controller.hasItem(value);
   getState = () => this.controller.getState();
   subscribe = (listener: (state: Readonly<SelectState>) => void) => this.controller.subscribe(listener);
 

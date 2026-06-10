@@ -1,7 +1,5 @@
-import type { SelectCore, SelectItem } from "@flexilla/select-core";
+import type { SelectCore } from "@flexilla/select-core";
 import type { Placement } from "flexipop/create-overlay";
-
-export type AutocompleteSource = SelectItem[] | string[];
 
 export type AutocompleteExperimentalOptions = {
   teleport: boolean;
@@ -11,8 +9,8 @@ export type AutocompleteExperimentalOptions = {
 export type AutocompleteOptions = {
   multiple?: boolean;
   defaultValue?: string;
-  source?: AutocompleteSource;
-  filter?: (query: string, item: SelectItem) => boolean;
+  filter?: (query: string, item: import("@flexilla/select-core").SelectItem) => boolean;
+  searchDebounce?: number;
   placement?: Placement;
   offsetDistance?: number;
   preventFromCloseOutside?: boolean;

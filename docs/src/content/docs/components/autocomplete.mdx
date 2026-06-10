@@ -39,7 +39,7 @@ yarn add @flexilla/autocomplete
 
 ## Markup structure
 
-`autocomplete` does not need a wrapper. The input, content, and selected-value container only need to share the same id.
+Autocomplete does not need a wrapper. The input, content, and value elements only need to share the same id.
 
 ```html
 <input
@@ -66,34 +66,42 @@ yarn add @flexilla/autocomplete
 <button data-select-clear data-select-id="framework-autocomplete">Clear</button>
 ```
 
-Common elements:
+### DOM attributes
 
-- `data-select-input`
-- `data-select-content`
-- `data-select-item`
-- `data-selected-value`
-- `data-select-clear`
-- `data-select-clear-all`
-- `data-select-remove`
+| Attribute | Role |
+|-----------|------|
+| `data-select-input` | Search input that drives the autocomplete |
+| `data-select-trigger` | Optional button that opens/closes the panel |
+| `data-select-item` | Selectable option (value goes in the attribute) |
+| `data-selected-value` | Container that renders the current selection |
+| `data-select-clear` | Resets all selected values |
+| `data-select-clear-all` | Same as `data-select-clear` |
+| `data-select-remove` | Removes a specific value (`data-select-remove="value"`) |
+| `data-autocomplete-id` | Shared id used to link input, content, and value elements |
+| `data-fx-autocomplete` | Auto-init selector (placed on the input) |
 
-Useful overlay attributes on `data-select-content`:
+### Overlay attributes
 
-- `data-placement`
-- `data-offset-distance`
-- `data-prevent-close-outside`
-- `data-prevent-close-inside`
-- `data-readjust-height`
-- `data-min-height`
+Put these on the content element to control positioning:
 
-The panel receives `--trigger-width`, so you can size it from the input width:
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-placement` | `bottom-start` | Popper placement |
+| `data-offset-distance` | `6` | Gap between input and panel |
+| `data-prevent-close-outside` | `false` | Keep open when clicking outside |
+| `data-prevent-close-inside` | `true` (with multiple) | Keep open when clicking inside |
+| `data-readjust-height` | `true` | Recalculate position on scroll |
+| `data-min-height` | `140` | Minimum panel height |
+
+`readjustHeight` is enabled by default for autocomplete. Disable it with `data-readjust-height="false"` or `{ readjustHeight: false }`.
+
+The panel receives `--trigger-width`, so you can match the input width:
 
 ```css
 [data-select-content] {
   width: var(--trigger-width);
 }
 ```
-
-`readjustHeight` is enabled by default for autocomplete. Disable it with `data-readjust-height="false"` or `{ readjustHeight: false }`.
 
 ## Basic usage
 
@@ -102,12 +110,12 @@ The panel receives `--trigger-width`, so you can size it from the input width:
 ```js
 import { Autocomplete } from "@flexilla/autocomplete";
 
-const autocomplete = new Autocomplete('[data-select-input][data-autocomplete-id="framework-autocomplete"]');
+new Autocomplete('[data-select-input][data-autocomplete-id="framework-autocomplete"]');
 ```
 
 You can also pass the input element directly.
 
-The constructor now expects a real selector or a real `HTMLElement`. It reads the id from that element and resolves the rest of the autocomplete from there.
+The constructor expects a CSS selector or `HTMLElement`. It reads the id from that element and resolves the rest of the autocomplete automatically.
 
 ### Auto init
 
@@ -117,7 +125,7 @@ import { Autocomplete } from "@flexilla/autocomplete";
 Autocomplete.autoInit();
 ```
 
-`Autocomplete.autoInit()` looks for `[data-fx-autocomplete]`, which is usually the input element.
+Looks for `[data-fx-autocomplete]` elements and initializes them.
 
 ### Controller API
 
@@ -139,34 +147,45 @@ autocomplete.connect({ element: input });
 
 ## Search and filtering
 
-Autocomplete uses the input as the main trigger. The panel opens on focus or click, and filtering happens as the user types.
+The input is the main trigger. The panel opens on focus or click, and filtering happens as the user types.
 
-You can customize the filter function:
+Customize the filter:
 
 ```js
-import { createAutocomplete } from "@flexilla/autocomplete";
-
-const autocomplete = createAutocomplete({
+createAutocomplete({
   filter: (query, item) => {
     return item.label?.toLowerCase().startsWith(query.toLowerCase()) ?? false;
   },
 });
 ```
 
-## Custom selected templates
+Search debounce (default 100ms):
 
-`data-selected-value` can define a custom selected model:
+```js
+createAutocomplete({
+  searchDebounce: 250, // ms
+});
+```
 
-- `template[data-selected-model]`
-- `data-bind`
-- `data-bind-src`
-- `data-bind-alt`
-- `data-bind-title`
-- `data-bind-href`
-- `data-bind-style`
-- `data-select-label`
-- `data-select-value`
-- `data-select-remove`
+Set to `0` for immediate filtering on every keystroke.
+
+## Selected value templates
+
+`data-selected-value` can define a custom template with `template[data-selected-model]`.
+
+Template bindings:
+
+| Attribute | Description |
+|-----------|-------------|
+| `data-bind` | Injects text from item data |
+| `data-bind-src` | Sets `src` attribute |
+| `data-bind-alt` | Sets `alt` attribute |
+| `data-bind-title` | Sets `title` attribute |
+| `data-bind-href` | Sets `href` attribute |
+| `data-bind-style` | Sets inline styles from item data |
+| `data-select-label` | Injects the item label |
+| `data-select-value` | Injects the raw value |
+| `data-select-remove` | Adds a remove button (multiple mode) |
 
 ```html
 <div data-selected-value data-select-id="owners">
@@ -195,24 +214,16 @@ const autocomplete = createAutocomplete({
 
 ## Multiple selection
 
-Enable multiple mode with options:
+Enable with the `multiple` option:
 
 ```js
-const autocomplete = new Autocomplete('[data-select-input][data-autocomplete-id="team-members"]', {
-  multiple: true,
-});
+new Autocomplete('[data-select-input][data-autocomplete-id="team-members"]', { multiple: true });
 ```
 
 Or in markup:
 
 ```html
-<input
-  data-fx-autocomplete
-  data-multiple
-  data-select-input
-  data-autocomplete-id="team-members"
-  type="text"
-/>
+<input data-fx-autocomplete data-multiple data-select-input data-autocomplete-id="team-members" type="text" />
 ```
 
 In multiple mode:
@@ -223,7 +234,7 @@ In multiple mode:
 
 ## Empty state
 
-Use `data-select-empty` to render a message when no item matches the query.
+Rendered when no item matches the query.
 
 ```html
 <template data-select-empty>
@@ -235,23 +246,9 @@ Use `data-select-empty` to render a message when no item matches the query.
 
 ## State and methods
 
-Like `select`, the controller exposes the `select-core` methods directly:
+Like Select, the controller exposes select-core methods directly:
 
-- `open()`
-- `close()`
-- `toggle()`
-- `select(value)`
-- `unselect(value)`
-- `clear()`
-- `toggleValue(value)`
-- `highlight(index)`
-- `highlightNext()`
-- `highlightPrev()`
-- `setSearch(query)`
-- `getState()`
-- `subscribe(listener)`
-
-Example:
+`open()` `close()` `toggle()` `select(value)` `unselect(value)` `clear()` `toggleValue(value)` `highlight(index)` `highlightNext()` `highlightPrev()` `setSearch(query)` `getState()` `subscribe(listener)`
 
 ```js
 autocomplete.subscribe((state) => {
@@ -261,33 +258,22 @@ autocomplete.subscribe((state) => {
 
 ## Lifecycle
 
-The class API exposes `cleanup()`:
+Class API:
 
 ```js
-const autocomplete = new Autocomplete('[data-select-input][data-autocomplete-id="framework-autocomplete"]');
-
-// Later
-autocomplete.cleanup();
+const ac = new Autocomplete('...');
+ac.cleanup();
 ```
 
-The controller API still returns a `destroy()` function:
+Controller API:
 
 ```js
-const { destroy } = autocomplete.connect({
-  element: '[data-select-input][data-autocomplete-id="framework-autocomplete"]',
-});
-
-// Later
+const { destroy } = autocomplete.connect({ element: '...' });
 destroy();
 ```
 
-Use cleanup when the DOM can be replaced or unmounted.
+## Autocomplete vs Select
 
-## When to use Autocomplete vs Select
-
-- Use autocomplete when the interaction starts from typing.
-- Use [Select](/docs/components/select) when the interaction starts from a trigger button and option panel.
-
-## Next step
-
-If you want the shared lower-level selection engine, read [Select Core](/docs/helpers/select-core).
+- Use **Autocomplete** when interaction starts from typing.
+- Use **[Select](/docs/components/select)** when interaction starts from a trigger button and option panel.
+- Use **[Select Core](/docs/helpers/select-core)** when you want the state engine without DOM bindings.

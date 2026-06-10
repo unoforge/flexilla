@@ -1,8 +1,7 @@
 import type { SelectCore, SelectItem, SelectState } from "@flexilla/select-core";
+import { getBooleanAttr } from "@flexilla/select-core";
 import { FlexillaManager } from "@flexilla/manager";
 import { createAutocomplete } from "./controller";
-import { SELECT_CONTENT } from "./constants";
-import { getBooleanAttr } from "./helpers";
 import { resolveAutocompleteTarget } from "./target";
 import type { AutocompleteController, AutocompleteOptions } from "./types";
 
@@ -29,7 +28,6 @@ export class Autocomplete implements SelectCore {
     const multiple =
       options.multiple ??
       getBooleanAttr(target.element, "data-multiple") ??
-      getBooleanAttr(document.querySelector<HTMLElement>(`${SELECT_CONTENT}[data-select-id="${target.id}"]`), "data-multiple") ??
       false;
 
     this.registryElement = registryElement;
@@ -52,6 +50,8 @@ export class Autocomplete implements SelectCore {
   setSearch = (query: string) => this.controller.setSearch(query);
   registerItem = (item: SelectItem) => this.controller.registerItem(item);
   unregisterItem = (value: string) => this.controller.unregisterItem(value);
+  getItem = (value: string) => this.controller.getItem(value);
+  hasItem = (value: string) => this.controller.hasItem(value);
   getState = () => this.controller.getState();
   subscribe = (listener: (state: Readonly<SelectState>) => void) => this.controller.subscribe(listener);
 

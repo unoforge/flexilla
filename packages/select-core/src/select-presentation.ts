@@ -30,7 +30,7 @@ export type SelectPresentationItem = {
 };
 
 export type SelectSummaryOptions = {
-  mode?: "chips" | "count" | "compact";
+  mode?: "chips" | "count" | "compact" | "simple";
   maxVisibleLabels?: number;
   countSingularText?: string;
   countPluralText?: string;
@@ -61,8 +61,10 @@ const replaceSummaryTokens = (template: string, values: Record<string, string | 
 
 const getContainerSummaryOptions = (container: HTMLElement, summary?: SelectSummaryOptions): SelectSummaryOptions => {
   const rawLimit = Number(container.getAttribute("data-select-summary-limit") || summary?.maxVisibleLabels || 1);
+  // Check for explicit mode configuration (container attr or options)
+  const explicitMode = (container.getAttribute("data-select-summary-mode") as SelectSummaryOptions["mode"] | null) || summary?.mode;
   return {
-    mode: (container.getAttribute("data-select-summary-mode") as SelectSummaryOptions["mode"] | null) || summary?.mode || "chips",
+    mode: explicitMode || "simple", // Default to "simple" (comma-separated) instead of "chips"
     maxVisibleLabels: Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 1,
     countSingularText:
       container.getAttribute("data-select-summary-count-singular") || summary?.countSingularText || DEFAULT_COUNT_SINGULAR_TEXT,
@@ -154,8 +156,6 @@ const createTemplateRecord = ({
     ...(item?.item.data || {}),
   };
 };
-
-export const setupSelectPresentationItem = (_element: HTMLElement) => {};
 
 export const setupSelectValueContainer = (container: HTMLElement) => {
   if (container.getAttribute(SELECT_MODEL_ATTR)) return;
@@ -275,7 +275,7 @@ const createSummaryNode = ({
       count === 1 ? summary.countSingularText || DEFAULT_COUNT_SINGULAR_TEXT : summary.countPluralText || DEFAULT_COUNT_PLURAL_TEXT,
       { count },
     );
-  } else {
+  } else if (summary.mode === "compact") {
     const visibleCount = Math.min(summary.maxVisibleLabels || 1, labels.length);
     const visibleLabels = labels.slice(0, visibleCount);
     const remaining = Math.max(labels.length - visibleLabels.length, 0);
@@ -286,6 +286,9 @@ const createSummaryNode = ({
           labels: visibleLabels.join(", "),
         })
       : visibleLabels.join(", ");
+  } else {
+    // Simple mode: all values comma-separated, no truncation
+    text = labels.join(", ");
   }
 
   const template = createNodeFromHtml(container.getAttribute(SELECT_MODEL_ATTR) || "");
