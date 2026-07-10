@@ -69,44 +69,36 @@ export type OverlayOptions = {
 };
 
 export const resolveOverlayOptions = ({
-  root,
   content,
   options,
   defaultPreventCloseInside = false,
 }: {
-  root: HTMLElement;
   content: HTMLElement | null;
   options: OverlayOptions;
   defaultPreventCloseInside?: boolean;
 }) => {
-  const source = content ?? root;
-
   return {
     placement: (content?.dataset.placement as string | undefined) ||
-      (root.dataset.placement as string | undefined) ||
       options.placement ||
       "bottom-start",
     offsetDistance:
       getNumberAttr(content, "data-offset-distance") ??
-      getNumberAttr(root, "data-offset-distance") ??
       options.offsetDistance ??
       6,
     preventFromCloseOutside:
       getBooleanAttr(content, "data-prevent-close-outside") ??
-      getBooleanAttr(root, "data-prevent-close-outside") ??
       options.preventFromCloseOutside ??
       false,
     preventCloseFromInside:
       getBooleanAttr(content, "data-prevent-close-inside") ??
-      getBooleanAttr(root, "data-prevent-close-inside") ??
       options.preventCloseFromInside ??
       defaultPreventCloseInside,
     readjustHeight:
-      getBooleanAttr(source, "data-readjust-height") ??
+      getBooleanAttr(content, "data-readjust-height") ??
       options.readjustHeight ??
       true,
     minHeight:
-      getNumberAttr(source, "data-min-height") ??
+      getNumberAttr(content, "data-min-height") ??
       options.minHeight ??
       140,
     popper: options.popper,

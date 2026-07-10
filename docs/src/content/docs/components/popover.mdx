@@ -41,20 +41,16 @@ yarn add @flexilla/popover
 
 ### Example
 
-<PreviewTopCodeBottom>
-  <PreviewComponent>
+<Tabs values={["Preview", "Code"]} autoHeight>
+  <TabPanel value="Preview" active={true}>
+  <DemoCompBoxInTab>
     <PopoverDefault/>
-  </PreviewComponent>
-
-```html
-<button data-popover-trigger data-popover-target="popover-example" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
-    Show PopOver
-</button>
-<div data-fx-popover data-popover-content id="popover-example" class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-64 z-20 p-6 bg-zinc-100 dark:bg-zinc-900/50 rounded-md h-48">
-    this is content
-</div>
-```
-</PreviewTopCodeBottom>
+  </DemoCompBoxInTab>
+  </TabPanel>
+  <TabPanel value="Code">
+    <CodeLoader source="PopoverDefault"/>
+  </TabPanel>
+</Tabs>
 
 ### Core Styling Requirements
 

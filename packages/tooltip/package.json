@@ -1,6 +1,6 @@
 {
   "name": "@flexilla/tooltip",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "private": false,
   "type": "module",
   "sideEffects": [
@@ -33,10 +33,10 @@
     "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/manager": "0.2.3",
-    "@flexilla/popover": "1.0.5",
-    "@flexilla/utilities": "2.5.4",
-    "flexipop": "0.3.3"
+    "@flexilla/manager": "0.2.4",
+    "@flexilla/popover": "1.0.6",
+    "@flexilla/utilities": "2.5.5",
+    "flexipop": "0.3.4"
   },
   "devDependencies": {
     "typescript": "5.9.3"

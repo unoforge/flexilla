@@ -15,13 +15,13 @@ import {
   SELECT_REMOVE,
   SELECT_TRIGGER,
   SELECT_VALUE,
-  type SelectCore,
   type SelectItem,
   type SelectState,
 } from "@flexilla/select-core";
 import { keyboardNavigation } from "@flexilla/utilities/accessibility";
 import { waitForFxComponents } from "@flexilla/utilities/dom-utilities";
 import { domTeleporter } from "@flexilla/utilities/dom-teleport";
+import { createLocker } from "@flexilla/utilities/locker";
 import { CreateOverlay } from "flexipop/create-overlay";
 import type { SelectController, SelectDom, SelectOptions } from "./types";
 import { parseItem, resolveOverlayOptions } from "./helpers";
@@ -41,7 +41,6 @@ type Teleporter = {
 export const createSelect = (options: SelectOptions = {}): SelectController => {
   const core = createSelectCore({ multiple: options.multiple });
   const filter = options.filter ?? defaultFilter;
-  let root: HTMLElement | null = null;
   let selectId: string | null = null;
   let trigger: HTMLElement | null = null;
   let content: HTMLElement | null = null;
@@ -60,6 +59,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   let overlay: CreateOverlay | null = null;
   let teleporter: Teleporter | null = null;
   let navigationKeys: { make: () => void; destroy: () => void } | null = null;
+  let locker: ReturnType<typeof createLocker> | null = null;
   const cleanup: Array<() => void> = [];
   let unsubscribe: (() => void) | null = null;
   let placeholder = "Select";
@@ -68,8 +68,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   let lastSearch = core.getState().search;
   let searchTimer: ReturnType<typeof setTimeout> | null = null;
   const experimentalOptions = { ...defaultExperimentalOptions, ...(options.experimental || {}) };
-
-  const getScopeElement = () => root ?? content ?? trigger ?? input;
 
   const queryById = <T extends HTMLElement>(selector: string) =>
     Array.from(document.querySelectorAll<T>(`${selector}[data-select-id="${selectId}"]`));
@@ -157,11 +155,14 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
       syncingOverlay = true;
       restoreEl();
       overlay.show();
+      locker?.lock([content])
       syncingOverlay = false;
       return;
     }
     if (!state.open && overlayState === "open") {
       syncingOverlay = true;
+      locker?.unlock()
+      trigger?.focus()
       overlay.hide();
       syncingOverlay = false;
     }
@@ -253,6 +254,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
     ensureHighlighted();
     if (!filtered.length) core.highlight(null);
+    if (core.getState().open) overlay?.refreshPopper();
   };
 
   const updateAria = (state: SelectState) => {
@@ -391,7 +393,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     if (!selectId) return;
 
     trigger = resolveSingleElement<HTMLElement>({ selector: SELECT_TRIGGER, role: "trigger" });
-    content = root;
     input = resolveSingleElement<HTMLInputElement>({ selector: SELECT_INPUT, role: "search input", required: false });
     hiddenValueInput = document.querySelector<HTMLInputElement>(`${SELECT_HIDDEN_VALUE}[data-select-id="${selectId}"]`);
 
@@ -456,7 +457,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     });
 
     const overlayOptions = resolveOverlayOptions({
-      root: getScopeElement() ?? trigger,
       content,
       options,
     });
@@ -486,6 +486,8 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
         },
         onHide: () => {
           navigationKeys?.destroy();
+          locker?.unlock()
+          trigger?.focus()
           if (core.getState().open) {
             syncingOverlay = true;
             core.close();
@@ -495,6 +497,8 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
         },
       },
     });
+    locker = createLocker();
+    cleanup.push(() => locker?.unlock());
     cleanup.push(() => overlay?.cleanup());
 
     registerItems();
@@ -522,7 +526,6 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
     if (searchTimer) clearTimeout(searchTimer);
     cleanup.splice(0).forEach((fn) => fn());
     unsubscribe?.();
-    root = null;
     selectId = null;
     trigger = null;
     content = null;
@@ -545,7 +548,7 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
 
   const connect = ({ element }: SelectDom) => {
     const target = resolveSelectTarget(element);
-    root = target.element;
+    content = target.element;
     selectId = target.id;
     bindDom();
     unsubscribe?.();

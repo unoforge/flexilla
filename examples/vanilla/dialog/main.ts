@@ -1,6 +1,7 @@
-import { Modal, ModalOptions } from "@flexilla/modal"
-import { Dropdown } from "./../../../packages/dropdown"
+import { Modal, type ModalOptions } from "@flexilla/modal"
+import { Dropdown } from "@flexilla/dropdown"
 import "./../main"
+import { Select } from "@flexilla/select"
 
 new Modal("[data-modal-test-1]")
 
@@ -91,3 +92,5 @@ new Modal(
 
 
 const droptest = new Dropdown("[data-drop-down-1]")
+
+new Select('[data-select-content][data-select-id="demo-select-template"]');

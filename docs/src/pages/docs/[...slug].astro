@@ -1,6 +1,6 @@
 ---
 import { sidebarItemFlaterned } from "@helper/doc-helper";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 import DocsLayout from "@layouts/DocsLayout.astro";
 import { components } from "@components/docs/AllComponents.astro";
@@ -13,7 +13,7 @@ import Link from "@components/atoms/Link.astro";
 export async function getStaticPaths() {
   const docs = await getCollection("docs");
   return docs.map((doc) => ({
-    params: { slug: doc.slug },
+    params: { slug: doc.id },
     props: { doc_content: doc },
   }));
 }
@@ -21,18 +21,17 @@ export async function getStaticPaths() {
 const { doc_content } = Astro.props;
 
 const {
-  slug,
   id,
   data: { title, description, hidePagination, hideTableOfContent, references },
 } = doc_content;
 
-const { Content, headings } = await doc_content.render();
+const { Content, headings } = await render(doc_content);
 
-const pageSlugId = slug
+const pageSlugId = id;
 
-const activeItem = slug.includes("framework-guide")
+const activeItem = id.includes("framework-guide")
   ? "framework-guide"
-  : `${slug}`;
+  : `${id}`;
 
 const { next: nextSlug, prev: prevSlug, current } = getPagger(pageSlugId);
 type metaTag = {

@@ -1,6 +1,6 @@
 {
   "name": "@flexilla/dropdown",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "private": false,
   "type": "module",
   "sideEffects": [
@@ -33,9 +33,9 @@
     "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/manager": "0.2.3",
-    "@flexilla/utilities": "2.5.4",
-    "flexipop": "0.3.3"
+    "@flexilla/manager": "0.2.4",
+    "@flexilla/utilities": "2.5.5",
+    "flexipop": "0.3.4"
   },
   "devDependencies": {
     "typescript": "5.9.3"

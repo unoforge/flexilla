@@ -1,0 +1,65 @@
+---
+import type { HTMLAttributes } from "astro/types"
+import { cn } from "@lib/utils"
+
+interface Props extends HTMLAttributes<"table"> {}
+
+const { class: className, ...rest } = Astro.props
+---
+
+<div class="w-full my6 first-mt0 last-mb0 overflow-x-auto rd-lg b b-zinc2/60 dark-b-zinc8/60">
+  <table
+    data-doc-table
+    class={`${cn("w-full border-collapse text-sm text-left text-zinc-700 dark-text-zinc-300", className)}`}
+    {...rest}
+  >
+    <slot />
+  </table>
+</div>
+
+<style is:global>
+  [data-doc-table] thead {
+    background-color: rgb(244 244 245 / 0.6);
+  }
+  html.dark [data-doc-table] thead {
+    background-color: rgb(24 24 27 / 0.6);
+  }
+
+  [data-doc-table] th {
+    font-weight: 600;
+    padding: 0.625rem 1rem;
+    color: rgb(24 24 27);
+    border-bottom: 1px solid rgb(228 228 231 / 0.9);
+    white-space: nowrap;
+  }
+  html.dark [data-doc-table] th {
+    color: rgb(244 244 245);
+    border-bottom-color: rgb(39 39 42 / 0.6);
+  }
+
+  [data-doc-table] td {
+    padding: 0.625rem 1rem;
+    color: rgb(63 63 70);
+    border-bottom: 1px solid rgb(228 228 231 / 0.5);
+    vertical-align: top;
+  }
+  html.dark [data-doc-table] td {
+    color: rgb(212 212 216);
+    border-bottom-color: rgb(39 39 42 / 0.4);
+  }
+
+  [data-doc-table] tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  [data-doc-table] tbody tr:hover {
+    background-color: rgb(244 244 245 / 0.4);
+  }
+  html.dark [data-doc-table] tbody tr:hover {
+    background-color: rgb(24 24 27 / 0.4);
+  }
+
+  [data-doc-table] td code {
+    white-space: nowrap;
+  }
+</style>

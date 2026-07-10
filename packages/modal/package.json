@@ -1,6 +1,6 @@
 {
   "name": "@flexilla/modal",
-  "version": "2.3.6",
+  "version": "2.3.7",
   "private": false,
   "type": "module",
   "sideEffects": [
@@ -33,8 +33,8 @@
     "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/manager": "0.2.3",
-    "@flexilla/utilities": "2.5.4"
+    "@flexilla/manager": "0.2.4",
+    "@flexilla/utilities": "2.5.5"
   },
   "devDependencies": {
     "typescript": "5.9.3"

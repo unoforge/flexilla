@@ -1,10 +1,9 @@
 
 import type { ModalContentAnimations, ModalOptions } from "./types";
 import { setBodyScrollable, toggleModalState } from "./helpers";
-import { $, $$, afterAnimation, dispatchCustomEvent, waitForFxComponents } from "@flexilla/utilities";
 import { FlexillaManager } from "@flexilla/manager"
 import { buildOverlay, destroyOverlay } from "./modalOverlay";
-import { domTeleporter } from "@flexilla/utilities"
+import { domTeleporter, $, $$, afterAnimation, dispatchCustomEvent, waitForFxComponents, createLocker } from "@flexilla/utilities"
 
 
 
@@ -37,6 +36,7 @@ class Modal {
     private closeButtons!: HTMLButtonElement[]
     private overlayClassName!: string[] | ""
     private allowBodyScroll?: boolean
+    private locker = createLocker()
     private initAsOpen?: boolean
     private teleporter!: {
         append: () => void;
@@ -245,8 +245,11 @@ class Modal {
 
         this.modalContent.focus();
         if (!this.preventCloseModal) this.overlayElement.addEventListener("click", this.hideModal)
+        this.locker.lock([this.modalElement])
         this.options.onShow?.()
         this.options.onToggle?.({ isHidden: false })
+        this.modalElement.removeAttribute("inert")
+        this.modalElement.removeAttribute("aria-hidden")
         this.modalElement.showModal()
     }
 
@@ -255,6 +258,7 @@ class Modal {
         this.modalElement.setAttribute("aria-hidden", "true");
         this.modalElement.setAttribute("data-state", "close");
         this.modalElement.blur();
+        this.locker.unlock()
         setBodyScrollable(this.enableStackedModals || false, this.allowBodyScroll || false, this.modalElement)
         if (!this.hasDefaultOverlay) destroyOverlay(this.overlayElement)
         dispatchCustomEvent(this.modalElement, "modal-close", { modalId: this.modalElement.id })
@@ -317,6 +321,7 @@ class Modal {
         }
         if (this.dispatchEventToDocument) document.removeEventListener(`modal:${this.modalId}:open`, this.showModal);
         if (this.dispatchEventToDocument) document.removeEventListener(`modal:${this.modalId}:close`, this.hideModal);
+        this.locker.unlock()
         FlexillaManager.removeInstance("modal", this.modalElement)
     }
 

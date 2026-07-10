@@ -12,22 +12,17 @@ export const parseItem = (element: HTMLElement): SelectItem | null => {
 };
 
 export const resolveOverlayOptions = ({
-  root,
   content,
   options,
 }: {
-  root: HTMLElement;
   content: HTMLElement | null;
   options: SelectOptions;
 }) => {
-  const multiple = options.multiple ?? (root.hasAttribute("data-multiple") || root.dataset.multiple === "true");
+  const multiple = options.multiple ?? (content?.hasAttribute("data-multiple") || content?.dataset.multiple === "true");
   const hasSearchInput =
-    Boolean(content?.querySelector(SELECT_INPUT)) ||
-    Boolean(root.querySelector(`${SELECT_INPUT}[data-select-id="${root.id}"]`)) ||
-    Boolean(root.querySelector(SELECT_INPUT));
+    Boolean(content?.querySelector(SELECT_INPUT));
 
   const baseOptions = baseResolveOverlayOptions({
-    root,
     content,
     options: {
       placement: options.placement,
@@ -45,7 +40,6 @@ export const resolveOverlayOptions = ({
   return {
     ...baseOptions,
     placement: (content?.dataset.placement as Placement | undefined) ||
-      (root.dataset.placement as Placement | undefined) ||
       options.placement ||
       "bottom-start",
   };

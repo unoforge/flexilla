@@ -40,17 +40,18 @@
         "@iconify-json/carbon": "^1.1.30",
         "@shikijs/transformers": "^3.12.0",
         "@unifydev/flexilla": "^0.1.3",
+        "@unocss/astro": "66.6.7",
         "@unocss/preset-icons": "^66.4.2",
         "unocss": "^66.4.2",
       },
     },
     "packages/accordion": {
       "name": "@flexilla/accordion",
-      "version": "2.2.6",
+      "version": "2.2.7",
       "dependencies": {
-        "@flexilla/collapsible": "workspace:*",
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
+        "@flexilla/collapsible": "0.1.3",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/utilities": "2.5.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -58,9 +59,9 @@
     },
     "packages/auto-resize-area": {
       "name": "@flexilla/auto-resize-area",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
+        "@flexilla/manager": "0.2.3",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -68,12 +69,12 @@
     },
     "packages/autocomplete": {
       "name": "@flexilla/autocomplete",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/select-core": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
-        "flexipop": "workspace:*",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/select-core": "0.1.1",
+        "@flexilla/utilities": "latest",
+        "flexipop": "0.3.3",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -81,11 +82,11 @@
     },
     "packages/collapse": {
       "name": "@flexilla/collapse",
-      "version": "2.1.6",
+      "version": "2.1.7",
       "dependencies": {
-        "@flexilla/collapsible": "workspace:*",
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
+        "@flexilla/collapsible": "0.1.3",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/utilities": "2.5.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -93,9 +94,9 @@
     },
     "packages/collapsible": {
       "name": "@flexilla/collapsible",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "dependencies": {
-        "@flexilla/utilities": "workspace:*",
+        "@flexilla/utilities": "2.5.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -103,9 +104,9 @@
     },
     "packages/custom-range": {
       "name": "@flexilla/custom-range",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
+        "@flexilla/manager": "0.2.3",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -113,10 +114,10 @@
     },
     "packages/dismissible": {
       "name": "@flexilla/dismissible",
-      "version": "2.0.15",
+      "version": "2.0.16",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/utilities": "2.5.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -124,11 +125,11 @@
     },
     "packages/dropdown": {
       "name": "@flexilla/dropdown",
-      "version": "2.2.7",
+      "version": "2.2.8",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
-        "flexipop": "workspace:*",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/utilities": "2.5.4",
+        "flexipop": "0.3.3",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -136,20 +137,20 @@
     },
     "packages/flexilla": {
       "name": "@flexilla/flexilla",
-      "version": "2.3.1",
+      "version": "2.3.2",
       "dependencies": {
-        "@flexilla/accordion": "workspace:*",
-        "@flexilla/auto-resize-area": "workspace:*",
-        "@flexilla/collapse": "workspace:*",
-        "@flexilla/custom-range": "workspace:*",
-        "@flexilla/dismissible": "workspace:*",
-        "@flexilla/dropdown": "workspace:*",
-        "@flexilla/modal": "workspace:*",
-        "@flexilla/offcanvas": "workspace:*",
-        "@flexilla/pin-input": "workspace:*",
-        "@flexilla/popover": "workspace:*",
-        "@flexilla/tabs": "workspace:*",
-        "@flexilla/tooltip": "workspace:*",
+        "@flexilla/accordion": "2.2.7",
+        "@flexilla/auto-resize-area": "2.1.1",
+        "@flexilla/collapse": "2.1.7",
+        "@flexilla/custom-range": "2.1.1",
+        "@flexilla/dismissible": "2.0.16",
+        "@flexilla/dropdown": "2.2.8",
+        "@flexilla/modal": "2.3.6",
+        "@flexilla/offcanvas": "2.2.2",
+        "@flexilla/pin-input": "0.0.3",
+        "@flexilla/popover": "1.0.5",
+        "@flexilla/tabs": "2.2.5",
+        "@flexilla/tooltip": "2.4.5",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -157,9 +158,9 @@
     },
     "packages/flexipop": {
       "name": "flexipop",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "dependencies": {
-        "@flexilla/utilities": "workspace:*",
+        "@flexilla/utilities": "2.5.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -167,17 +168,17 @@
     },
     "packages/manager": {
       "name": "@flexilla/manager",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "devDependencies": {
         "typescript": "5.9.3",
       },
     },
     "packages/modal": {
       "name": "@flexilla/modal",
-      "version": "2.3.5",
+      "version": "2.3.6",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/utilities": "2.5.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -185,10 +186,10 @@
     },
     "packages/offcanvas": {
       "name": "@flexilla/offcanvas",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/utilities": "2.5.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -196,9 +197,9 @@
     },
     "packages/pin-input": {
       "name": "@flexilla/pin-input",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
+        "@flexilla/manager": "0.2.3",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -206,11 +207,11 @@
     },
     "packages/popover": {
       "name": "@flexilla/popover",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
-        "flexipop": "workspace:*",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/utilities": "2.5.4",
+        "flexipop": "0.3.3",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -218,7 +219,7 @@
     },
     "packages/select": {
       "name": "@flexilla/select",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@flexilla/manager": "workspace:*",
         "@flexilla/select-core": "workspace:*",
@@ -231,17 +232,17 @@
     },
     "packages/select-core": {
       "name": "@flexilla/select-core",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "devDependencies": {
         "typescript": "5.9.3",
       },
     },
     "packages/tabs": {
       "name": "@flexilla/tabs",
-      "version": "2.2.4",
+      "version": "2.2.5",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/utilities": "2.5.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -249,12 +250,12 @@
     },
     "packages/tooltip": {
       "name": "@flexilla/tooltip",
-      "version": "2.4.4",
+      "version": "2.4.5",
       "dependencies": {
-        "@flexilla/manager": "workspace:*",
-        "@flexilla/popover": "workspace:*",
-        "@flexilla/utilities": "workspace:*",
-        "flexipop": "workspace:*",
+        "@flexilla/manager": "0.2.3",
+        "@flexilla/popover": "1.0.5",
+        "@flexilla/utilities": "2.5.4",
+        "flexipop": "0.3.3",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -262,7 +263,7 @@
     },
     "packages/utilities": {
       "name": "@flexilla/utilities",
-      "version": "2.5.3",
+      "version": "2.5.4",
       "devDependencies": {
         "typescript": "5.9.3",
       },
@@ -913,6 +914,8 @@
 
     "@unifydev/unify-variant": ["@unifydev/unify-variant@0.3.0", "", {}, "sha512-H+udnWGtnEpN8sb1lk3a1tbAtl9I/HLu4eNbwyttwUncZrMZT3SZc6EAnQVRjc39ZK7AxBFaBIZvbCxskv57zQ=="],
 
+    "@unocss/astro": ["@unocss/astro@66.6.7", "", { "dependencies": { "@unocss/core": "66.6.7", "@unocss/reset": "66.6.7", "@unocss/vite": "66.6.7" }, "peerDependencies": { "vite": "^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0-0 || ^6.0.0-0 || ^7.0.0-0 || ^8.0.0-0" }, "optionalPeers": ["vite"] }, "sha512-Vk/4sZWGgusROqL4eMgp3uZVYDDdfknNPyn1ij1dNPw2HV/m79U4QKpjpZvnr9XwrX9i4CMgc1TcZdC9T4gzuA=="],
+
     "@unocss/cli": ["@unocss/cli@66.6.7", "", { "dependencies": { "@jridgewell/remapping": "^2.3.5", "@unocss/config": "66.6.7", "@unocss/core": "66.6.7", "@unocss/preset-wind3": "66.6.7", "@unocss/preset-wind4": "66.6.7", "@unocss/transformer-directives": "66.6.7", "cac": "^6.7.14", "chokidar": "^5.0.0", "colorette": "^2.0.20", "consola": "^3.4.2", "magic-string": "^0.30.21", "pathe": "^2.0.3", "perfect-debounce": "^2.1.0", "tinyglobby": "^0.2.15", "unplugin-utils": "^0.3.1" }, "bin": { "unocss": "bin/unocss.mjs" } }, "sha512-m/yW5HMVyxfAOeyO4OyA4JB9dY+/gTsk25ucI8xVCFVDEENPEGr+vEqTDOA+vfe6pdURtyDYS7OrhikIRU1WNA=="],
 
     "@unocss/config": ["@unocss/config@66.6.7", "", { "dependencies": { "@unocss/core": "66.6.7", "colorette": "^2.0.20", "consola": "^3.4.2", "unconfig": "^7.5.0" } }, "sha512-1uleyRLyJc6PNNc2L3hEaKL89zXwvQAtP36oFySgL47RAxZHPZ4vfqFpbwR0eEN4iSqTS24ZFr7CTRWCaEGjzQ=="],
@@ -942,6 +945,8 @@
     "@unocss/preset-wind3": ["@unocss/preset-wind3@66.6.7", "", { "dependencies": { "@unocss/core": "66.6.7", "@unocss/preset-mini": "66.6.7", "@unocss/rule-utils": "66.6.7" } }, "sha512-PKyqeRzlIMd3Irdt6fCKMm73zgwweiXESk5edUK8dVWndvPIcZCOqrEq7yg6Pr/Q8tHdq26viYSkVY3a3t8RSg=="],
 
     "@unocss/preset-wind4": ["@unocss/preset-wind4@66.6.7", "", { "dependencies": { "@unocss/core": "66.6.7", "@unocss/extractor-arbitrary-variants": "66.6.7", "@unocss/rule-utils": "66.6.7" } }, "sha512-9grhWeBsFzpv8iER9AFATRaxLyXMCwGQ5HzeI4XZh2ZZ9O6vC7nYfGhns4/I+F/RpFglzU1bjqMWRS/DS8OpGQ=="],
+
+    "@unocss/reset": ["@unocss/reset@66.6.7", "", {}, "sha512-+OjpLDEaPmhTQ3Gj7EaKApNM92TM9f9gLgHNa79+66wIll9IfhKfEmJXnF9y1SE725n4PmPIQgC9k313HztMLA=="],
 
     "@unocss/rule-utils": ["@unocss/rule-utils@66.6.7", "", { "dependencies": { "@unocss/core": "^66.6.7", "magic-string": "^0.30.21" } }, "sha512-4PT/s8yKIShSqP9XPSw4EjbZopcu3wlIB9i3kbGbzQwF91H+0Yy10guK3kHDGtkmWVN6Np6VvaGIj2UcbmaivA=="],
 
@@ -2576,6 +2581,8 @@
     "@babel/traverse/@babel/parser": ["@babel/parser@7.29.2", "", { "dependencies": { "@babel/types": "^7.29.0" }, "bin": "./bin/babel-parser.js" }, "sha512-4GgRzy/+fsBa72/RZVJmGKPmZu9Byn8o4MoLpmNe1m8ZfYnz5emHLQz3U4gLud6Zwl0RZIcgiLD7Uq7ySFuDLA=="],
 
     "@babel/traverse/@babel/types": ["@babel/types@7.29.0", "", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.28.5" } }, "sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A=="],
+
+    "@flexilla/autocomplete/@flexilla/utilities": ["@flexilla/utilities@2.5.4", "", {}, "sha512-Q00wBmqCXR3RLy2D1Pn+uoxj2gJpBKyB4D1sGF8qC2WzHnZNLTXjQgfD3jNS6QxTtT1McdY6+95Zltp2lq5Vcg=="],
 
     "@inquirer/core/signal-exit": ["signal-exit@4.1.0", "", {}, "sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw=="],
 

@@ -1,6 +1,6 @@
 {
   "name": "flexipop",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": false,
   "type": "module",
   "sideEffects": [
@@ -37,7 +37,7 @@
     "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/utilities": "2.5.4"
+    "@flexilla/utilities": "2.5.5"
   },
   "devDependencies": {
     "typescript": "5.9.3"

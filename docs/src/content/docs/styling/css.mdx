@@ -20,7 +20,7 @@ We’ll directly use attribute selectors in CSS. For example, to apply styles ba
 Here are the states we will use for demonstration:
 
 - `open`
-- `closed`
+- `close`
 - `active`
 - `inactive`
 - `visible`
@@ -118,8 +118,52 @@ In this example, elements with `data-state="open"` are styled with a green backg
 
 Here, content with `data-state="hidden"` is hidden from view using `display: none`.
 
+## Example 4: Combining Multiple States
 
-In this case, the button with both `data-state="active open"` will be styled with a dark green background and yellow text.
+An element can carry multiple state values in a single `data-state` attribute (space-separated). This is useful when an element is in more than one state at the same time — for example, a tab trigger that is both `active` and `open`.
+
+### HTML
+
+```html
+<button data-state="active open" class="btn">
+  Active & Open Button
+</button>
+
+<button data-state="active close" class="btn">
+  Active & Closed Button
+</button>
+```
+
+### CSS
+
+```css
+/* Base button style */
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Both active AND open */
+.btn[data-state~="active"][data-state~="open"] {
+  background-color: darkgreen;
+  color: yellow;
+}
+
+/* Active but closed */
+.btn[data-state~="active"][data-state~="close"] {
+  background-color: darkslategray;
+  color: white;
+}
+```
+
+In this case, the button with `data-state="active open"` will be styled with a dark green background and yellow text.
+
+<Callout type="note">
+The `~=` selector matches a whitespace-separated word within the attribute value. This lets you target individual states even when multiple are combined.
+</Callout>
 
 
 ## Example 5: Transition and Animation

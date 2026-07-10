@@ -10,6 +10,7 @@ export default defineConfig({
     "scroll-to-top": "src/scroll-to-top.ts",
     "dom-teleport": "src/dom-teleport.ts",
     "theme/index": "src/theme/index.ts",
+    "locker/index":"src/locker/index.ts"
   },
   format: ["esm", "cjs"],
   fixedExtension: false,

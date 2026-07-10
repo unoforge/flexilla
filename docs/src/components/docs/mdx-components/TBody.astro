@@ -1,0 +1,12 @@
+---
+import type { HTMLAttributes } from "astro/types"
+import { cn } from "@lib/utils"
+
+interface Props extends HTMLAttributes<"tbody"> {}
+
+const { class: className, ...rest } = Astro.props
+---
+
+<tbody class={`${cn("", className)}`} {...rest}>
+  <slot />
+</tbody>

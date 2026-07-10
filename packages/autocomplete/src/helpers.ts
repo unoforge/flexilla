@@ -3,18 +3,15 @@ import type { Placement } from "flexipop/create-overlay";
 import type { AutocompleteOptions } from "./types";
 
 export const resolveOverlayOptions = ({
-  root,
   content,
   options,
 }: {
-  root: HTMLElement;
   content: HTMLElement | null;
   options: AutocompleteOptions;
 }) => {
-  const multiple = options.multiple ?? (root.hasAttribute("data-multiple") || root.dataset.multiple === "true");
+  const multiple = options.multiple ?? (content?.hasAttribute("data-multiple") || content?.dataset.multiple === "true");
 
   const baseOptions = baseResolveOverlayOptions({
-    root,
     content,
     options: {
       placement: options.placement,
@@ -32,7 +29,6 @@ export const resolveOverlayOptions = ({
   return {
     ...baseOptions,
     placement: (content?.dataset.placement as Placement | undefined) ||
-      (root.dataset.placement as Placement | undefined) ||
       options.placement ||
       "bottom-start",
   };

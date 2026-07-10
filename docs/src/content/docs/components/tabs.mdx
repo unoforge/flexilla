@@ -221,8 +221,9 @@ The options object provides flexibility in customizing the Tabs component.
 
 ```js
 const options = {
-  onTabChange({ activeTab }) {
+  onChangeTab({ currentTrigger, currentPanel }) {
     // Action when the tab changes
+    console.log(currentTrigger, currentPanel);
   },
 };
 ```

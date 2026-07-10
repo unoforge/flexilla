@@ -1,6 +1,6 @@
 {
   "name": "@flexilla/utilities",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -48,6 +48,11 @@
       "types": "./dist/theme/index.d.ts",
       "import": "./dist/theme/index.js",
       "require": "./dist/theme/index.cjs"
+    },
+    "./locker": {
+      "types": "./dist/locker/index.d.ts",
+      "import": "./dist/locker/index.js",
+      "require": "./dist/locker/index.cjs"
     }
   },
   "files": [

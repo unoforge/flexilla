@@ -151,6 +151,29 @@ class CreateOverlay {
         this.show()
         this.addEventOnMouseEnter()
     }
+    private initInstance() {
+        updateOverlayState({
+            state: this.defaultState,
+            popper: this.contentElement,
+            trigger: this.triggerElement
+        })
+        if (this.defaultState === "open") {
+            this.show()
+        } else {
+            updateOverlayState({
+                state: "close",
+                popper: this.contentElement,
+                trigger: this.triggerElement
+            })
+        }
+
+        if (this.triggerStrategy !== "manual") {
+            this.triggerElement.addEventListener("click", this.toggleStateOnClick)
+        }
+        if (this.triggerStrategy === "hover") {
+            this.triggerElement.addEventListener("mouseenter", this.showOnMouseEnter)
+        }
+    }
 
     /**
      * Shows the overlay
@@ -258,7 +281,7 @@ class CreateOverlay {
             window.clearTimeout(this.clickListenerTimeout)
             this.clickListenerTimeout = null
         }
-        this.triggerStrategy === "click" && document.removeEventListener("click", this.handleDocumentClick)
+        document.removeEventListener("click", this.handleDocumentClick)
         document.removeEventListener("keydown", this.handleKeyDown)
         if (this.triggerStrategy === "hover") {
             this.triggerElement.removeEventListener("mouseleave", this.hideOnMouseLeaseTrigger)
@@ -275,28 +298,9 @@ class CreateOverlay {
 
     }
 
-    private initInstance() {
-        updateOverlayState({
-            state: this.defaultState,
-            popper: this.contentElement,
-            trigger: this.triggerElement
-        })
-        if (this.defaultState === "open") {
-            this.show()
-        } else {
-            updateOverlayState({
-                state: "close",
-                popper: this.contentElement,
-                trigger: this.triggerElement
-            })
-        }
-
-        this.triggerElement.addEventListener("click", this.toggleStateOnClick)
-        if (this.triggerStrategy === "hover") {
-            this.triggerElement.addEventListener("mouseenter", this.showOnMouseEnter)
-        }
+    refreshPopper(){
+        this.popper.updatePosition()
     }
-
     /**
      * Cleans up event listeners and related callbacks
      */

@@ -18,7 +18,7 @@
     <div class="space-y-6">
       <div class="space-y-3">
         <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Basic single select</h2>
-        <p class="text-sm text-zinc-600 dark:text-zinc-400">Minimal usage with only a trigger, a content list, and a shared id.</p>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Minimal single select with a trigger, a content list, and a default value.</p>
       </div>
       <div class="relative w-full max-w-md space-y-2">
         <button data-fx-select data-select-trigger data-select-id="demo-select-basic" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">
@@ -39,7 +39,7 @@
       <div class="space-y-6">
         <div class="space-y-3">
           <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Searchable single select</h2>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">Uses a search field inside the panel and renders the selected trigger with a single shared template.</p>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Searchable single select with a filter input, custom template with data bindings, a clear button, and an empty state.</p>
         </div>
       <div class="relative w-full max-w-md space-y-2">
         <button data-fx-select data-select-trigger data-select-id="demo-select" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">
@@ -100,7 +100,7 @@
     <div class="space-y-6">
         <div class="space-y-3">
           <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select</h2>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">Toggle multiple values with Enter or click.</p>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Multi select with chips summary, search filtering, individual chip removal, and clear all.</p>
         </div>
       <div class="relative max-w-md space-y-2">
         <button data-fx-select data-multiple data-select-trigger data-select-id="demo-select-multi" class="w-full b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg flex justify-start text-left text-sm">
@@ -215,7 +215,7 @@
       <div class="space-y-6">
         <div class="space-y-3">
           <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Single select with custom value template</h2>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400">Uses a single selected-value model and item data attributes to render a compact selected summary.</p>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Single select with a custom template using <code>data-bind-style</code> to render a colored dot indicator alongside the label.</p>
         </div>
       <div class="relative w-full max-w-md space-y-2">
         <button data-fx-select data-select-trigger data-select-id="demo-select-template" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">

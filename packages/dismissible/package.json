@@ -1,6 +1,6 @@
 {
   "name": "@flexilla/dismissible",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -30,8 +30,8 @@
     "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/manager": "0.2.3",
-    "@flexilla/utilities": "2.5.4"
+    "@flexilla/manager": "0.2.4",
+    "@flexilla/utilities": "2.5.5"
   },
   "devDependencies": {
     "typescript": "5.9.3"
