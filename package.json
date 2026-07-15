@@ -16,6 +16,8 @@
     "release:version:yes": "lerna version --no-private --yes",
     "release:publish": "lerna publish from-package --no-private",
     "release:publish:yes": "lerna publish from-package --no-private --yes",
+    "bump": "node scripts/bump-versions.mjs",
+    "publish:all": "node scripts/publish-all.mjs",
     "release": "bun run build && bun run typecheck && bun run release:publish",
     "test": "bun test",
     "typecheck": "bun run --filter 'flexipop' typecheck && bun run --filter '@flexilla/*' typecheck"

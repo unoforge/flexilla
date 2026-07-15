@@ -25,6 +25,7 @@
     "@astrojs/vercel": "10.0.2",
     "@astrojs/vue": "6.0.1",
     "@flexilla/flexilla": "^2.2.8-beta.1",
+    "@flexilla/toast": "^0.1.0",
     "@flexilla/utilities": "^2.5.2",
     "@fontsource/geist-sans": "^5.1.0",
     "@preact/signals": "^1.2.2",

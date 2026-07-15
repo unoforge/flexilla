@@ -1,0 +1,13 @@
+<div class="flex flex-wrap items-center gap-3">
+    <button data-toast-demo-default
+        class="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition">
+        Show Toast
+    </button>
+</div>
+
+<script>
+import toast from '@flexilla/toast'
+document.querySelector('[data-toast-demo-default]')?.addEventListener('click', () => {
+    toast('Event has been created.')
+});
+</script>

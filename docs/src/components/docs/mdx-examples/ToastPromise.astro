@@ -1,0 +1,28 @@
+<div class="flex flex-wrap items-center gap-3">
+    <button data-toast-demo-promise
+        class="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition">
+        Run Promise
+    </button>
+    <button data-toast-demo-loading
+        class="bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition">
+        Then Update
+    </button>
+</div>
+
+<script>
+import toast from '@flexilla/toast'
+document.querySelector('[data-toast-demo-promise]')?.addEventListener('click', () =>
+    toast.promise(
+        new Promise<string>((resolve) => setTimeout(() => resolve('done'), 2000)),
+        {
+            loading: 'Loading data…',
+            success: (data) => `Successfully loaded ${data}!`,
+            error: 'Failed to load data.',
+        }
+    )
+);
+document.querySelector('[data-toast-demo-loading]')?.addEventListener('click', () => {
+    const id = toast.loading('Processing…');
+    setTimeout(() => toast.success('Completed!', { id }), 2000);
+});
+</script>

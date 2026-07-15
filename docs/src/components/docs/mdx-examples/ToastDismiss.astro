@@ -1,0 +1,16 @@
+<div class="flex flex-wrap items-center gap-3">
+    <button data-toast-demo-dismiss
+        class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition">
+        Dismiss All
+    </button>
+</div>
+
+<script>
+import toast from '@flexilla/toast'
+document.querySelector('[data-toast-demo-dismiss]')?.addEventListener('click', () => {
+    toast.success('Toast 1')
+    setTimeout(() => toast.success('Toast 2'), 200)
+    setTimeout(() => toast.success('Toast 3'), 400)
+    setTimeout(() => toast.dismiss(), 1500)
+});
+</script>
