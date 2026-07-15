@@ -30,6 +30,33 @@ make();
 destroy();
 ```
 
+## Options
+
+### `containerElement`
+
+The container element or selector that wraps the items you want to manage.
+
+### `targetChildren`
+
+The focusable items to navigate between. This can be a selector string or an array of elements.
+
+### `direction`
+
+Controls which arrow keys are handled.
+
+- `up-down`
+- `left-right`
+- `all`
+
+## Lifecycle
+
+`keyboardNavigation()` returns two methods:
+
+- `make()` to attach the keyboard listeners
+- `destroy()` to remove them again
+
+That makes it a good fit for framework lifecycle hooks where you want setup on mount and cleanup on unmount.
+
 
 ## Examples
 

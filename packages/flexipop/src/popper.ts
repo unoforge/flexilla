@@ -1,6 +1,6 @@
 import { DEFAULT_OFFSETDISTANCE, DEFAULT_PLACEMENT } from "./const";
 import { getDimensions } from "./utils";
-import { Placement, PopperOptions } from "./types";
+import type { Placement, PopperOptions } from "./types";
 import { determinePosition } from "./helpers";
 
 /**
@@ -15,6 +15,8 @@ class CreatePopper {
     private placement: Placement
     private disableOnResize: boolean
     private disableOnScroll: boolean
+    private readjustHeight: boolean
+    private minHeight: number
     private onUpdate: (({ x, y, placement }: { x: number, y: number, placement: Placement }) => void) | undefined
     private isWindowEventsRegistered: boolean
 
@@ -41,7 +43,9 @@ class CreatePopper {
             offsetDistance = DEFAULT_OFFSETDISTANCE,
             placement = DEFAULT_PLACEMENT,
             eventEffect = {},
-            onUpdate
+            onUpdate,
+            readjustHeight,
+            minHeight
         } = options
         if (!(reference instanceof HTMLElement)) throw new Error("Invalid HTMLElement for Reference Element");
         if (!(popper instanceof HTMLElement)) throw new Error("Invalid HTMLElement for Popper");
@@ -55,6 +59,8 @@ class CreatePopper {
         this.placement = placement
         this.disableOnResize = disableOnResize || false
         this.disableOnScroll = disableOnScroll || false
+        this.readjustHeight = readjustHeight || false
+        this.minHeight = minHeight || 140
         this.onUpdate = onUpdate
     }
 
@@ -70,23 +76,62 @@ class CreatePopper {
     /**
      * Set Style Property
      */
-    private setPopperStyleProperty = (x: number, y: number) => {
+    private setPopperStyleProperty = (x: number, y: number, placement: Placement, triggerWidth: number) => {
+        this.popper.setAttribute("data-show-placement", placement)
         this.popper.style.setProperty("--fx-popper-placement-x", `${x}px`)
         this.popper.style.setProperty("--fx-popper-placement-y", `${y}px`)
+        this.popper.style.setProperty("--trigger-width", `${triggerWidth}px`)
     }
 
     private setInitialStyles = (): void => {
         this.popper.style.setProperty("--fx-popper-placement-x", "")
         this.popper.style.setProperty("--fx-popper-placement-y", "")
+        this.popper.style.setProperty("--trigger-width", "")
     };
+
+    private resetReadjustHeightStyles = (): void => {
+        this.popper.style.maxHeight = ""
+        this.popper.style.overflowY = ""
+    }
+
+    private applyReadjustHeight = (maxHeight?: number): void => {
+        if (!maxHeight) {
+            this.resetReadjustHeightStyles()
+            return
+        }
+
+        this.popper.style.maxHeight = `${maxHeight}px`
+        this.popper.style.overflowY = "auto"
+    }
 
     private initPlacement = (): void => {
         this.validateElements();
         this.setInitialStyles();
+        this.resetReadjustHeightStyles();
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
+        const initialDimensions = getDimensions({ reference: this.reference, popper: this.popper });
+        const initialPosition = determinePosition(
+            {
+                placement: this.placement,
+                refWidth: initialDimensions.refWidth,
+                refTop: initialDimensions.refTop,
+                refLeft: initialDimensions.refLeft,
+                popperWidth: initialDimensions.popperWidth,
+                refHeight: initialDimensions.refHeight,
+                popperHeight: initialDimensions.popperHeight,
+                windowHeight,
+                windowWidth,
+                offsetDistance: this.offsetDistance,
+                minHeight: this.minHeight,
+                readjustHeight: this.readjustHeight
+            }
+        );
+
+        this.applyReadjustHeight(initialPosition.maxHeight)
+
         const { popperHeight, popperWidth, refHeight, refWidth, refLeft, refTop } = getDimensions({ reference: this.reference, popper: this.popper });
-        const { x, y } = determinePosition(
+        const { x, y, resolvedPlacement } = determinePosition(
             {
                 placement: this.placement,
                 refWidth,
@@ -97,13 +142,15 @@ class CreatePopper {
                 popperHeight,
                 windowHeight,
                 windowWidth,
-                offsetDistance: this.offsetDistance
+                offsetDistance: this.offsetDistance,
+                minHeight: this.minHeight,
+                readjustHeight: this.readjustHeight
             }
         );
 
-        this.setPopperStyleProperty(x, y)  
+        this.setPopperStyleProperty(x, y, resolvedPlacement, refWidth)
         this.onUpdate?.({ x, y, placement: this.placement })
-  
+
     };
 
     private removeWindowEvents = () => {
@@ -136,6 +183,7 @@ class CreatePopper {
      */
     resetPosition = () => {
         this.setInitialStyles()
+        this.resetReadjustHeightStyles()
     }
 
     /**
@@ -170,6 +218,7 @@ class CreatePopper {
      */
     cleanupEvents = (): void => {
         this.setInitialStyles()
+        this.resetReadjustHeightStyles()
         this.removeWindowEvents()
     };
 

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CreateOverlay Demo</title>
+  <style>
+    body {
+      overflow-y: auto;
+    }
+
+    [data-fx-overlay] {
+      position: fixed;
+      left: var(--fx-popper-placement-x, 0px);
+      top: var(--fx-popper-placement-y, 0px);
+      visibility: hidden;
+      z-index: 60;
+    }
+
+    [data-fx-overlay][data-state="open"] {
+      visibility: visible;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-stone-950 text-stone-100">
+  <main class="relative min-h-screen overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(245,158,11,0.18),_transparent_32%),linear-gradient(180deg,_#0c0a09_0%,_#1c1917_45%,_#0c0a09_100%)]"></div>
+
+    <section class="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 pb-24 pt-10">
+      <div class="max-w-3xl space-y-4">
+        <span class="inline-flex rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.28em] text-amber-200">
+          flexipop / create-overlay
+        </span>
+        <h1 class="text-4xl font-semibold tracking-tight text-stone-50">
+          Readjust height demo
+        </h1>
+        <p class="max-w-2xl text-sm leading-6 text-stone-300">
+          Both overlays use <code>CreateOverlay</code> with intentionally tall content.
+          The triggers are placed low enough in the viewport to force a vertical fallback.
+        </p>
+      </div>
+
+      <div class="pointer-events-none absolute inset-x-6 top-[58vh] h-px border-t border-dashed border-stone-600/80">
+        <span class="absolute -top-3 right-0 bg-stone-950/90 px-2 text-[10px] uppercase tracking-[0.3em] text-stone-500">
+          trigger line
+        </span>
+      </div>
+
+      <div class="mt-auto grid gap-6 pb-10 pt-[28vh] lg:grid-cols-2">
+        <article class="rounded-[28px] border border-stone-700/80 bg-stone-900/70 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur">
+          <div class="space-y-2">
+            <p class="text-xs uppercase tracking-[0.28em] text-stone-500">Without readjust</p>
+            <h2 class="text-xl font-semibold text-stone-50">Natural height only</h2>
+            <p class="text-sm leading-6 text-stone-300">
+              Requested placement: <code>bottom</code>. When the overlay does not fit below or above,
+              it keeps its natural height and overflows.
+            </p>
+          </div>
+
+          <div class="mt-5 rounded-2xl border border-stone-700 bg-stone-950/70 p-4">
+            <button id="overlay-default-trigger"
+              class="inline-flex items-center rounded-xl bg-stone-100 px-4 py-2 text-sm font-medium text-stone-900 transition hover:bg-white">
+              Open default overlay
+            </button>
+            <pre id="overlay-default-status"
+              class="mt-4 whitespace-pre-wrap rounded-xl bg-stone-900 px-4 py-3 text-xs leading-6 text-stone-300"></pre>
+          </div>
+        </article>
+
+        <article class="rounded-[28px] border border-emerald-500/40 bg-emerald-500/10 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur">
+          <div class="space-y-2">
+            <p class="text-xs uppercase tracking-[0.28em] text-emerald-300/70">With readjustHeight</p>
+            <h2 class="text-xl font-semibold text-stone-50">Viewport-safe height</h2>
+            <p class="text-sm leading-6 text-stone-200">
+              Here, <code>readjustHeight: true</code> and <code>minHeight: 160</code> are enabled.
+              The overlay should be resized and turn on <code>overflow-y: auto</code>.
+            </p>
+          </div>
+
+          <div class="mt-5 rounded-2xl border border-emerald-400/30 bg-stone-950/70 p-4">
+            <button id="overlay-readjust-trigger"
+              class="inline-flex items-center rounded-xl bg-emerald-300 px-4 py-2 text-sm font-medium text-emerald-950 transition hover:bg-emerald-200">
+              Open readjusted overlay
+            </button>
+            <pre id="overlay-readjust-status"
+              class="mt-4 whitespace-pre-wrap rounded-xl bg-stone-900 px-4 py-3 text-xs leading-6 text-stone-300"></pre>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-10 rounded-[32px] border border-sky-400/20 bg-sky-500/10 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.25)] backdrop-blur">
+        <div class="max-w-3xl space-y-3">
+          <p class="text-xs uppercase tracking-[0.28em] text-sky-200/70">Horizontal placements</p>
+          <h2 class="text-2xl font-semibold text-stone-50">left / right with readjustHeight</h2>
+          <p class="text-sm leading-6 text-stone-300">
+            This area leaves enough room on both sides to verify <code>start</code>, <code>middle</code>,
+            and <code>end</code> placements more clearly.
+          </p>
+        </div>
+
+        <div class="mt-6 grid gap-5">
+          <div class="grid items-start gap-4 rounded-[24px] border border-stone-700/70 bg-stone-950/60 p-5 lg:grid-cols-[minmax(0,1fr)_240px]">
+            <pre id="overlay-left-start-status" class="order-2 whitespace-pre-wrap rounded-xl bg-black/80 px-4 py-3 text-xs leading-6 text-stone-300 lg:order-1"></pre>
+            <div class="order-1 flex justify-end lg:order-2">
+              <button id="overlay-left-start-trigger" class="inline-flex rounded-xl bg-sky-200 px-4 py-2 text-sm font-medium text-sky-950">Open left-start</button>
+            </div>
+          </div>
+
+          <div class="grid items-start gap-4 rounded-[24px] border border-stone-700/70 bg-stone-950/60 p-5 lg:grid-cols-[minmax(0,1fr)_240px]">
+            <pre id="overlay-left-middle-status" class="order-2 whitespace-pre-wrap rounded-xl bg-black/80 px-4 py-3 text-xs leading-6 text-stone-300 lg:order-1"></pre>
+            <div class="order-1 flex justify-end lg:order-2">
+              <button id="overlay-left-middle-trigger" class="inline-flex rounded-xl bg-sky-200 px-4 py-2 text-sm font-medium text-sky-950">Open left-middle</button>
+            </div>
+          </div>
+
+          <div class="grid items-start gap-4 rounded-[24px] border border-stone-700/70 bg-stone-950/60 p-5 lg:grid-cols-[minmax(0,1fr)_240px]">
+            <pre id="overlay-left-end-status" class="order-2 whitespace-pre-wrap rounded-xl bg-black/80 px-4 py-3 text-xs leading-6 text-stone-300 lg:order-1"></pre>
+            <div class="order-1 flex justify-end lg:order-2">
+              <button id="overlay-left-end-trigger" class="inline-flex rounded-xl bg-sky-200 px-4 py-2 text-sm font-medium text-sky-950">Open left-end</button>
+            </div>
+          </div>
+
+          <div class="grid items-start gap-4 rounded-[24px] border border-stone-700/70 bg-stone-950/60 p-5 lg:grid-cols-[240px_minmax(0,1fr)]">
+            <div class="flex justify-start">
+              <button id="overlay-right-start-trigger" class="inline-flex rounded-xl bg-rose-200 px-4 py-2 text-sm font-medium text-rose-950">Open right-start</button>
+            </div>
+            <pre id="overlay-right-start-status" class="whitespace-pre-wrap rounded-xl bg-black/80 px-4 py-3 text-xs leading-6 text-stone-300"></pre>
+          </div>
+
+          <div class="grid items-start gap-4 rounded-[24px] border border-stone-700/70 bg-stone-950/60 p-5 lg:grid-cols-[240px_minmax(0,1fr)]">
+            <div class="flex justify-start">
+              <button id="overlay-right-middle-trigger" class="inline-flex rounded-xl bg-rose-200 px-4 py-2 text-sm font-medium text-rose-950">Open right-middle</button>
+            </div>
+            <pre id="overlay-right-middle-status" class="whitespace-pre-wrap rounded-xl bg-black/80 px-4 py-3 text-xs leading-6 text-stone-300"></pre>
+          </div>
+
+          <div class="grid items-start gap-4 rounded-[24px] border border-stone-700/70 bg-stone-950/60 p-5 lg:grid-cols-[240px_minmax(0,1fr)]">
+            <div class="flex justify-start">
+              <button id="overlay-right-end-trigger" class="inline-flex rounded-xl bg-rose-200 px-4 py-2 text-sm font-medium text-rose-950">Open right-end</button>
+            </div>
+            <pre id="overlay-right-end-status" class="whitespace-pre-wrap rounded-xl bg-black/80 px-4 py-3 text-xs leading-6 text-stone-300"></pre>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <div id="overlay-default" data-fx-overlay
+      class="w-[min(26rem,calc(100vw-2rem))] rounded-[24px] border border-stone-700 bg-stone-100 p-5 text-stone-900 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-[0.24em] text-stone-500">default</p>
+            <h3 class="text-lg font-semibold">No height readjustment</h3>
+          </div>
+          <span class="rounded-full bg-stone-900 px-3 py-1 text-xs font-medium text-stone-100">620px content</span>
+        </div>
+        <p class="text-sm leading-6 text-stone-600">
+          This panel keeps its natural height even if the viewport cannot fully contain it.
+        </p>
+        <div data-demo-fill="default" class="space-y-3"></div>
+      </div>
+    </div>
+
+    <div id="overlay-readjust" data-fx-overlay
+      class="w-[min(26rem,calc(100vw-2rem))] rounded-[24px] border border-emerald-300 bg-white p-5 text-stone-900 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-[0.24em] text-emerald-700">readjusted</p>
+            <h3 class="text-lg font-semibold">Height constrained before final placement</h3>
+          </div>
+          <span class="rounded-full bg-emerald-600 px-3 py-1 text-xs font-medium text-white">scroll enabled</span>
+        </div>
+        <p class="text-sm leading-6 text-stone-600">
+          This panel should receive a computed <code>max-height</code> and stay visible in the viewport.
+        </p>
+        <div data-demo-fill="readjust" class="space-y-3"></div>
+      </div>
+    </div>
+
+    <div id="overlay-left-start" data-fx-overlay class="w-[min(24rem,calc(100vw-2rem))] rounded-[24px] border border-sky-300 bg-white p-5 text-stone-900 shadow-[0_30px_80px_rgba(0,0,0,0.45)]"><div class="space-y-3"><div><p class="text-xs uppercase tracking-[0.24em] text-sky-700">left-start</p><h3 class="text-lg font-semibold">Start aligned on the left</h3></div><div data-demo-fill="left-start" class="space-y-3"></div></div></div>
+    <div id="overlay-left-middle" data-fx-overlay class="w-[min(24rem,calc(100vw-2rem))] rounded-[24px] border border-sky-300 bg-white p-5 text-stone-900 shadow-[0_30px_80px_rgba(0,0,0,0.45)]"><div class="space-y-3"><div><p class="text-xs uppercase tracking-[0.24em] text-sky-700">left-middle</p><h3 class="text-lg font-semibold">Middle aligned on the left</h3></div><div data-demo-fill="left-middle" class="space-y-3"></div></div></div>
+    <div id="overlay-left-end" data-fx-overlay class="w-[min(24rem,calc(100vw-2rem))] rounded-[24px] border border-sky-300 bg-white p-5 text-stone-900 shadow-[0_30px_80px_rgba(0,0,0,0.45)]"><div class="space-y-3"><div><p class="text-xs uppercase tracking-[0.24em] text-sky-700">left-end</p><h3 class="text-lg font-semibold">End aligned on the left</h3></div><div data-demo-fill="left-end" class="space-y-3"></div></div></div>
+    <div id="overlay-right-start" data-fx-overlay class="w-[min(24rem,calc(100vw-2rem))] rounded-[24px] border border-rose-300 bg-white p-5 text-stone-900 shadow-[0_30px_80px_rgba(0,0,0,0.45)]"><div class="space-y-3"><div><p class="text-xs uppercase tracking-[0.24em] text-rose-700">right-start</p><h3 class="text-lg font-semibold">Start aligned on the right</h3></div><div data-demo-fill="right-start" class="space-y-3"></div></div></div>
+    <div id="overlay-right-middle" data-fx-overlay class="w-[min(24rem,calc(100vw-2rem))] rounded-[24px] border border-rose-300 bg-white p-5 text-stone-900 shadow-[0_30px_80px_rgba(0,0,0,0.45)]"><div class="space-y-3"><div><p class="text-xs uppercase tracking-[0.24em] text-rose-700">right-middle</p><h3 class="text-lg font-semibold">Middle aligned on the right</h3></div><div data-demo-fill="right-middle" class="space-y-3"></div></div></div>
+    <div id="overlay-right-end" data-fx-overlay class="w-[min(24rem,calc(100vw-2rem))] rounded-[24px] border border-rose-300 bg-white p-5 text-stone-900 shadow-[0_30px_80px_rgba(0,0,0,0.45)]"><div class="space-y-3"><div><p class="text-xs uppercase tracking-[0.24em] text-rose-700">right-end</p><h3 class="text-lg font-semibold">End aligned on the right</h3></div><div data-demo-fill="right-end" class="space-y-3"></div></div></div>
+
+  </main>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>

@@ -40,6 +40,27 @@ theme.getCurrentTheme();     // resolved runtime theme: "light" | "dark"
 theme.getTheme();            // saved preference: "light" | "dark" | "system"
 ```
 
+## Options
+
+You can customize the theme utility with:
+
+- `storageKey` to control where the preference is stored
+- `initialTheme` to choose the default preference
+- `mode` to use class mode or attribute mode
+- `className` when using class mode
+- `attributeName` when using attribute mode
+- `listenSystemChanges` to react to OS theme changes
+- `suppressTransition` to avoid transition flicker while switching themes
+
+```ts
+const theme = flexiTheme({
+  storageKey: "app-theme",
+  mode: "attribute",
+  attributeName: "data-theme",
+  initialTheme: "system",
+});
+```
+
 ## 4. Optional Theme Buttons
 
 ```html
@@ -47,6 +68,17 @@ theme.getTheme();            // saved preference: "light" | "dark" | "system"
 <button data-theme-value="dark">Dark</button>
 <button data-theme-value="system">System</button>
 <button id="theme-toggle">Toggle</button>
+```
+
+## Events
+
+The document element dispatches a `theme-changed` event whenever the theme is updated.
+
+```ts
+document.documentElement.addEventListener("theme-changed", (event) => {
+  console.log(event.detail.theme);
+  console.log(event.detail.preference);
+});
 ```
 
 ```ts

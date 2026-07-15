@@ -1,5 +1,5 @@
 ---
-title: Accordion Component
+title: Dropdown Component
 description: Create interactive dropdown menus with customizable options, placements, and trigger strategies.
 references:
     - Popover: /docs/overlays/popover
@@ -58,7 +58,7 @@ Any valid HTMLElement, must have `id` attribute, position set to fixed.
   </DemoCompBoxInTab>
   </TabPanel>
   <TabPanel value="Code">
-    <CodeLoader source="dropdownDefault"/>
+    <CodeLoader source="DropdownDefault"/>
   </TabPanel>
 </Tabs>
 
@@ -259,4 +259,41 @@ Like `show()` method but here you can set the placement and offsetDistance if ne
 
 ```js
 myDropdown.setShowOptions({ placement: Placement, offsetDistance: number })
+```
+
+### `setOptions(/* options */)`
+
+Update the dropdown placement and offset without immediately showing it.
+
+```js
+myDropdown.setOptions({ placement: Placement, offsetDistance: number });
+```
+
+### `cleanup()`
+
+Call `cleanup()` when the dropdown is removed from the page.
+
+```js
+myDropdown.cleanup();
+```
+
+## Events
+
+The dropdown dispatches events on the dropdown content element:
+
+- `dropdown-show`
+- `dropdown-hide`
+
+```js
+const dropdownEl = document.querySelector("#myDropdown");
+
+new Dropdown(dropdownEl);
+
+dropdownEl.addEventListener("dropdown-show", (event) => {
+  console.log(event.detail.isHidden); // false
+});
+
+dropdownEl.addEventListener("dropdown-hide", (event) => {
+  console.log(event.detail.isHidden); // true
+});
 ```

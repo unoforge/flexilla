@@ -11,8 +11,8 @@ const setAllTriggerToFalse = (activeTrigger: HTMLElement, tabTriggers: HTMLEleme
   }
 };
 
-const setNestedTabsIndicatorCorrectly = ({ indicatorTransformDuration, indicatorTransformEaseing, indicator, triggerElement }: {  indicatorTransformDuration: number, indicatorTransformEaseing: string, indicator: HTMLSpanElement, triggerElement: HTMLElement }) => {
-  if (!(indicator instanceof HTMLSpanElement) || !(triggerElement instanceof HTMLElement)) return
+const setNestedTabsIndicatorCorrectly = ({ indicatorTransformDuration, indicatorTransformEaseing, indicator, triggerElement }: {  indicatorTransformDuration: number, indicatorTransformEaseing: string, indicator: HTMLElement, triggerElement: HTMLElement }) => {
+  if (!(indicator instanceof HTMLElement) || !(triggerElement instanceof HTMLElement)) return
   moveIndicator({
     triggerElement,
     indicator_: indicator,
@@ -49,7 +49,7 @@ export const activeTab = ({ triggerElement, tabTriggers, tabsPanelContainer, sho
     toSelectTab.style.setProperty("--un-tab-show-animation", `${showAnimation}`)
   }
 
-  const indicator = $("[data-tab-indicator]", tabList) as HTMLSpanElement
+  const indicator = $("[data-tab-indicator]", tabList) as HTMLElement
   moveIndicator({
     triggerElement,
     indicator_: indicator,
@@ -62,8 +62,8 @@ export const activeTab = ({ triggerElement, tabTriggers, tabsPanelContainer, sho
     const childTabListWrapper = $d("[data-tab-list-wrapper]", childTab) || childTab
     const childTabList = $d("[data-tab-list]", childTabListWrapper) as HTMLElement
     const triggerElement = childTabList.querySelector("[data-tabs-trigger][data-state=active]") as HTMLElement
-    const childIndicator = childTabList.querySelector("span[data-tab-indicator]") as HTMLSpanElement
-    if (childIndicator instanceof HTMLSpanElement && triggerElement instanceof HTMLElement && !childTab.hasAttribute("data-nested-indicator-seteled")) {
+    const childIndicator = childTabList.querySelector("[data-tab-indicator]") as HTMLElement
+    if (childIndicator instanceof HTMLElement && triggerElement instanceof HTMLElement && !childTab.hasAttribute("data-nested-indicator-seteled")) {
       childTab.setAttribute("data-nested-indicator-seteled", '')
       setNestedTabsIndicatorCorrectly({
         indicatorTransformDuration: indicatorTransformDuration,

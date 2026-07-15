@@ -1,46 +1,43 @@
 {
   "name": "@flexilla/offcanvas",
+  "version": "2.2.3",
   "private": false,
-  "version": "2.2.1",
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "description": "An offcanvas component for creating responsive and off-screen navigation panels in web applications.",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/offcanvas.js",
-  "module": "./dist/offcanvas.umd.cjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/offcanvas.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/offcanvas.umd.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./offcanvas.css": "./dist/offcanvas.css"
+    "./offcanvas.css": "./dist/style.css"
   },
   "files": [
     "dist",
     "README.md",
-    "package.json",
-    "!vite.config.ts",
-    "!.gitignore",
-    "!tsconfig.json"
+    "LICENSE"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
+  },
+  "dependencies": {
+    "@flexilla/manager": "0.2.4",
+    "@flexilla/utilities": "2.5.5"
   },
   "devDependencies": {
-    "@flexilla/utilities": "latest",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "5.9.3"
   },
   "keywords": [
     "offcanvas",
@@ -62,8 +59,5 @@
   },
   "license": "MIT",
   "author": "johnkat-mj",
-  "dependencies": {
-    "@flexilla/manager": "^0.2.2"
-  },
-  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
+  "gitHead": "b642d6db4a3bb9d7d8193c4374b3d2fecbe6ed2e"
 }

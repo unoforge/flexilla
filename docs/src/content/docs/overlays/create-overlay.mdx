@@ -33,3 +33,216 @@ yarn add flexipop
 </TabCodeGroup>
 
 ## Structure
+
+`CreateOverlay` requires two elements: a **trigger** and a **content** (the popper). The trigger toggles the content's visibility, and the content is positioned relative to the trigger by the underlying `CreatePopper` engine.
+
+### HTML Markup
+
+```html
+<button id="myTrigger" data-overlay-trigger>
+  Open Overlay
+</button>
+
+<div id="myOverlay" class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 p-4 bg-zinc-100 dark:bg-zinc-900 rounded-md">
+  Overlay content here
+</div>
+```
+
+<Callout type="note">
+**Note:** The content element should have its `position` set to `fixed` (or use the `ui-popper` utility class from the UnoCSS preset / Tailwind plugin), just like with a raw `CreatePopper`.
+</Callout>
+
+### Required CSS (without UnoCSS/Tailwind)
+
+```css
+#myOverlay {
+  position: fixed;
+  top: var(--fx-popper-placement-y);
+  left: var(--fx-popper-placement-x);
+}
+```
+
+## Basic Usage
+
+```js
+import { CreateOverlay } from 'flexipop/create-overlay';
+
+const overlay = new CreateOverlay({
+  trigger: '#myTrigger',
+  content: '#myOverlay',
+  options: {
+    triggerStrategy: 'click',
+    placement: 'bottom',
+    offsetDistance: 10,
+  }
+});
+```
+
+## Options
+
+`CreateOverlay` accepts an `OverlayOptions` object, which extends `PopperOptions` with trigger, close, and lifecycle configuration.
+
+```ts
+import type { OverlayOptions } from 'flexipop/create-overlay';
+
+type OverlayOptions = {
+  defaultState?: "open" | "close",
+  triggerStrategy?: "click" | "hover" | "manual",
+  placement?: Placement,
+  offsetDistance?: number,
+  preventFromCloseOutside?: boolean,
+  preventCloseFromInside?: boolean,
+  popper?: {
+    eventEffect: EventEffect
+  },
+  readjustHeight?: boolean,
+  minHeight?: number,
+  beforeShow?: () => void,
+  beforeHide?: () => { cancelAction?: boolean } | void,
+  onShow?: () => void,
+  onHide?: () => void,
+  onToggle?: ({ isHidden }: { isHidden?: boolean }) => void,
+};
+
+type EventEffect = {
+  disableOnScroll?: boolean,
+  disableOnResize?: boolean
+};
+```
+
+### Trigger Strategies
+
+| Strategy | Behavior |
+|---|---|
+| `click` *(default)* | Toggles the overlay on trigger click. Closes on click-outside or Escape. |
+| `hover` | Opens on trigger mouseenter, closes on mouseleave (with a small delay). Also opens on click. |
+| `manual` | No trigger events are attached. You control show/hide entirely via the `show()` and `hide()` methods. |
+
+### Example with Options
+
+```js
+const overlay = new CreateOverlay({
+  trigger: '#myTrigger',
+  content: '#myOverlay',
+  options: {
+    defaultState: 'close',
+    triggerStrategy: 'click',
+    placement: 'bottom-end',
+    offsetDistance: 8,
+    preventFromCloseOutside: true,
+    preventCloseFromInside: false,
+    beforeShow: () => console.log('About to show'),
+    onShow: () => console.log('Overlay is shown!'),
+    onHide: () => console.log('Overlay is hidden!'),
+    onToggle: ({ isHidden }) => console.log('Toggled, hidden:', isHidden),
+  }
+});
+```
+
+### Cancelable Hide
+
+The `beforeHide` callback can return `{ cancelAction: true }` to prevent the overlay from closing. This is useful when you need to validate state or confirm an action before dismissing the overlay.
+
+```js
+const overlay = new CreateOverlay({
+  trigger: '#myTrigger',
+  content: '#myOverlay',
+  options: {
+    beforeHide: () => {
+      if (hasUnsavedChanges) {
+        return { cancelAction: true }; // Prevent closing
+      }
+    },
+  }
+});
+```
+
+## Methods
+
+### `show()`
+
+Manually show the overlay. Positions the popper, attaches click-outside/Escape listeners, and triggers callbacks.
+
+```js
+overlay.show();
+```
+
+### `hide()`
+
+Manually hide the overlay. Respects `beforeHide` cancellation. Removed listeners and cleans up popper events after the CSS transition completes.
+
+```js
+overlay.hide();
+```
+
+### `setShowOptions({ placement, offsetDistance })`
+
+Like `show()`, but lets you update the placement and offset distance before displaying. Useful for dynamically repositioning the overlay.
+
+```js
+overlay.setShowOptions({ placement: 'right', offsetDistance: 20 });
+```
+
+### `setPopperOptions({ placement, offsetDistance })`
+
+Updates the popper's placement and offset distance without showing the overlay.
+
+```js
+overlay.setPopperOptions({ placement: 'top' });
+```
+
+### `setPopperTrigger(trigger, { placement?, offsetDistance? })`
+
+Swaps the reference trigger element. The previous trigger's event listeners are cleaned up, and new ones are attached to the provided element. When `triggerStrategy` is `"manual"`, only the internal reference is updated.
+
+```js
+overlay.setPopperTrigger(newTriggerEl, { placement: 'bottom' });
+```
+
+### `refreshPopper()`
+
+Recalculates the popper position. Call this when the trigger moves or the content changes size while the overlay is visible.
+
+```js
+overlay.refreshPopper();
+```
+
+### `cleanup()`
+
+Removes all event listeners (trigger, document click, keydown, hover) and calls `cleanupEvents()` on the underlying popper. Call this when the overlay is removed from the DOM.
+
+```js
+overlay.cleanup();
+```
+
+## Events
+
+The content element receives a `before-hide` custom event right before the overlay would close. You can cancel the hide by calling `event.detail.setExitAction(true)`.
+
+```js
+const overlayEl = document.querySelector("#myOverlay");
+
+overlayEl.addEventListener("before-hide", (event) => {
+  if (shouldPreventClose) {
+    event.detail.setExitAction(true);
+  }
+});
+```
+
+<Callout type="note">
+The `before-hide` event and the `beforeHide` callback serve the same purpose. If either one cancels the action, the overlay will not close.
+</Callout>
+
+## CreateOverlay vs CreatePopper
+
+| | `CreatePopper` | `CreateOverlay` |
+|---|---|---|
+| **Purpose** | Low-level positioning engine | Higher-level overlay manager |
+| **Show / Hide** | No visibility management | Full show/hide with state management |
+| **Trigger strategies** | None | `click`, `hover`, `manual` |
+| **Click-outside / Escape** | No | Yes |
+| **Lifecycle callbacks** | `onUpdate` only | `beforeShow`, `beforeHide`, `onShow`, `onHide`, `onToggle` |
+| **Cancelable hide** | No | Yes (via callback or event) |
+| **Built on** | — | `CreatePopper` |
+
+Use `CreatePopper` when you only need positioning (e.g., a custom tooltip with your own event handling). Use `CreateOverlay` when you need trigger management, click-outside closing, and lifecycle hooks out of the box.

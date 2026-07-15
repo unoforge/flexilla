@@ -24,8 +24,8 @@ export type OverlayOptions = {
     placement?: Placement,
     /** Distance in pixels between overlay and trigger element */
     offsetDistance?: number,
-    /** How the overlay is triggered ("click" or "hover") */
-    triggerStrategy?: "click" | "hover",
+    /** How the overlay is triggered ("click", "hover", or "manual") */
+    triggerStrategy?: "click" | "hover" | "manual",
     /** Popper-specific configuration */
     popper?: {
         /** Event-related effects configuration */
@@ -34,11 +34,13 @@ export type OverlayOptions = {
     /** Callback function executed before Overlay shows */
     beforeShow?: () => void,
     /** Callback function executed before Overlay hides */
-    beforeHide?: ()=>{ cancelAction?: boolean;} |void,
+    beforeHide?: () => { cancelAction?: boolean; } | void,
     /** Callback function executed after Overlay shows */
     onShow?: () => void,
     /** Callback function executed after Overlay hides */
     onHide?: () => void,
     /** Callback function executed when Overlay visibility toggles */
-    onToggle?: ({ isHidden }: { isHidden?: boolean }) => void
+    onToggle?: ({ isHidden }: { isHidden?: boolean }) => void,
+    readjustHeight?: boolean
+    minHeight?: number
 }

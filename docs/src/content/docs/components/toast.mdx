@@ -1,0 +1,402 @@
+---
+title: Toast Component
+description: A lightweight, framework-agnostic toast notification component inspired by Sonner — with zero dependencies, shadow DOM encapsulation, promise support, swipe-to-dismiss, and stacking.
+references:
+    - Sonner: https://sonner.emeraldii.test
+    - UnoCSS Preset: /docs/styling/unocss
+    - Tailwind Plugin: /docs/styling/tailwind
+---
+
+The Toast component is a lightweight, dependency-free notification system inspired by [Sonner](https://sonner.emeraldii.test/).
+It renders into a shadow DOM — so styles are fully encapsulated and there is nothing to configure: no CSS import, no Tailwind plugin, no UnoCSS preset.
+Just install, import, and call `toast()`.
+
+<Callout>
+  Unlike other Flexilla components, Toast is **not** a DOM-trigger component.
+  There are no `data-*` attributes to add to your markup.
+  Everything happens through the JavaScript API — `toast()`, `toast.success()`, `toast.promise()`, etc.
+</Callout>
+
+## Installation
+
+<TabCodeGroup
+  values={[
+    { text: "npm", value: "npm-tab", icon: "npm" },
+    { text: "yarn", value: "yarn-tab", icon: "yarn" }
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="npm-tab" active={true}>
+```bash
+npm i @flexilla/toast
+```
+  </TabPanel>
+  <TabPanel value="yarn-tab">
+```bash
+yarn add @flexilla/toast
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Usage
+
+Import the `toast` function and call it anywhere in your application:
+
+```js
+import toast from '@flexilla/toast'
+
+// simplest call
+toast('Event has been created.')
+
+// or use a typed variant
+toast.success('Settings saved successfully!')
+toast.error('There was a problem.')
+toast.warning('Please review your changes.')
+toast.info('A new version is available.')
+```
+
+### Example
+
+<Tabs values={["Preview", "Code"]} autoHeight>
+  <TabPanel value="Preview" active={true}>
+  <DemoCompBoxInTab>
+    <ToastDefault/>
+  </DemoCompBoxInTab>
+  </TabPanel>
+  <TabPanel value="Code">
+    <CodeLoader source="ToastDefault"/>
+  </TabPanel>
+</Tabs>
+
+## Toast Types
+
+The `toast` function exposes typed variants that render the appropriate icon and (optionally) rich color:
+
+| Variant | Usage |
+|---------|-------|
+| `toast(message)` | Default — no icon |
+| `toast.success(message)` | Success icon |
+| `toast.error(message)` | Error icon |
+| `toast.warning(message)` | Warning icon |
+| `toast.info(message)` | Info icon |
+| `toast.loading(message)` | Spinner — auto-dismiss disabled |
+| `toast.message(message)` | Same as `toast()` — no icon |
+| `toast.show(message)` | Alias for `toast.message()` |
+
+<Tabs values={["Preview", "Code"]} autoHeight>
+  <TabPanel value="Preview" active={true}>
+  <DemoCompBoxInTab>
+    <ToastTypes/>
+  </DemoCompBoxInTab>
+  </TabPanel>
+  <TabPanel value="Code">
+    <CodeLoader source="ToastTypes"/>
+  </TabPanel>
+</Tabs>
+
+## Promises & Loading
+
+### Promise
+
+`toast.promise()` automatically shows a loading toast, then replaces it with a success or error toast when the promise resolves or rejects.
+
+```js
+toast.promise(
+  myAsyncOperation(),
+  {
+    loading: 'Loading data…',
+    success: (data) => `Successfully loaded ${data}!`,
+    error: 'Failed to load data.',
+  }
+)
+```
+
+### Loading + Update by ID
+
+You can also manually show a loading toast and update it later by passing the same `id`:
+
+```js
+const id = toast.loading('Processing…')
+setTimeout(() => toast.success('Completed!', { id }), 2000)
+```
+
+<Tabs values={["Preview", "Code"]} autoHeight>
+  <TabPanel value="Preview" active={true}>
+  <DemoCompBoxInTab>
+    <ToastPromise/>
+  </DemoCompBoxInTab>
+  </TabPanel>
+  <TabPanel value="Code">
+    <CodeLoader source="ToastPromise"/>
+  </TabPanel>
+</Tabs>
+
+## Actions & Close Button
+
+### Action Button
+
+Add an `action` object to any toast to display a button. The `onClick` callback receives the original `MouseEvent`.
+
+```js
+toast('Item deleted.', {
+  action: {
+    label: 'Undo',
+    onClick: () => toast.success('Restored!'),
+  },
+})
+```
+
+You can also make the action a cancel-style button by adding `cancel: true`:
+
+```js
+toast('File will be deleted permanently', {
+  action: { label: 'Confirm', onClick: () => {}, cancel: true },
+})
+```
+
+### Close Button
+
+Enable the close button globally via `toast.config({ closeButton: true })` or per-toast via `{ closeButton: true }`.
+
+### Description
+
+Add a `description` string for a secondary line of text:
+
+```js
+toast.success('Profile updated!', {
+  description: 'Your changes have been saved successfully.',
+})
+```
+
+<Tabs values={["Preview", "Code"]} autoHeight>
+  <TabPanel value="Preview" active={true}>
+  <DemoCompBoxInTab>
+    <ToastActions/>
+  </DemoCompBoxInTab>
+  </TabPanel>
+  <TabPanel value="Code">
+    <CodeLoader source="ToastActions"/>
+  </TabPanel>
+</Tabs>
+
+## Rich Colors
+
+By default, success/error/warning/info toasts use subtle background tints.
+Enable rich colors to get full background colors:
+
+```js
+toast.config({ richColors: true })
+
+toast.success('Order confirmed!')
+toast.error('Payment failed!')
+```
+
+<Tabs values={["Preview", "Code"]} autoHeight>
+  <TabPanel value="Preview" active={true}>
+  <DemoCompBoxInTab>
+    <ToastRich/>
+  </DemoCompBoxInTab>
+  </TabPanel>
+  <TabPanel value="Code">
+    <CodeLoader source="ToastRich"/>
+  </TabPanel>
+</Tabs>
+
+## Stacking & Expand
+
+When multiple toasts are visible, they stack with a scale-down effect — only the front toast is fully visible, and the ones behind are scaled down and slightly offset.
+
+Hovering the toast area expands the stack so all toasts become visible.
+
+This behavior is automatic — there is nothing to configure.
+
+By default `expand` is `false` (stack on load). Set `expand: true` to always show expanded:
+
+```js
+toast.config({ expand: true })
+```
+
+## Dismiss
+
+### `toast.dismiss(id?)`
+
+Dismiss a specific toast by its ID, or call without an argument to dismiss all:
+
+```js
+// dismiss a specific toast
+toast.dismiss(myId)
+
+// dismiss all
+toast.dismiss()
+```
+
+<Tabs values={["Preview", "Code"]} autoHeight>
+  <TabPanel value="Preview" active={true}>
+  <DemoCompBoxInTab>
+    <ToastDismiss/>
+  </DemoCompBoxInTab>
+  </TabPanel>
+  <TabPanel value="Code">
+    <CodeLoader source="ToastDismiss"/>
+  </TabPanel>
+</Tabs>
+
+## Swipe to Dismiss
+
+Toasts can be dismissed by swiping horizontally or vertically.
+Swipe direction is locked after the first 10px of movement.
+Swiping back toward the origin cancels the dismissal.
+
+This is enabled by default on all toasts with a non-zero `duration`.
+
+## Configuration
+
+`toast.config()` sets defaults for all future toasts:
+
+```js
+toast.config({
+  position: 'bottom-right',
+  duration: 4000,
+  richColors: true,
+  closeButton: true,
+  expand: false,
+  visibleToasts: 3,
+  offset: 24,
+  gap: 14,
+})
+```
+
+You can also pass any of these options per-toast:
+
+```js
+toast.success('Custom!', {
+  duration: 10000,
+  position: 'top-center',
+  closeButton: true,
+})
+```
+
+### Options
+
+<BoxTable>
+  <BoxTableRow title="position" type='"top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center"'>
+    Position of the toaster. Default: `bottom-right`.
+  </BoxTableRow>
+  <BoxTableRow title="duration" type="number">
+    Auto-dismiss delay in ms. Set to `0` or `Infinity` to disable. Default: `3000`.
+  </BoxTableRow>
+  <BoxTableRow title="closeButton" type="boolean">
+    Show a close button on each toast. Default: `false`.
+  </BoxTableRow>
+  <BoxTableRow title="richColors" type="boolean">
+    Use full background colors for typed toasts. Default: `false`.
+  </BoxTableRow>
+  <BoxTableRow title="expand" type="boolean">
+    Expand the stack instead of scaling down. Default: `false`.
+  </BoxTableRow>
+  <BoxTableRow title="visibleToasts" type="number">
+    Maximum number of toasts visible at once. Default: `3`.
+  </BoxTableRow>
+  <BoxTableRow title="offset" type="number">
+    Distance from the viewport edge in px. Default: `24`.
+  </BoxTableRow>
+  <BoxTableRow title="gap" type="number">
+    Gap between stacked toasts in px. Default: `14`.
+  </BoxTableRow>
+  <BoxTableRow title="description" type="string">
+    Secondary text displayed under the title.
+  </BoxTableRow>
+  <BoxTableRow title="id" type="string | number">
+    Custom ID — if it matches an existing toast, the existing one is replaced.
+  </BoxTableRow>
+  <BoxTableRow title="action" type="{ label: string, onClick: (e: MouseEvent) => void, cancel?: boolean }">
+    Action button configuration.
+  </BoxTableRow>
+</BoxTable>
+
+## Methods
+
+### `toast(message, options?)`
+
+Show a default toast. Returns the toast ID.
+
+### `toast.success(message, options?)`
+
+Show a success toast with a check icon. Returns the toast ID.
+
+### `toast.error(message, options?)`
+
+Show an error toast with an X icon. Returns the toast ID.
+
+### `toast.warning(message, options?)`
+
+Show a warning toast with a warning icon. Returns the toast ID.
+
+### `toast.info(message, options?)`
+
+Show an info toast with an info icon. Returns the toast ID.
+
+### `toast.loading(message, options?)`
+
+Show a loading toast with a spinner. Auto-dismiss is disabled. Returns the toast ID.
+
+### `toast.message(message, options?)`
+
+Show a toast without an icon. Returns the toast ID.
+
+### `toast.show(message, options?)`
+
+Alias for `toast.message()`. Returns the toast ID.
+
+### `toast.promise(promise, data)`
+
+Show a loading toast, then replace it with success or error when the promise settles.
+
+```ts
+toast.promise<T>(
+  promise: Promise<T> | (() => Promise<T>),
+  data: {
+    loading?: string
+    success?: string | ((data: T) => string | Promise<string>)
+    error?: string | ((err: any) => string | Promise<string>)
+    description?: string | ((data: T | any) => string | Promise<string>)
+    finally?: () => void
+  }
+)
+```
+
+### `toast.dismiss(id?)`
+
+Dismiss a specific toast (by ID) or all toasts (no argument).
+
+### `toast.config(options)`
+
+Set default options for all future toasts.
+
+## Class API
+
+For projects that prefer a class-based import, `Toast` is also exported:
+
+```js
+import { Toast } from '@flexilla/toast'
+
+Toast.success('Hello from the class API!')
+Toast.error('Something went wrong.')
+Toast.dismiss()
+```
+
+All static methods mirror the function-based API.
+
+## How It Works
+
+The toast container is a `<div data-fx-toasters>` element appended to `document.body`.
+A shadow DOM is attached to it, and all styles are injected via a `<style>` element inside the shadow root.
+This means:
+
+- **No CSS import needed** — styles are fully encapsulated.
+- **No conflicts** with your application's CSS.
+- **No Tailwind or UnoCSS setup required.**
+
+Each call to `toast()` creates an `<li>` element inside an `<ol data-fx-toaster>` that is positioned via `position: fixed`.
+The toaster automatically removes itself from the DOM when all toasts are dismissed.

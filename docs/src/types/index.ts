@@ -13,19 +13,12 @@ export type SeoType = {
 export type SupportedLanguage = "html" | "css" | "js" | "ts" | "vue"
 
 export interface CodeSnippet {
-    id: string;
     title: string;
     icon:string
     lang: SupportedLanguage;
     code: string;
-  }
-  
-  export interface SubkeyData {
-    id: string;
-    title: string;
-    items: CodeSnippet[];
-  }
-  
-  export interface SourceData {
-    [source: string]: SubkeyData[];
-  }
+}
+
+export interface SourceData {
+  [source: string]: CodeSnippet;
+}

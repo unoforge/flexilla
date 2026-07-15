@@ -1,8 +1,8 @@
 import type { EventEffect, OverlayOptions } from "./types"
 import { CreatePopper, type Placement } from './../index'
-import { $, afterTransition, dispatchCustomEvent } from "@flexilla/utilities"
 
 import { updateOverlayState } from "./helpers"
+import { afterTransition, $, dispatchCustomEvent } from "@flexilla/utilities"
 
 
 /**
@@ -30,15 +30,18 @@ import { updateOverlayState } from "./helpers"
 class CreateOverlay {
     private triggerElement: HTMLElement
     private contentElement: HTMLElement
-    private triggerStrategy: "click" | "hover"
+    private triggerStrategy: "click" | "hover" | "manual"
     private placement: Placement
     private offsetDistance: number
     private preventFromCloseOutside: boolean
     private preventFromCloseInside: boolean
     private options: OverlayOptions
     private defaultState: "open" | "close"
+    private readjustHeight: boolean
+    private minHeight: number
     private popper: CreatePopper
     private eventEffect: EventEffect | undefined
+    private clickListenerTimeout: number | null = null
 
     /**
      * Creates an instance of CreateOverlay
@@ -64,13 +67,17 @@ class CreateOverlay {
         this.preventFromCloseInside = this.options.preventCloseFromInside || false
         this.defaultState = this.options.defaultState || "close";
         this.eventEffect = this.options.popper?.eventEffect
+        this.readjustHeight = this.options.readjustHeight ?? false
+        this.minHeight = this.options.minHeight || 140
         this.popper = new CreatePopper(
             this.triggerElement,
             this.contentElement,
             {
                 placement: this.placement,
                 offsetDistance: this.offsetDistance,
-                eventEffect: this.eventEffect
+                eventEffect: this.eventEffect,
+                readjustHeight: this.readjustHeight,
+                minHeight: this.minHeight
             }
         )
         this.initInstance()
@@ -83,25 +90,24 @@ class CreateOverlay {
 
     private handleDocumentClick = (event: MouseEvent) => {
         if (this.contentElement.getAttribute("data-state") === "open") {
-            if (
-                !this.triggerElement.contains(event.target as Node) &&
-                !this.preventFromCloseInside &&
-                !this.preventFromCloseOutside
-            ) {
+            const target = event.target as Node
+            const clickedTrigger = this.triggerElement.contains(target)
+            const clickedContent = this.contentElement.contains(target)
+
+            if (!clickedTrigger && !clickedContent && !this.preventFromCloseOutside) {
+                this.hide()
+                return
+            }
+
+            if (!clickedTrigger && clickedContent && !this.preventFromCloseInside) {
                 this.hide()
             }
-            else if (!this.triggerElement.contains(event.target as Node)
-                && !this.contentElement.contains(event.target as Node)
-                && !this.preventFromCloseOutside)
-                this.hide()
-            else if (!this.triggerElement.contains(event.target as Node) && !this.contentElement.contains(event.target as Node) && !this.preventFromCloseOutside) this.hide()
-            else if (!this.triggerElement.contains(event.target as Node) && this.contentElement.contains(event.target as Node) && !this.preventFromCloseInside) this.hide()
         }
     }
 
     private handleKeyDown = (event: KeyboardEvent) => {
-        event.preventDefault()
         if (this.triggerStrategy !== "hover" && event.key === "Escape") {
+            event.preventDefault()
             if (this.contentElement.getAttribute("data-state") === "open") {
                 if (!this.preventFromCloseOutside) this.hide();
             }
@@ -145,6 +151,29 @@ class CreateOverlay {
         this.show()
         this.addEventOnMouseEnter()
     }
+    private initInstance() {
+        updateOverlayState({
+            state: this.defaultState,
+            popper: this.contentElement,
+            trigger: this.triggerElement
+        })
+        if (this.defaultState === "open") {
+            this.show()
+        } else {
+            updateOverlayState({
+                state: "close",
+                popper: this.contentElement,
+                trigger: this.triggerElement
+            })
+        }
+
+        if (this.triggerStrategy !== "manual") {
+            this.triggerElement.addEventListener("click", this.toggleStateOnClick)
+        }
+        if (this.triggerStrategy === "hover") {
+            this.triggerElement.addEventListener("mouseenter", this.showOnMouseEnter)
+        }
+    }
 
     /**
      * Shows the overlay
@@ -153,7 +182,13 @@ class CreateOverlay {
     show() {
         this.popper.updatePosition()
         document.addEventListener("keydown", this.handleKeyDown)
-        document.addEventListener("click", this.handleDocumentClick)
+        if (this.clickListenerTimeout !== null) {
+            window.clearTimeout(this.clickListenerTimeout)
+        }
+        this.clickListenerTimeout = window.setTimeout(() => {
+            document.addEventListener("click", this.handleDocumentClick)
+            this.clickListenerTimeout = null
+        }, 0)
         this.options.beforeShow?.()
         updateOverlayState({
             state: "open",
@@ -176,7 +211,13 @@ class CreateOverlay {
             offsetDistance
         })
         document.addEventListener("keydown", this.handleKeyDown)
-        document.addEventListener("click", this.handleDocumentClick)
+        if (this.clickListenerTimeout !== null) {
+            window.clearTimeout(this.clickListenerTimeout)
+        }
+        this.clickListenerTimeout = window.setTimeout(() => {
+            document.addEventListener("click", this.handleDocumentClick)
+            this.clickListenerTimeout = null
+        }, 0)
         this.options.beforeShow?.()
         updateOverlayState({
             state: "open",
@@ -210,6 +251,8 @@ class CreateOverlay {
             offsetDistance: options.offsetDistance || this.offsetDistance
         })
         this.triggerElement = trigger;
+        if (this.triggerStrategy === "manual") return
+
         this.triggerElement.addEventListener("click", this.toggleStateOnClick)
         if (this.triggerStrategy === "hover") {
             this.triggerElement.addEventListener("mouseenter", this.showOnMouseEnter)
@@ -234,7 +277,11 @@ class CreateOverlay {
             popper: this.contentElement,
             trigger: this.triggerElement
         })
-        this.triggerStrategy === "click" && document.removeEventListener("click", this.handleDocumentClick)
+        if (this.clickListenerTimeout !== null) {
+            window.clearTimeout(this.clickListenerTimeout)
+            this.clickListenerTimeout = null
+        }
+        document.removeEventListener("click", this.handleDocumentClick)
         document.removeEventListener("keydown", this.handleKeyDown)
         if (this.triggerStrategy === "hover") {
             this.triggerElement.removeEventListener("mouseleave", this.hideOnMouseLeaseTrigger)
@@ -251,36 +298,26 @@ class CreateOverlay {
 
     }
 
-    private initInstance() {
-        updateOverlayState({
-            state: this.defaultState,
-            popper: this.contentElement,
-            trigger: this.triggerElement
-        })
-        if (this.defaultState === "open") {
-            this.show()
-        } else {
-            updateOverlayState({
-                state: "close",
-                popper: this.contentElement,
-                trigger: this.triggerElement
-            })
-        }
-
-        this.triggerElement.addEventListener("click", this.toggleStateOnClick)
-        if (this.triggerStrategy === "hover") {
-            this.triggerElement.addEventListener("mouseenter", this.showOnMouseEnter)
-        }
+    refreshPopper(){
+        this.popper.updatePosition()
     }
-
     /**
      * Cleans up event listeners and related callbacks
      */
     cleanup = () => {
+        if (this.clickListenerTimeout !== null) {
+            window.clearTimeout(this.clickListenerTimeout)
+            this.clickListenerTimeout = null
+        }
+        document.removeEventListener("click", this.handleDocumentClick)
+        document.removeEventListener("keydown", this.handleKeyDown)
         this.triggerElement.removeEventListener("click", this.toggleStateOnClick)
         if (this.triggerStrategy === "hover") {
             this.triggerElement.removeEventListener("mouseenter", this.showOnMouseEnter)
+            this.triggerElement.removeEventListener("mouseleave", this.hideOnMouseLeaseTrigger)
+            this.contentElement.removeEventListener("mouseleave", this.hideOnMouseLeave)
         }
+        this.popper.cleanupEvents()
     }
 }
 

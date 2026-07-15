@@ -1,0 +1,279 @@
+---
+title: Autocomplete
+description: Build searchable autocomplete UIs with rich selected content, empty states, and multi selection.
+references:
+    - Select Core: /docs/helpers/select-core
+    - Select: /docs/components/select
+---
+
+`@flexilla/autocomplete` builds on top of `@flexilla/select-core` and connects the search input, option list, and selected values in the DOM.
+
+Use it when you want:
+
+- typed search over a list of options
+- single or multiple selection
+- rich selected content or tags
+- a headless DOM binding without a framework dependency
+
+## Installation
+
+<TabCodeGroup
+  values={[
+    { text: "npm", value: "npm-tab", icon: "npm" },
+    { text: "yarn", value: "yarn-tab", icon: "yarn" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="npm-tab" active={true}>
+```bash
+npm i @flexilla/autocomplete
+```
+  </TabPanel>
+  <TabPanel value="yarn-tab">
+```bash
+yarn add @flexilla/autocomplete
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Markup structure
+
+Autocomplete does not need a wrapper. The input, content, and value elements only need to share the same id.
+
+```html
+<input
+  data-fx-autocomplete
+  data-select-input
+  data-autocomplete-id="framework-autocomplete"
+  type="text"
+  placeholder="Search frameworks"
+/>
+
+<div
+  data-select-content
+  data-select-id="framework-autocomplete"
+  data-placement="bottom-start"
+  class="ui-popper"
+  hidden
+>
+  <button data-select-item="astro">Astro</button>
+  <button data-select-item="vue">Vue</button>
+  <button data-select-item="laravel">Laravel</button>
+</div>
+
+<div data-selected-value data-select-id="framework-autocomplete"></div>
+<button data-select-clear data-select-id="framework-autocomplete">Clear</button>
+```
+
+### DOM attributes
+
+| Attribute | Role |
+|-----------|------|
+| `data-select-input` | Search input that drives the autocomplete |
+| `data-select-trigger` | Optional button that opens/closes the panel |
+| `data-select-item` | Selectable option (value goes in the attribute) |
+| `data-selected-value` | Container that renders the current selection |
+| `data-select-clear` | Resets all selected values |
+| `data-select-clear-all` | Same as `data-select-clear` |
+| `data-select-remove` | Removes a specific value (`data-select-remove="value"`) |
+| `data-autocomplete-id` | Shared id used to link input, content, and value elements |
+| `data-fx-autocomplete` | Auto-init selector (placed on the input) |
+
+### Overlay attributes
+
+Put these on the content element to control positioning:
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-placement` | `bottom-start` | Popper placement |
+| `data-offset-distance` | `6` | Gap between input and panel |
+| `data-prevent-close-outside` | `false` | Keep open when clicking outside |
+| `data-prevent-close-inside` | `true` (with multiple) | Keep open when clicking inside |
+| `data-readjust-height` | `true` | Recalculate position on scroll |
+| `data-min-height` | `140` | Minimum panel height |
+
+`readjustHeight` is enabled by default for autocomplete. Disable it with `data-readjust-height="false"` or `{ readjustHeight: false }`.
+
+The panel receives `--trigger-width`, so you can match the input width:
+
+```css
+[data-select-content] {
+  width: var(--trigger-width);
+}
+```
+
+## Basic usage
+
+### Class API
+
+```js
+import { Autocomplete } from "@flexilla/autocomplete";
+
+new Autocomplete('[data-select-input][data-autocomplete-id="framework-autocomplete"]');
+```
+
+You can also pass the input element directly.
+
+The constructor expects a CSS selector or `HTMLElement`. It reads the id from that element and resolves the rest of the autocomplete automatically.
+
+### Auto init
+
+```js
+import { Autocomplete } from "@flexilla/autocomplete";
+
+Autocomplete.autoInit();
+```
+
+Looks for `[data-fx-autocomplete]` elements and initializes them.
+
+### Controller API
+
+```js
+import { createAutocomplete } from "@flexilla/autocomplete";
+
+const autocomplete = createAutocomplete();
+const { destroy } = autocomplete.connect({
+  element: '[data-select-input][data-autocomplete-id="framework-autocomplete"]',
+});
+```
+
+You can also connect with an existing element:
+
+```js
+const input = document.querySelector('[data-autocomplete-id="framework-autocomplete"]');
+autocomplete.connect({ element: input });
+```
+
+## Search and filtering
+
+The input is the main trigger. The panel opens on focus or click, and filtering happens as the user types.
+
+Customize the filter:
+
+```js
+createAutocomplete({
+  filter: (query, item) => {
+    return item.label?.toLowerCase().startsWith(query.toLowerCase()) ?? false;
+  },
+});
+```
+
+Search debounce (default 100ms):
+
+```js
+createAutocomplete({
+  searchDebounce: 250, // ms
+});
+```
+
+Set to `0` for immediate filtering on every keystroke.
+
+## Selected value templates
+
+`data-selected-value` can define a custom template with `template[data-selected-model]`.
+
+Template bindings:
+
+| Attribute | Description |
+|-----------|-------------|
+| `data-bind` | Injects text from item data |
+| `data-bind-src` | Sets `src` attribute |
+| `data-bind-alt` | Sets `alt` attribute |
+| `data-bind-title` | Sets `title` attribute |
+| `data-bind-href` | Sets `href` attribute |
+| `data-bind-style` | Sets inline styles from item data |
+| `data-select-label` | Injects the item label |
+| `data-select-value` | Injects the raw value |
+| `data-select-remove` | Adds a remove button (multiple mode) |
+
+```html
+<div data-selected-value data-select-id="owners">
+  <template data-selected-model>
+    <span class="inline-flex items-center gap-2">
+      <span
+        class="size-5 rounded-full"
+        data-bind-style="badgeStyle"
+        data-bind="initials"
+      ></span>
+      <span data-bind="label"></span>
+    </span>
+  </template>
+  <span data-placeholder>No owner selected</span>
+</div>
+
+<li
+  data-select-item="brenda"
+  data-label="Brenda Stone"
+  data-initials="BS"
+  data-badge-style="background-color:#fecdd3;color:#881337"
+>
+  ...
+</li>
+```
+
+## Multiple selection
+
+Enable with the `multiple` option:
+
+```js
+new Autocomplete('[data-select-input][data-autocomplete-id="team-members"]', { multiple: true });
+```
+
+Or in markup:
+
+```html
+<input data-fx-autocomplete data-multiple data-select-input data-autocomplete-id="team-members" type="text" />
+```
+
+In multiple mode:
+
+- selecting items keeps the panel open
+- removing a selected item also keeps the panel open
+- the input remains available for continued search
+
+## Empty state
+
+Rendered when no item matches the query.
+
+```html
+<template data-select-empty>
+  <div>
+    No owner found for "<span data-select-empty-query></span>"
+  </div>
+</template>
+```
+
+## State and methods
+
+Like Select, the controller exposes select-core methods directly:
+
+`open()` `close()` `toggle()` `select(value)` `unselect(value)` `clear()` `toggleValue(value)` `highlight(index)` `highlightNext()` `highlightPrev()` `setSearch(query)` `getState()` `subscribe(listener)`
+
+```js
+autocomplete.subscribe((state) => {
+  console.log(state.search, state.selectedValues);
+});
+```
+
+## Lifecycle
+
+Class API:
+
+```js
+const ac = new Autocomplete('...');
+ac.cleanup();
+```
+
+Controller API:
+
+```js
+const { destroy } = autocomplete.connect({ element: '...' });
+destroy();
+```
+
+## Autocomplete vs Select
+
+- Use **Autocomplete** when interaction starts from typing.
+- Use **[Select](/docs/components/select)** when interaction starts from a trigger button and option panel.
+- Use **[Select Core](/docs/helpers/select-core)** when you want the state engine without DOM bindings.

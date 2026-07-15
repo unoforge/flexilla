@@ -1,0 +1,100 @@
+---
+title: OTP Flow
+description: Build OTP and verification code flows with pin-input, validation, and cleanup.
+references:
+    - Pin Input: /docs/components/pin-input
+---
+
+`@flexilla/pin-input` is a good fit for OTP and verification-code flows because it already handles the awkward parts:
+
+- moving focus between inputs
+- backspace navigation
+- paste support
+- completion checks
+
+## Basic setup
+
+```html
+<div id="otp-input">
+  <input data-pin-input maxlength="1" />
+  <input data-pin-input maxlength="1" />
+  <input data-pin-input maxlength="1" />
+  <input data-pin-input maxlength="1" />
+  <input data-pin-input maxlength="1" />
+  <input data-pin-input maxlength="1" />
+</div>
+```
+
+```js
+import { PinInput } from "@flexilla/pin-input";
+
+const pinInput = new PinInput("#otp-input", {
+  validation: /\d/,
+});
+```
+
+## Listening for completion
+
+```js
+pinInput.onChange((value) => {
+  if (pinInput.isComplete) {
+    console.log("Submit verification code:", value);
+  }
+});
+```
+
+This pattern is usually enough to trigger:
+
+- automatic submit
+- enabling the confirm button
+- verification requests
+
+## Paste support
+
+One of the best parts of `pin-input` is that it supports pasting a full code across multiple inputs.
+
+That means users can copy a code from email or SMS and paste once instead of filling each input manually.
+
+## Validation
+
+Use `validation` when your code format is predictable.
+
+```js
+new PinInput("#otp-input", {
+  validation: /\d/,
+});
+```
+
+For alphanumeric codes:
+
+```js
+new PinInput("#otp-input", {
+  validation: /[a-zA-Z0-9]/,
+});
+```
+
+## Lifecycle
+
+If the OTP UI can be removed from the page, call `cleanup()` when you are done with it.
+
+```js
+const pinInput = new PinInput("#otp-input");
+
+// Later
+pinInput.cleanup();
+```
+
+This is especially important in routed apps, dialogs, and conditional rendering flows.
+
+## Good UX additions
+
+An OTP flow usually feels better when combined with:
+
+- a resend-code action
+- a visible countdown or timeout
+- a clear error message for invalid codes
+- automatic focus on the first input when the screen opens
+
+## Next step
+
+Use [Pin Input](/docs/components/pin-input) as the input layer, then keep the verification request and retry logic separate in your application code.

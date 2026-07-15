@@ -11,7 +11,9 @@ export type PopperOptions = {
     placement?: Placement,
     offsetDistance?: number,
     eventEffect?: EventEffect,
-    onUpdate?: ({ x, y, placement }: { x: number, y: number, placement?: Placement }) => void
+    onUpdate?: ({ x, y, placement }: { x: number, y: number, placement?: Placement }) => void,
+    readjustHeight?: boolean
+    minHeight?: number
 }
 
 export type Dimensions = {

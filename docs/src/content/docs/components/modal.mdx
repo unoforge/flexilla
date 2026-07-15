@@ -83,11 +83,21 @@ To add overlay
   </DemoCompBoxInTab>
   </TabPanel>
   <TabPanel value="Code">
-    <CodeLoader source="modalDefault"/>
+    <CodeLoader source="ModalDefault"/>
   </TabPanel>
 </Tabs>
 
 ### Initialization
+
+Initialize the modal by passing the dialog element or selector:
+
+```js
+import { Modal } from "@flexilla/modal";
+
+const modal = new Modal("#myModal", {
+  // options
+});
+```
 
 
 ## Modal Options
@@ -293,3 +303,26 @@ Programmatically closes the modal.
 modal.hideModal();
 ```
 
+## Events
+
+The modal dispatches events on the modal element:
+
+- `modal-open`
+- `modal-close`
+- `before-hide`
+
+```js
+const modalEl = document.querySelector("#myModal");
+
+modalEl.addEventListener("modal-open", (event) => {
+  console.log(event.detail.modalId);
+});
+
+modalEl.addEventListener("modal-close", (event) => {
+  console.log(event.detail.modalId);
+});
+
+modalEl.addEventListener("before-hide", (event) => {
+  console.log(event.detail);
+});
+```

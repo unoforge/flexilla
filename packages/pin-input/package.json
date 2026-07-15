@@ -1,45 +1,39 @@
 {
   "name": "@flexilla/pin-input",
+  "version": "0.0.4",
   "private": false,
-  "version": "0.0.2",
   "type": "module",
+  "sideEffects": false,
   "description": "A lightweight JavaScript component for creating PIN and OTP input fields with validation and keyboard navigation support.",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/pin-input.umd.cjs",
-  "module": "./dist/pin-input.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/pin-input.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/pin-input.umd.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
     "dist",
     "README.md",
-    "package.json",
-    "!vite.config.ts",
-    "!.gitignore",
-    "!tsconfig.json"
+    "LICENSE"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
+  },
+  "dependencies": {
+    "@flexilla/manager": "0.2.4"
   },
   "devDependencies": {
-    "@flexilla/utilities": "latest",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "5.9.3"
   },
   "keywords": [
     "pin-input",
@@ -62,8 +56,5 @@
   },
   "license": "MIT",
   "author": "johnkat-mj",
-  "dependencies": {
-    "@flexilla/manager": "^0.2.2"
-  },
-  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
+  "gitHead": "b642d6db4a3bb9d7d8193c4374b3d2fecbe6ed2e"
 }

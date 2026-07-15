@@ -1,7 +1,7 @@
 
 import type { OffcanvasOptions } from "./types"
 import { closeAllOpenedOffcanvas, toggleOffCanvasState } from "./helpers"
-import { appendBefore, $$, $, dispatchCustomEvent, domTeleporter, waitForFxComponents } from "@flexilla/utilities"
+import { appendBefore, $$, $, dispatchCustomEvent, domTeleporter, waitForFxComponents, createLocker } from "@flexilla/utilities"
 import { createOverlay, destroyOverlay } from "./offCanvasOverlay"
 import { FlexillaManager } from "@flexilla/manager"
 
@@ -34,6 +34,8 @@ class Offcanvas {
     private staticBackdrop!: boolean
     private backdrop!: string
     private options!: OffcanvasOptions
+    private overlayElement: HTMLElement | null = null
+    private locker = createLocker()
     private teleporter!: {
         append: () => void;
         remove: () => void;
@@ -124,6 +126,7 @@ class Offcanvas {
         })
         const cancelAction = this.options.beforeHide?.()?.cancelAction
         if (cancelAction || cancelFromBeforeHide) return
+        this.locker.unlock()
         const id = this.offCanvasElement.getAttribute("id")
         const overlayElement = $(`[data-fx-offcanvas-overlay][data-offcanvas-el=${id}]`)
         if (overlayElement instanceof HTMLElement)
@@ -154,11 +157,18 @@ class Offcanvas {
             this.backdrop,
             id
         )
+        this.overlayElement = overlayElement instanceof HTMLElement ? overlayElement : null
         if (overlayElement instanceof HTMLElement) {
             appendBefore({ newElement: overlayElement, existingElement: this.offCanvasElement })
             if (!this.staticBackdrop)
                 overlayElement.addEventListener("click", this.closeOffCanvas)
         }
+        const allowed = this.overlayElement
+            ? [this.offCanvasElement, this.overlayElement]
+            : [this.offCanvasElement]
+        this.locker.lock(allowed)
+        this.offCanvasElement.removeAttribute("inert")
+        this.offCanvasElement.removeAttribute("aria-hidden")
         document.addEventListener("keydown", this.closeWithEsc)
         this.options.onShow?.()
         dispatchCustomEvent(this.offCanvasElement, "offcanvas-open", { offcanvasId: this.offCanvasElement.id })
@@ -253,6 +263,7 @@ class Offcanvas {
         }
         if (this.dispatchEventToDocument) document.removeEventListener(`sheet:${this.offCanvasId}:open`, this.open);
         if (this.dispatchEventToDocument) document.removeEventListener(`sheet:${this.offCanvasId}:close`, this.close);
+        this.locker.unlock()
         FlexillaManager.removeInstance("offcanvas", this.offCanvasElement)
     }
 

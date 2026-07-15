@@ -1,64 +1,59 @@
 {
   "name": "@flexilla/flexilla",
+  "version": "2.3.3",
   "private": false,
-  "version": "2.3.1",
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "description": "A set of unstyled interactive components for building interactive, and customizable user interfaces. Open-Source",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/flexilla.js",
-  "module": "./dist/flexilla.umd.cjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/flexilla.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/flexilla.umd.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./flexilla.css": "./dist/flexilla.css",
-    "./dropdown.css": "./dist/dropdown.css",
-    "./modal.css": "./dist/modal.css",
-    "./offcanvas.css": "./dist/offcanvas.css",
-    "./tabs.css": "./dist/tabs.css",
-    "./tooltip.css": "./dist/tooltip.css"
+    "./flexilla.css": "./dist/style.css",
+    "./dropdown.css": "./public/dropdown.css",
+    "./modal.css": "./public/modal.css",
+    "./offcanvas.css": "./public/offcanvas.css",
+    "./tabs.css": "./public/tabs.css",
+    "./tooltip.css": "./public/tooltip.css"
   },
   "files": [
     "dist",
+    "public",
     "README.md",
-    "package.json",
-    "!vite.config.ts",
-    "!.gitignore",
-    "!tsconfig.json"
+    "LICENSE"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/accordion": "^2.2.6",
-    "@flexilla/auto-resize-area": "^2.0.15",
-    "@flexilla/collapse": "^2.1.6",
-    "@flexilla/custom-range": "^2.0.14",
-    "@flexilla/dismissible": "^2.0.15",
-    "@flexilla/dropdown": "^2.2.7",
-    "@flexilla/modal": "^2.3.5",
-    "@flexilla/offcanvas": "^2.2.1",
-    "@flexilla/pin-input": "^0.0.2",
-    "@flexilla/popover": "^1.0.4",
-    "@flexilla/tabs": "^2.2.4",
-    "@flexilla/tooltip": "^2.4.4"
+    "@flexilla/accordion": "2.2.8",
+    "@flexilla/auto-resize-area": "2.1.2",
+    "@flexilla/collapse": "2.1.8",
+    "@flexilla/custom-range": "2.1.2",
+    "@flexilla/dismissible": "2.0.17",
+    "@flexilla/dropdown": "2.2.9",
+    "@flexilla/modal": "2.3.7",
+    "@flexilla/offcanvas": "2.2.3",
+    "@flexilla/pin-input": "0.0.4",
+    "@flexilla/popover": "1.0.6",
+    "@flexilla/tabs": "2.2.6",
+    "@flexilla/tooltip": "2.4.6"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "5.9.3"
   },
   "keywords": [
     "Flexilla",
@@ -80,5 +75,5 @@
   },
   "license": "MIT",
   "author": "johnkat-mj",
-  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
+  "gitHead": "b642d6db4a3bb9d7d8193c4374b3d2fecbe6ed2e"
 }

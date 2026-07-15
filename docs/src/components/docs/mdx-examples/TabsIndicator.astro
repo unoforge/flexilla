@@ -2,7 +2,6 @@
     <div
         data-tab-fx-site
         data-fx-tabs
-        data-indicator-class-name="ui-tabs-indicator bg-zinc-200 dark:bg-zinc-800 flex rounded absolute ease-linear duration-200"
         class="w-full"
     >
         <div data-tab-list-wrapper class="flex w-full">
@@ -11,6 +10,11 @@
                 role="tablist"
                 class="flex items-center relative p-0.5 bg-zinc-100 dark:bg-zinc-900/50 w-full rounded-md *:cursor-pointer"
             >
+                <span
+                    data-tab-indicator
+                    aria-hidden="true"
+                    class="ui-tabs-indicator bg-zinc-200 dark:bg-zinc-800 flex rounded ease-linear duration-200"
+                ></span>
                 <li role="presentation" class="flex">
                     <a
                         href="#"

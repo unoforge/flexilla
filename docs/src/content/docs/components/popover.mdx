@@ -41,20 +41,16 @@ yarn add @flexilla/popover
 
 ### Example
 
-<PreviewTopCodeBottom>
-  <PreviewComponent>
+<Tabs values={["Preview", "Code"]} autoHeight>
+  <TabPanel value="Preview" active={true}>
+  <DemoCompBoxInTab>
     <PopoverDefault/>
-  </PreviewComponent>
-
-```html
-<button data-popover-trigger data-popover-target="popover-example" class="bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm">
-    Show PopOver
-</button>
-<div data-fx-popover data-popover-content id="popover-example" class="ui-popper invisible opacity-0 fx-open:visible fx-open:opacity-100 w-64 z-20 p-6 bg-zinc-100 dark:bg-zinc-900/50 rounded-md h-48">
-    this is content
-</div>
-```
-</PreviewTopCodeBottom>
+  </DemoCompBoxInTab>
+  </TabPanel>
+  <TabPanel value="Code">
+    <CodeLoader source="PopoverDefault"/>
+  </TabPanel>
+</Tabs>
 
 ### Core Styling Requirements
 
@@ -273,4 +269,41 @@ Like `show()` method but here you can set the placement and offsetDistance if ne
 
 ```js
 myPopover.setShowOptions({ placement: Placement, offsetDistance: number })
+```
+
+### `setOptions(/* options */)`
+
+Update the placement and offset without immediately showing the popover.
+
+```js
+myPopover.setOptions({ placement: Placement, offsetDistance: number });
+```
+
+### `cleanup()`
+
+Call `cleanup()` when the popover is removed from the page.
+
+```js
+myPopover.cleanup();
+```
+
+## Events
+
+The popover dispatches events on the popover content element:
+
+- `popover-show`
+- `popover-hide`
+
+```js
+const popoverEl = document.querySelector("#popover-example");
+
+new Popover(popoverEl);
+
+popoverEl.addEventListener("popover-show", (event) => {
+  console.log(event.detail.isHidden); // false
+});
+
+popoverEl.addEventListener("popover-hide", (event) => {
+  console.log(event.detail.isHidden); // true
+});
 ```

@@ -4,11 +4,11 @@ description: Automatically adjusting the height of text areas based on the conte
 ---
 
 
-The **Auto-Resize TextArea** component automatically adjusts its height to fit the user's input, removing the need for scrollbars and enhancing the experience when working with multiline text fields. This ensures that users don't have to resize or scroll within the textarea.
+The **Auto-Resize TextArea** component automatically adjusts its height to fit the user's input, removing the need for scrollbars and improving multiline text entry.
 
 ## Installation
 
-To add auto-resizing functionality to your textarea, install the **AutoResize** component via npm (or any other package manager):
+To add auto-resizing functionality to your textarea, install the package:
 
 ```bash
 npm i @flexilla/auto-resize-area
@@ -31,16 +31,25 @@ To make a textarea auto-resizable, use a basic HTML structure like this:
 
 ### Initialization
 
-You can initialize the **AutoResize** component programmatically by passing the textarea element or its selector:
+You can initialize the component programmatically by passing the textarea element or its selector:
 
 ```js
-import { AutoResize } from '@flexilla/auto-resize-area';
+import { AutoResizeTextArea } from '@flexilla/auto-resize-area';
 
-// Initialize AutoResize on the textarea element
-const autoResizingTextarea = new AutoResize('#myTextarea');
+const autoResizingTextarea = new AutoResizeTextArea('#myTextarea');
 ```
 
 Once initialized, the textarea will dynamically resize based on its content, ensuring a smooth user experience without scrollbars.
+
+You can also define height limits with data attributes:
+
+```html
+<textarea
+  id="myTextarea"
+  data-min-height="40"
+  data-max-height="240"
+></textarea>
+```
 
 ### Full Example
 
@@ -51,9 +60,31 @@ Here’s a full example demonstrating how to set up and use the **AutoResize** c
 <textarea id="myTextarea" rows="1" placeholder="Start typing..."></textarea>
 
 <script type="module">
-  import { AutoResize } from '@flexilla/auto-resize-area';
+  import { AutoResizeTextArea } from '@flexilla/auto-resize-area';
   
   // Enable auto-resize functionality on the textarea
-  const myTextarea = new AutoResize('#myTextarea');
+  const myTextarea = new AutoResizeTextArea('#myTextarea');
 </script>
+```
+
+## Methods
+
+### `cleanup()`
+
+Remove the `input` and `resize` listeners when the instance is no longer needed.
+
+```js
+autoResizingTextarea.cleanup();
+```
+
+### `autoInit()`
+
+Initialize all matching textareas automatically. By default, `AutoResizeTextArea.autoInit()` looks for `[data-fx-autoresize]`.
+
+```js
+import { AutoResizeTextArea } from "@flexilla/auto-resize-area";
+
+AutoResizeTextArea.autoInit();
+// or
+AutoResizeTextArea.autoInit(".auto-resize-textarea");
 ```

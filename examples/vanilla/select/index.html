@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Demo</title>
+</head>
+
+<body class="pt14 bg-white dark:bg-zinc-950">
+  <section class="max-w3xl mxauto space-y-14 relative z20 pb20">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">Select</h1>
+      <p class="text-zinc-600 dark:text-zinc-400">Headless select powered by @flexilla/select-core with DOM bindings.</p>
+    </header>
+
+    <div class="space-y-6">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Basic single select</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Minimal single select with a trigger, a content list, and a default value.</p>
+      </div>
+      <div class="relative w-full max-w-md space-y-2">
+        <button data-fx-select data-select-trigger data-select-id="demo-select-basic" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">
+          <span data-selected-value data-select-id="demo-select-basic" class="flex-1 text-left">Choose a framework</span>
+          <span class="text-xs opacity-70">⌄</span>
+        </button>
+        <input type="hidden" data-select-value data-select-id="demo-select-basic" name="framework" />
+        <div data-select-content data-select-id="demo-select-basic" data-default-value="vue" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="astro" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Astro</li>
+            <li data-select-item="vue" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Vue</li>
+            <li data-select-item="laravel" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Laravel</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Searchable single select</h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Searchable single select with a filter input, custom template with data bindings, a clear button, and an empty state.</p>
+        </div>
+      <div class="relative w-full max-w-md space-y-2">
+        <button data-fx-select data-select-trigger data-select-id="demo-select" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">
+          <span data-selected-value data-select-id="demo-select" class="flex-1 text-left">
+            <template data-selected-model>
+              <span class="inline-flex items-center gap-2 min-w-0">
+                <span class="size-6 rounded-full inline-flex items-center justify-center text-[11px] font-semibold shrink-0" data-bind-style="badgeStyle" data-bind="initials"></span>
+                <span class="truncate" data-bind="label"></span>
+              </span>
+            </template>
+            <span data-placeholder>Choose an owner</span>
+          </span>
+          <span class="text-xs opacity-70">⌄</span>
+        </button>
+        <button data-select-clear data-select-id="demo-select" class="ml-3 text-sm text-blue6 hover:text-blue7">Clear</button>
+        <div data-select-content data-select-id="demo-select" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+          <div class="p-2 border-b border-zinc-200 dark:border-zinc-800">
+            <input data-select-input data-select-id="demo-select" type="text" placeholder="Search team members" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+          </div>
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="alice" data-label="Alice Johnson" data-initials="AJ" data-badge-style="background-color:#fde68a;color:#78350f" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-amber-200 text-amber-900 inline-flex items-center justify-center text-xs font-semibold">AJ</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Alice Johnson</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">alice@flexilla.dev</div>
+                </div>
+              </div>
+            </li>
+            <li data-select-item="marc" data-label="Marc Dupont" data-initials="MD" data-badge-style="background-color:#bae6fd;color:#0c4a6e" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-sky-200 text-sky-900 inline-flex items-center justify-center text-xs font-semibold">MD</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Marc Dupont</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">marc@flexilla.dev</div>
+                </div>
+              </div>
+            </li>
+            <li data-select-item="nina" data-label="Nina Lopez" data-initials="NL" data-badge-style="background-color:#bbf7d0;color:#14532d" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-emerald-200 text-emerald-900 inline-flex items-center justify-center text-xs font-semibold">NL</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Nina Lopez</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">nina@flexilla.dev</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <template data-select-empty>
+            <div class="px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400">
+              No team member found for "<span data-select-empty-query></span>"
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+        <div class="space-y-3">
+          <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select</h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Multi select with chips summary, search filtering, individual chip removal, and clear all.</p>
+        </div>
+      <div class="relative max-w-md space-y-2">
+        <button data-fx-select data-multiple data-select-trigger data-select-id="demo-select-multi" class="w-full b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg flex justify-start text-left text-sm">
+          <span>Assign reviewers</span>
+        </button>
+        <input type="hidden" data-select-value data-select-id="demo-select-multi" name="reviewers" />
+        <div data-selected-value data-select-summary-mode="chips" data-select-id="demo-select-multi" class="flex gap-2 flex-wrap text-sm text-zinc-800 dark:text-zinc-100">
+          <template data-selected-model>
+            <span class="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800">
+              <span class="size-5 rounded-full inline-flex items-center justify-center text-[10px] font-semibold" data-bind-style="badgeStyle" data-bind="initials"></span>
+              <span data-bind="label"></span>
+              <button data-select-remove class="text-xs text-zinc-600 dark:text-zinc-300 hover:text-red-500">×</button>
+            </span>
+          </template>
+          <span class="text-zinc-500" data-placeholder>No reviewer selected</span>
+        </div>
+        <div class="flex items-center gap-2 mt-2">
+          <button data-select-clear-all data-select-id="demo-select-multi" class="text-sm text-blue6 hover:text-blue7">Clear all</button>
+        </div>
+        <div data-select-content data-select-id="demo-select-multi" data-default-value="brenda,sarah" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+          <div class="p-2 border-b border-zinc-200 dark:border-zinc-800">
+            <input data-select-input data-select-id="demo-select-multi" type="text" placeholder="Filter reviewers" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+          </div>
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="brenda" data-label="Brenda Stone" data-initials="BS" data-badge-style="background-color:#fecdd3;color:#881337" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-rose-200 text-rose-900 inline-flex items-center justify-center text-xs font-semibold">BS</span>
+                <div>
+                  <div class="font-medium">Brenda Stone</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">Product designer</div>
+                </div>
+              </div>
+            </li>
+            <li data-select-item="david" data-label="David Kim" data-initials="DK" data-badge-style="background-color:#ddd6fe;color:#4c1d95" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-violet-200 text-violet-900 inline-flex items-center justify-center text-xs font-semibold">DK</span>
+                <div>
+                  <div class="font-medium">David Kim</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">Frontend engineer</div>
+                </div>
+              </div>
+            </li>
+            <li data-select-item="sarah" data-label="Sarah Chen" data-initials="SC" data-badge-style="background-color:#bae6fd;color:#155e75" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-cyan-200 text-cyan-900 inline-flex items-center justify-center text-xs font-semibold">SC</span>
+                <div>
+                  <div class="font-medium">Sarah Chen</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">Documentation lead</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <template data-select-empty>
+            <div class="px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400">
+              No reviewer found for "<span data-select-empty-query></span>"
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Multi select summaries</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Instead of rendering chips, the trigger can show a count or a compact summary.</p>
+      </div>
+      <div class="grid gap-8 max-w-xl">
+        <div class="relative space-y-2">
+          <button data-fx-select data-multiple data-select-trigger data-select-id="demo-select-count" class="w-full b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg flex justify-between text-left text-sm">
+            <span data-selected-value data-select-id="demo-select-count" data-select-summary-mode="count" data-select-summary-count-singular="{count} user selected" data-select-summary-count-plural="{count} users selected" class="flex-1 text-left">
+              <span data-placeholder>No user selected</span>
+            </span>
+            <span class="text-xs opacity-70">⌄</span>
+          </button>
+          <div data-select-content data-select-id="demo-select-count" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+            <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+              <li data-select-item="john" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">John</li>
+              <li data-select-item="virgil" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Virgil</li>
+              <li data-select-item="jacques" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Jacques</li>
+              <li data-select-item="enot" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Enot</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="relative space-y-2">
+          <button data-fx-select data-multiple data-select-trigger data-select-id="demo-select-compact" class="w-full b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg flex justify-between text-left text-sm">
+            <span
+              data-selected-value
+              data-select-id="demo-select-compact"
+              data-select-summary-mode="compact"
+              data-select-summary-limit="2"
+              data-select-summary-compact-text="{labels} and {remaining} other users"
+              class="flex-1 text-left"
+            >
+              <span data-placeholder>No reviewer selected</span>
+            </span>
+            <span class="text-xs opacity-70">⌄</span>
+          </button>
+          <div data-select-content data-select-id="demo-select-compact" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+            <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+              <li data-select-item="john" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">John</li>
+              <li data-select-item="virgil" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Virgil</li>
+              <li data-select-item="jacques" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Jacques</li>
+              <li data-select-item="enot" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Enot</li>
+              <li data-select-item="jade" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">Jade</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Single select with custom value template</h2>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400">Single select with a custom template using <code>data-bind-style</code> to render a colored dot indicator alongside the label.</p>
+        </div>
+      <div class="relative w-full max-w-md space-y-2">
+        <button data-fx-select data-select-trigger data-select-id="demo-select-template" class="b b-zinc8 hover-bg-zinc-950 bg-zinc9 text-white px-4 py-2 rounded-lg text-sm w-full flex items-center justify-between gap-3">
+          <span data-selected-value data-select-id="demo-select-template" class="flex-1 text-left">
+            <template data-selected-model>
+              <span class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full" data-bind-style="dotStyle"></span>
+                <span data-bind="label"></span>
+              </span>
+            </template>
+            <span data-placeholder>Select project status</span>
+          </span>
+          <span class="text-xs opacity-70">⌄</span>
+        </button>
+        <div data-select-content data-select-id="demo-select-template" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="todo" data-label="Todo" data-dot-style="background-color:#a1a1aa" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-zinc-400"></span>
+                <span>Todo</span>
+              </div>
+            </li>
+            <li data-select-item="progress" data-label="In progress" data-dot-style="background-color:#fbbf24" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-amber-400"></span>
+                <span>In progress</span>
+              </div>
+            </li>
+            <li data-select-item="done" data-label="Done" data-dot-style="background-color:#22c55e" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded cursor-pointer">
+              <div class="inline-flex items-center gap-2">
+                <span class="size-2 rounded-full bg-emerald-500"></span>
+                <span>Done</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>

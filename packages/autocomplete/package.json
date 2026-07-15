@@ -1,0 +1,57 @@
+{
+  "name": "@flexilla/autocomplete",
+  "version": "0.1.2",
+  "private": false,
+  "type": "module",
+  "sideEffects": false,
+  "description": "Autocomplete primitive built on the headless @flexilla/select-core",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
+  },
+  "dependencies": {
+    "@flexilla/manager": "0.2.4",
+    "@flexilla/select-core": "0.1.2",
+    "@flexilla/utilities": "latest",
+    "flexipop": "0.3.4"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
+  "keywords": [
+    "autocomplete",
+    "select",
+    "headless",
+    "flexilla"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unoforge/flexilla"
+  },
+  "bugs": {
+    "url": "https://github.com/unoforge/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "Flexilla Team",
+  "gitHead": "b642d6db4a3bb9d7d8193c4374b3d2fecbe6ed2e"
+}

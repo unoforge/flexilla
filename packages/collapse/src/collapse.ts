@@ -2,7 +2,7 @@
 import type { CollapseOptions } from "./types";
 
 import { $$, $, dispatchCustomEvent } from "@flexilla/utilities"
-import { expandElement, collapseElement, initCollapsible } from "./../../collapsible/src/collapsible"
+import { expandElement, collapseElement, initCollapsible } from "@flexilla/collapsible"
 import {FlexillaManager} from "@flexilla/manager"
 
 /**

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autocomplete Demo</title>
+</head>
+
+<body class="pt14 bg-white dark:bg-zinc-950">
+  <section class="max-w3xl mxauto space-y-14 relative z20 pb20">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">Autocomplete</h1>
+      <p class="text-sm text-zinc-600 dark:text-zinc-400">Powered by @flexilla/autocomplete using the shared select core.</p>
+    </header>
+
+    <div class="space-y-6">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Static list</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Filters existing items with case-insensitive matching.</p>
+      </div>
+      <div class="w-full max-w-md space-y-2">
+        <label class="block text-sm font-medium text-zinc-800 dark:text-zinc-200">Search fruit</label>
+        <input data-fx-autocomplete data-select-input data-autocomplete-id="demo-autocomplete-static" type="text" placeholder="Type to filter" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+        <input type="hidden" data-autocomplete-value data-select-id="demo-autocomplete-static" name="fruit" />
+        <button data-select-clear data-select-id="demo-autocomplete-static" class="text-sm text-blue6 hover:text-blue7">Clear selection</button>
+        <p data-selected-value data-select-id="demo-autocomplete-static" class="text-sm text-zinc-600 dark:text-zinc-400">Nothing selected</p>
+        <div data-select-content data-select-id="demo-autocomplete-static" data-default-value="banana" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="apple" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded data-[hidden]:hidden">Apple</li>
+            <li data-select-item="banana" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded data-[hidden]:hidden">Banana</li>
+            <li data-select-item="cherry" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded data-[hidden]:hidden">Cherry</li>
+            <li data-select-item="date" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center gap-2 rounded data-[hidden]:hidden">Date</li>
+          </ul>
+          <template data-select-empty>
+            <div class="px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400">
+              No fruit found for "<span data-select-empty-query></span>"
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+      <div class="space-y-6">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Single autocomplete with custom summary</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Keeps the input as the search trigger and renders the selected summary with one shared template.</p>
+      </div>
+      <div class="w-full max-w-md space-y-2">
+        <label class="block text-sm font-medium text-zinc-800 dark:text-zinc-200">Pick an owner</label>
+        <input data-fx-autocomplete data-select-input data-autocomplete-id="demo-autocomplete-user" type="text" placeholder="Search owners" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+        <div data-selected-value data-select-id="demo-autocomplete-user" class="text-sm text-zinc-800 dark:text-zinc-100">
+          <template data-selected-model>
+            <span class="inline-flex items-center gap-2 px-2 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-900">
+              <span class="size-6 rounded-full inline-flex items-center justify-center text-[11px] font-semibold" data-bind-style="badgeStyle" data-bind="initials"></span>
+              <span data-bind="label"></span>
+            </span>
+          </template>
+          <span data-placeholder class="text-zinc-500">No owner selected</span>
+        </div>
+        <div data-select-content data-select-id="demo-autocomplete-user" data-placement="bottom-start" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="brenda" data-label="Brenda Stone" data-initials="BS" data-badge-style="background-color:#fecdd3;color:#881337" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-rose-200 text-rose-900 inline-flex items-center justify-center text-xs font-semibold">BS</span>
+                <div>
+                  <div class="font-medium">Brenda Stone</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">Product designer</div>
+                </div>
+              </div>
+            </li>
+            <li data-select-item="david" data-label="David Kim" data-initials="DK" data-badge-style="background-color:#ddd6fe;color:#4c1d95" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-violet-200 text-violet-900 inline-flex items-center justify-center text-xs font-semibold">DK</span>
+                <div>
+                  <div class="font-medium">David Kim</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">Frontend engineer</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <template data-select-empty>
+            <div class="px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400">
+              No owner found for "<span data-select-empty-query></span>"
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+      <div class="space-y-6">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Rich user tags</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400">Selected tags use one reusable model while the input keeps handling search.</p>
+      </div>
+      <div class="w-full max-w-md space-y-2">
+        <label class="block text-sm font-medium text-zinc-800 dark:text-zinc-200">Assign team members</label>
+        <input data-fx-autocomplete data-multiple data-select-input data-autocomplete-id="demo-autocomplete-multi" type="text" placeholder="Type a name or email" class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100" />
+        <input type="hidden" data-autocomplete-value data-select-id="demo-autocomplete-multi" name="assignees" />
+        <div class="flex items-center gap-2">
+          <button data-select-clear-all data-select-id="demo-autocomplete-multi" class="text-sm text-blue6 hover:text-blue7">Clear all</button>
+        </div>
+        <div data-selected-value data-select-id="demo-autocomplete-multi" data-select-summary-mode="chips" class="flex gap-2 flex-wrap text-sm text-zinc-800 dark:text-zinc-100">
+          <template data-selected-model>
+            <span class="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800">
+              <span class="size-5 rounded-full inline-flex items-center justify-center text-[10px] font-semibold" data-bind-style="badgeStyle" data-bind="initials"></span>
+              <span data-bind="label"></span>
+              <button data-select-remove class="text-xs text-zinc-600 dark:text-zinc-300 hover:text-red-500">×</button>
+            </span>
+          </template>
+          <span class="text-zinc-500" data-placeholder>No one selected</span>
+        </div>
+        <div data-select-content data-select-id="demo-autocomplete-multi" data-default-value="alice,nina" data-placement="bottom-start" data-readjust-height="false" class="ui-popper w-[--trigger-width] z-50 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm  opacity-0 invisible fx-open:opacity-100 fx-open:visible ease-linear transition-transform translate-y-4 fx-open:translate-y-0">
+          <ul class="py-1 text-sm text-zinc-800 dark:text-zinc-100">
+            <li data-select-item="alice" data-label="Alice Johnson" data-initials="AJ" data-badge-style="background-color:#fde68a;color:#78350f" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-amber-200 text-amber-900 inline-flex items-center justify-center text-xs font-semibold">AJ</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Alice Johnson</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">alice@flexilla.dev</div>
+                </div>
+              </div>
+            </li>
+            <li data-select-item="marc" data-label="Marc Dupont" data-initials="MD" data-badge-style="background-color:#bae6fd;color:#0c4a6e" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-sky-200 text-sky-900 inline-flex items-center justify-center text-xs font-semibold">MD</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Marc Dupont</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">marc@flexilla.dev</div>
+                </div>
+              </div>
+            </li>
+            <li data-select-item="nina" data-label="Nina Lopez" data-initials="NL" data-badge-style="background-color:#bbf7d0;color:#14532d" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-emerald-200 text-emerald-900 inline-flex items-center justify-center text-xs font-semibold">NL</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Nina Lopez</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">nina@flexilla.dev</div>
+                </div>
+              </div>
+            </li>
+            <li data-select-item="sarah" data-label="Sarah Chen" data-initials="SC" data-badge-style="background-color:#bae6fd;color:#155e75" class="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center rounded cursor-pointer data-[hidden]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="size-8 rounded-full bg-cyan-200 text-cyan-900 inline-flex items-center justify-center text-xs font-semibold">SC</span>
+                <div class="min-w-0">
+                  <div class="font-medium">Sarah Chen</div>
+                  <div class="text-xs text-zinc-500 dark:text-zinc-400">sarah@flexilla.dev</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <template data-select-empty>
+            <div class="px-3 py-4 text-sm text-zinc-500 dark:text-zinc-400">
+              No team member found for "<span data-select-empty-query></span>"
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <!-- Async demo intentionally omitted for current scope -->
+  </section>
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>

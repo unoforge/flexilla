@@ -1,0 +1,96 @@
+---
+title: Stacked Modals
+description: Build layered modal flows with stacked mode, guarded closing, and lifecycle hooks.
+references:
+    - Modal: /docs/components/modal
+---
+
+Flexilla modals support more than just a simple open and close cycle. You can build more advanced flows such as:
+
+- confirmation over another modal
+- nested or layered modal experiences
+- guarded closing when a step is incomplete
+
+## Enable stacked modals
+
+To allow multiple modals to stay active instead of forcing one to close another, enable stacked mode.
+
+```js
+import { Modal } from "@flexilla/modal";
+
+new Modal("#primary-modal", {
+  enableStackedModals: true,
+});
+
+new Modal("#confirm-modal", {
+  enableStackedModals: true,
+});
+```
+
+You can also express that in markup with the modal data attribute.
+
+## Guard closing with `beforeHide`
+
+`beforeHide` is useful when the modal should not close until a condition is satisfied.
+
+```js
+let canClose = false;
+
+new Modal("#confirm-modal", {
+  beforeHide: () => {
+    if (!canClose) {
+      return { cancelAction: true };
+    }
+  },
+});
+```
+
+This works well for:
+
+- destructive confirmations
+- required form steps
+- async operations that should finish first
+
+## React to modal events
+
+Flexilla modals also dispatch events such as:
+
+- `modal-open`
+- `modal-close`
+- `before-hide`
+
+```js
+const modalEl = document.querySelector("#primary-modal");
+
+modalEl.addEventListener("modal-open", (event) => {
+  console.log("Opened:", event.detail.modalId);
+});
+
+modalEl.addEventListener("modal-close", (event) => {
+  console.log("Closed:", event.detail.modalId);
+});
+```
+
+That makes it easier to coordinate the rest of the page without tightly coupling everything to one modal instance.
+
+## Body scroll and overlays
+
+When you stack modals, you should think carefully about:
+
+- whether body scrolling should remain locked
+- which overlay appears above which layer
+- how the user should return to the previous step
+
+Those are interaction decisions, not just implementation details.
+
+## Recommended use
+
+Stacked modals are powerful, but they should be used intentionally. They work best when:
+
+- the second modal is short and focused
+- the relationship between the two layers is obvious
+- the user can recover easily if they cancel
+
+## Next step
+
+Use the [Modal](/docs/components/modal) API for the base behavior, then combine `enableStackedModals`, `beforeHide`, and custom events when you need a more advanced workflow.

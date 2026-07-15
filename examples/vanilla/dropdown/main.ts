@@ -1,7 +1,14 @@
 import { Dropdown } from "@flexilla/dropdown"
 import "./../main"
 
-new Dropdown("[data-drop-down-1]")
+new Dropdown("[data-drop-down-1]", {
+    // reajustSize: true
+})
+new Dropdown("[data-drop-down-resize-demo]", {
+    readjustHeight: true,
+    minHeight: 140
+})
+
 new Dropdown("[data-drop-down-2]")
 new Dropdown(
     "[data-drop-down-3]",

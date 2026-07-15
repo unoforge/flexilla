@@ -1,4 +1,4 @@
-import type { Placement } from "flexipop"
+import type { Placement } from "flexipop/create-overlay"
 
 /** Configuration for controlling event-based behavior */
 type EventEffect = {
@@ -55,6 +55,9 @@ export type DropdownOptions = {
      * @param {boolean} [params.isHidden] - Current visibility state
      */
     onToggle?: ({ isHidden }: { isHidden?: boolean }) => void,
+
+    readjustHeight?:boolean,
+    minHeight?:number,
 
     experimental?: ExperimentalOptions
 

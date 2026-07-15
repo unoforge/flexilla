@@ -1,0 +1,51 @@
+{
+  "name": "@flexilla/select-core",
+  "version": "0.1.2",
+  "private": false,
+  "type": "module",
+  "sideEffects": false,
+  "description": "Headless state engine for Flexilla select-like components",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
+  "keywords": [
+    "select",
+    "autocomplete",
+    "headless",
+    "flexilla"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unoforge/flexilla"
+  },
+  "bugs": {
+    "url": "https://github.com/unoforge/flexilla/issues"
+  },
+  "license": "MIT",
+  "author": "Flexilla Team",
+  "gitHead": "b642d6db4a3bb9d7d8193c4374b3d2fecbe6ed2e"
+}

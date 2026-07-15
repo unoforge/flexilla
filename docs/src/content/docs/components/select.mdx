@@ -1,0 +1,341 @@
+---
+title: Select
+description: Build a DOM-first select with searchable panels, rich selected content, and multi-select summaries.
+references:
+    - Select Core: /docs/helpers/select-core
+    - Autocomplete: /docs/components/autocomplete
+---
+
+`@flexilla/select` gives you DOM bindings for the headless `@flexilla/select-core` engine.
+
+Use it when you want:
+
+- a visible option list controlled by a trigger button
+- single or multiple selection
+- optional search inside the panel
+- rich selected content in the trigger or multi tags
+
+If you only want the state engine without DOM wiring, use [Select Core](/docs/helpers/select-core).
+
+## Installation
+
+<TabCodeGroup
+  values={[
+    { text: "npm", value: "npm-tab", icon: "npm" },
+    { text: "yarn", value: "yarn-tab", icon: "yarn" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="npm-tab" active={true}>
+```bash
+npm i @flexilla/select
+```
+  </TabPanel>
+  <TabPanel value="yarn-tab">
+```bash
+yarn add @flexilla/select
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Markup structure
+
+Select does not need a wrapper. The trigger, content, and value elements only need to share the same `data-select-id`.
+
+```html
+<button
+  data-fx-select
+  data-select-trigger
+  data-select-id="framework-select"
+>
+  <span data-selected-value data-select-id="framework-select">
+    Choose a framework
+  </span>
+</button>
+
+<div
+  data-select-content
+  data-select-id="framework-select"
+  data-placement="bottom-start"
+  class="ui-popper"
+  hidden
+>
+  <button data-select-item="astro">Astro</button>
+  <button data-select-item="vue">Vue</button>
+  <button data-select-item="laravel">Laravel</button>
+</div>
+
+<button data-select-clear data-select-id="framework-select">Clear</button>
+```
+
+### DOM attributes
+
+| Attribute | Role |
+|-----------|------|
+| `data-select-trigger` | Button that opens/closes the panel |
+| `data-select-item` | Selectable option (value goes in the attribute) |
+| `data-selected-value` | Container that renders the current selection |
+| `data-select-input` | Search input inside the panel (optional) |
+| `data-select-clear` | Resets all selected values |
+| `data-select-clear-all` | Same as `data-select-clear` |
+| `data-select-remove` | Removes a specific value (`data-select-remove="value"`) |
+| `data-fx-select` | Auto-init selector (placed on the trigger) |
+
+### Overlay attributes
+
+Put these on the content element to control positioning:
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-placement` | `bottom-start` | Popper placement |
+| `data-offset-distance` | `6` | Gap between trigger and panel |
+| `data-prevent-close-outside` | `false` | Keep open when clicking outside |
+| `data-prevent-close-inside` | `true` (with search or multiple) | Keep open when clicking inside |
+| `data-readjust-height` | `true` | Recalculate position on scroll |
+| `data-min-height` | `140` | Minimum panel height |
+
+The panel also receives `--trigger-width`, so you can match the trigger width:
+
+```css
+[data-select-content] {
+  width: var(--trigger-width);
+}
+```
+
+## Basic usage
+
+### Class API
+
+```js
+import { Select } from "@flexilla/select";
+
+new Select('[data-select-content][data-select-id="framework-select"]');
+```
+
+You can also pass the element directly:
+
+```js
+const el = document.querySelector('[data-select-content][data-select-id="framework-select"]');
+new Select(el);
+```
+
+The constructor expects a CSS selector or `HTMLElement`. It reads the `data-select-id` from that element and resolves the rest of the select automatically.
+
+### Auto init
+
+```js
+import { Select } from "@flexilla/select";
+
+Select.autoInit();
+```
+
+Looks for `[data-fx-select]` elements and initializes them.
+
+### Controller API
+
+```js
+import { createSelect } from "@flexilla/select";
+
+const select = createSelect({ multiple: true });
+const { destroy } = select.connect({
+  element: '[data-select-content][data-select-id="framework-select"]',
+});
+```
+
+## Search
+
+Add `data-select-input` inside the content to make the list searchable.
+
+```html
+<div data-select-content data-select-id="owner-select" hidden>
+  <input
+    data-select-input
+    data-select-id="owner-select"
+    type="text"
+    placeholder="Search team members"
+  />
+
+  <button data-select-item="alice" data-label="Alice Johnson">Alice Johnson</button>
+  <button data-select-item="marc" data-label="Marc Dupont">Marc Dupont</button>
+
+  <template data-select-empty>
+    <div>
+      No team member found for "<span data-select-empty-query></span>"
+    </div>
+  </template>
+</div>
+```
+
+When a search input is present:
+
+- clicks inside the panel stay open so the input remains usable
+- choosing an item in single mode still closes the panel
+- use `data-select-empty` to show a message when nothing matches
+
+Custom filter:
+
+```js
+createSelect({
+  filter: (query, item) => {
+    return item.label?.toLowerCase().includes(query.toLowerCase()) ?? false;
+  },
+});
+```
+
+Search debounce (default 100ms):
+
+```js
+createSelect({
+  searchDebounce: 250, // ms
+});
+```
+
+Set to `0` for immediate filtering on every keystroke.
+
+## Selected value templates
+
+`data-selected-value` can define a reusable template with `template[data-selected-model]`.
+
+Template bindings:
+
+| Attribute | Description |
+|-----------|-------------|
+| `data-bind` | Injects text from item data |
+| `data-bind-src` | Sets `src` attribute |
+| `data-bind-alt` | Sets `alt` attribute |
+| `data-bind-title` | Sets `title` attribute |
+| `data-bind-href` | Sets `href` attribute |
+| `data-bind-style` | Sets inline styles from item data |
+| `data-select-label` | Injects the item label |
+| `data-select-value` | Injects the raw value |
+| `data-select-remove` | Adds a remove button (multiple mode) |
+
+```html
+<div data-selected-value data-select-id="reviewers">
+  <template data-selected-model>
+    <span class="inline-flex items-center gap-2">
+      <span
+        class="size-5 rounded-full"
+        data-bind-style="badgeStyle"
+        data-bind="initials"
+      ></span>
+      <span data-bind="label"></span>
+      <button data-select-remove>×</button>
+    </span>
+  </template>
+  <span data-placeholder>No reviewer selected</span>
+</div>
+
+<li
+  data-select-item="alice"
+  data-label="Alice Johnson"
+  data-initials="AJ"
+  data-badge-style="background-color:#fde68a;color:#78350f"
+>
+  ...
+</li>
+```
+
+## Multiple selection
+
+Enable with the `multiple` option:
+
+```js
+new Select('[data-select-content][data-select-id="reviewers"]', { multiple: true });
+```
+
+Or in markup:
+
+```html
+<button data-fx-select data-multiple data-select-trigger data-select-id="reviewers">
+  Assign reviewers
+</button>
+```
+
+In multiple mode:
+
+- clicking items toggles them on and off
+- the panel stays open after selection
+- removing a selected item keeps the panel open
+
+### Multi-select summaries
+
+Instead of rendering full templates, `data-selected-value` can show a summary.
+
+Modes: `chips`, `count`, `compact`.
+
+```html
+<span
+  data-selected-value
+  data-select-id="reviewers"
+  data-select-summary-mode="count"
+  data-select-summary-count-singular="{count} user selected"
+  data-select-summary-count-plural="{count} users selected"
+>
+  <span data-placeholder>No user selected</span>
+</span>
+```
+
+Compact mode limits visible labels:
+
+```html
+<span
+  data-selected-value
+  data-select-id="reviewers"
+  data-select-summary-mode="compact"
+  data-select-summary-limit="2"
+  data-select-summary-compact-text="{labels} and {remaining} other users"
+>
+  <span data-placeholder>No reviewer selected</span>
+</span>
+```
+
+## Empty state
+
+Rendered when search returns no visible items.
+
+```html
+<template data-select-empty>
+  <div>
+    No results found for "<span data-select-empty-query></span>"
+  </div>
+</template>
+```
+
+## State and methods
+
+The controller exposes select-core methods directly:
+
+`open()` `close()` `toggle()` `select(value)` `unselect(value)` `clear()` `toggleValue(value)` `highlight(index)` `highlightNext()` `highlightPrev()` `setSearch(query)` `getState()` `subscribe(listener)`
+
+```js
+const select = createSelect();
+select.connect({ element: '...' });
+
+select.subscribe((state) => {
+  console.log(state.selectedValues);
+});
+```
+
+## Lifecycle
+
+Class API:
+
+```js
+const select = new Select('...');
+select.cleanup();
+```
+
+Controller API:
+
+```js
+const { destroy } = select.connect({ element: '...' });
+destroy();
+```
+
+## Select vs Autocomplete
+
+- Use **Select** when interaction starts from a trigger button and a visible option list.
+- Use **[Autocomplete](/docs/components/autocomplete)** when interaction starts from typed input.
+- Use **[Select Core](/docs/helpers/select-core)** when you want the state engine without DOM bindings.

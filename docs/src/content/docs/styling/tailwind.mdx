@@ -1,165 +1,196 @@
 ---
-title: Flexilla - Tailwind Plugin
-description: Simplified styling for Flexilla with variants and components
+title: Flexilla Tailwind CSS
+description: Style Flexilla components with Tailwind CSS using state variants and helper utilities.
 ---
 
+Tailwind CSS works well with Flexilla because Flexilla exposes state through `data-*` attributes. You can either define the state variants yourself in Tailwind 4, or use the `@flexilla/tailwind-plugin` package in Tailwind 3 projects.
 
-## With Tailwind4
+## Tailwind 4
 
-Just include these variants and utilities in your main tailwind config CSS file.
+In Tailwind 4, you can define the variants you need directly in your CSS.
 
 ```css
 @custom-variant fx-open (&[data-state="open"]);
-@custom-variant fx-close (&[data-state="open"]);
-@custom-variant fx-visible (&[data-state="open"]);
-@custom-variant fx-hidden (&[data-state="open"]);
-@custom-variant fx-opened (&[data-state="open"]);
-@custom-variant fx-closed (&[data-state="open"]);
-@custom-variant fx-resized (&[data-resized="true"]);
+@custom-variant fx-close (&[data-state="close"]);
+@custom-variant fx-opened (&[data-state="opened"]);
+@custom-variant fx-closed (&[data-state="closed"]);
+@custom-variant fx-visible (&[data-state="visible"]);
+@custom-variant fx-hidden (&[data-state="hidden"]);
 @custom-variant fx-active (&[data-state="active"]);
 @custom-variant fx-inactive (&[data-state="inactive"]);
-@custom-variant fx-focus-active (&[data-focus="active"]);
-/* Remove unwanted variants or add others if needed */
-
-
+@custom-variant fx-resized (&[data-resized="true"]);
 
 @utility ui-popper {
-  @apply fixed left-(--fx-popper-placement-x) top-(--fx-popper-placement-y);
-}
-@utility u-fx-popper {
-  @apply fixed left-(--fx-popper-placement-x) top-(--fx-popper-placement-y);
-}
-
-@utility animated-modal-content {
-  animation-fill-mode: both;
-  animation: var(--un-modal-animation);
-  -webkit-animation: var(--un-modal-animation);
+  position: fixed;
+  top: var(--fx-popper-placement-y);
+  left: var(--fx-popper-placement-x);
 }
 
 @utility ui-overlay {
-  @apply fixed inset-0;
+  position: fixed;
+  inset: 0;
+}
+
+@utility ui-animated-modal-content {
+  animation: var(--un-modal-animation);
+  animation-fill-mode: both;
+}
+
+@utility ui-animated-tab-panel {
+  animation: var(--un-tab-show-animation);
+  animation-fill-mode: both;
+}
+
+@utility ui-tabs-indicator {
+  position: absolute;
+  transform-origin: 0 0;
+  width: var(--un-tab-indicator-width);
+  height: var(--un-tab-indicator-height);
+  top: var(--un-tab-indicator-top);
+  left: var(--un-tab-indicator-left);
 }
 ```
 
+You do not need every variant on day one. Start with the states your components actually use.
 
+## Tailwind 3
 
-## Using Tailwind3
-
-The `@flexilla/tailwind-plugin` provides simplified variants and essential components for styling elements in the Flexilla library. Instead of writing verbose attribute-based styling like `data-[state=open]:some-class`, this plugin introduces easy-to-use variants, such as `fx-open:some-class`. Additionally, it includes predefined components like overlays, tab indicators, and animated modal content for quick implementation of common UI features.
+For Tailwind 3 projects, use `@flexilla/tailwind-plugin`.
 
 ### Installation
-
-To get started, install the `@flexilla/tailwind-plugin` using npm or yarn:
 
 ```bash
 npm i -D @flexilla/tailwind-plugin
 ```
 
-Then, include it in your TailwindCSS configuration:
+### Setup
 
 ```js
 // tailwind.config.js
 module.exports = {
-  plugins: [
-    require('@flexilla/tailwind-plugin'),
-    // other plugins...
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx,html}",
   ],
-}
+  plugins: [
+    require("@flexilla/tailwind-plugin"),
+  ],
+};
 ```
 
+## What the plugin gives you
 
-## Variants
+The plugin provides:
 
-The plugin offers a range of variants that allow you to conditionally style elements based on the `data-state` attribute. The variants are prefixed with `fx-` to make the syntax concise and easy to use.
+- state variants such as `fx-open:` and `fx-active:`
+- negative variants such as `fx-not-open:`
+- `peer-` and `group-` versions of those variants
+- helper utilities like `ui-popper`, `ui-overlay`, `ui-animated-modal-content`, `ui-animated-tab-panel`, and `ui-tabs-indicator`
 
-### Available State Variants
+## Common variants
 
-Here are the supported state variants:
+The plugin supports common states including:
 
-- `fx-open` : data-state=open
-- `fx-closed` : data-state=closed
-- `fx-active`
-- `fx-inactive`
+- `fx-open`
+- `fx-close`
+- `fx-opened`
+- `fx-closed`
 - `fx-visible`
 - `fx-hidden`
+- `fx-active`
+- `fx-inactive`
+- `fx-resized`
 
-And their negations:
+It also supports negated states such as:
 
 - `fx-not-open`
-- `fx-not-active`
 - `fx-not-visible`
-- and more...
+- `fx-not-active`
 
-### Example Usage
+## Basic usage
 
-Instead of writing:
-
-```html
-<div class="data-[state=open]:bg-green-500"></div>
-```
-
-You can simply write:
+Instead of writing raw attribute selectors, you can write normal Tailwind classes with Flexilla-aware variants.
 
 ```html
-<div class="fx-open:bg-green-500"></div>
-```
-
-The plugin also supports `peer-` and `group-` variants, allowing you to target peer or grouped elements based on the same states:
-
-```html
-<div class="group">
-    <div class="peer-fx-open:bg-blue-500 group-fx-active:text-white"></div>
+<div class="invisible opacity-0 transition fx-open:visible fx-open:opacity-100">
+  Popover content
 </div>
 ```
 
-## Components
-
-Essential UI components, each with predefined styles to speed up your development.
-
-### Popper
-
-The `ui-popper` component positions elements based on custom CSS variables:
+## Group and peer usage
 
 ```html
-<div class="ui-popper">
-  <!-- Popper content -->
+<button class="group" data-state="active">
+  <span class="group-fx-active:text-zinc-950">Current tab</span>
+</button>
+```
+
+```html
+<div class="peer" data-state="open"></div>
+<div class="hidden peer-fx-open:block">Shown when peer is open</div>
+```
+
+## Helper utilities
+
+### `ui-popper`
+
+```html
+<div id="menu" class="ui-popper z-40 rounded-xl border border-zinc-200 bg-white p-3 shadow-xl">
+  Dropdown content
 </div>
 ```
 
-### Animated Modal Content
-
-The `ui-animated-modal-content` class adds required styles in can you need to add animation to the modal content
+### `ui-overlay`
 
 ```html
-<div class="ui-animated-modal-content">
-  <!-- Modal content -->
+<div data-modal-overlay class="ui-overlay bg-black/50 backdrop-blur-sm"></div>
+```
+
+### `ui-animated-modal-content`
+
+```html
+<div data-modal-content class="ui-animated-modal-content rounded-2xl bg-white p-6 shadow-2xl">
+  Modal content
 </div>
 ```
 
-### Animated Tab Panel
-
-Use the `ui-animated-tab-panel` same as `ui-animated-modal-content` but for tabs transitions:
+### `ui-animated-tab-panel`
 
 ```html
-<div class="ui-animated-tab-panel">
-  <!-- Tab panel content -->
+<div data-tab-panel class="ui-animated-tab-panel">
+  Tab panel
 </div>
 ```
 
-### Tabs Indicator
-
-For styling tab indicators, use the `ui-tabs-indicator` class. It allows for dynamic positioning and sizing through CSS variables:
+### `ui-tabs-indicator`
 
 ```html
-<div class="ui-tabs-indicator"></div>
+<div class="ui-tabs-indicator rounded-full bg-zinc-900"></div>
 ```
 
-### Overlay
+## Real example
 
-The `ui-overlay` provides a fixed overlay for modals or other UI elements:
+This is a simple dropdown content block styled with Tailwind classes:
 
 ```html
-<div class="ui-overlay">
-  <!-- Overlay content -->
+<button data-dropdown-trigger data-dropdown-id="tailwind-menu" class="rounded-lg border border-zinc-300 px-4 py-2">
+  Open menu
+</button>
+
+<div
+  id="tailwind-menu"
+  class="ui-popper invisible z-40 min-w-56 rounded-xl border border-zinc-200 bg-white p-3 opacity-0 shadow-xl transition fx-open:visible fx-open:opacity-100"
+>
+  <a href="#" class="block rounded-md px-3 py-2 hover:bg-zinc-100">Profile</a>
+  <a href="#" class="block rounded-md px-3 py-2 hover:bg-zinc-100">Settings</a>
 </div>
 ```
+
+## Choosing between Tailwind and plain CSS
+
+- Use Tailwind if your project already uses utility classes.
+- Use plain CSS if you want fewer moving parts.
+- In either case, keep your styling centered around the states Flexilla exposes.
+
+## Next step
+
+Once Tailwind is configured, move to the component page you want to use and start from its required markup structure.

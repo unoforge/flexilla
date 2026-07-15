@@ -7,7 +7,6 @@ import {
 } from "@flexilla/utilities";
 import type { IndicatorOptions, TabsOptions } from "./types";
 import { DEFAULT_INDICATOR, TRANSFORM_DURATION, TRANSFORM_EASING } from "./const";
-import { createIndicator } from "./indicator";
 import { activeTab, handleKeyEvent, hideAllTabPanels } from "./helpers";
 import { FlexillaManager } from "@flexilla/manager"
 /**
@@ -20,7 +19,7 @@ import { FlexillaManager } from "@flexilla/manager"
  *   defaultValue: 'tab1',
  *   animationOnShow: 'slide-right',
  *   indicatorOptions: {
- *     className: 'tab-indicator'
+ *     transformDuration: 250
  *   }
  * });
  *
@@ -38,7 +37,6 @@ class Tabs {
   private tabPanels!: HTMLElement[];
   private tabTriggers!: HTMLElement[];
   private activeTabTrigger!: HTMLElement;
-  private indicatorClassName!: string;
   private indicatorTransformEaseing!: string;
   private indicatorTransformDuration!: number;
   private panelsContainer!: HTMLElement;
@@ -56,7 +54,7 @@ class Tabs {
    * @param {TabsOptions} [options={}] - Configuration options for the tabs component.
    * @param {string} [options.defaultValue] - The initial active tab panel's ID.
    * @param {string} [options.animationOnShow] - Animation class to apply when showing tab panels.
-   * @param {IndicatorOptions} [options.indicatorOptions] - Configuration for the tab indicator.
+   * @param {IndicatorOptions} [options.indicatorOptions] - Motion configuration for a manually declared tab indicator.
    */
   constructor(tabs: string | HTMLElement, options: TabsOptions = {}) {
     const tabsElement = typeof tabs === "string" ? $(tabs) : tabs
@@ -86,8 +84,7 @@ class Tabs {
     }
     const defaultActiveTrigger = $("[data-tabs-trigger][data-state=active]", this.tabList)
     this.activeTabTrigger = $(`[data-tabs-trigger][data-target='${this.defaultTabValue}']`, this.tabList) || defaultActiveTrigger || this.tabTriggers[0];
-    const { transformEasing, transformDuration, className } = this.indicatorOptions;
-    this.indicatorClassName = className || this.tabsElement.getAttribute("data-indicator-class-name") || "";
+    const { transformEasing, transformDuration } = this.indicatorOptions;
     this.indicatorTransformEaseing = transformEasing || this.tabsElement.dataset.indicatorTransformEasing || TRANSFORM_EASING;
     this.indicatorTransformDuration = transformDuration || parseInt(this.tabsElement.dataset.indicatorTransformDuration || "") || TRANSFORM_DURATION;
     this.initTabs();
@@ -121,7 +118,6 @@ class Tabs {
         indicatorTransformDuration: this.indicatorTransformDuration,
         indicatorTransformEaseing: this.indicatorTransformEaseing,
         activeTabTrigger: this.activeTabTrigger,
-        indicatorClassName: this.indicatorClassName,
         tabList: this.tabList
       }
     );
@@ -219,14 +215,8 @@ class Tabs {
 
 
   private initializeTab(
-    { tabTriggers, tabPanels, tabsPanelContainer, showAnimation, indicatorTransformDuration, indicatorTransformEaseing, activeTabTrigger, indicatorClassName, tabList }: { tabTriggers: HTMLElement[], tabPanels: HTMLElement[], tabsPanelContainer: HTMLElement, showAnimation: string, indicatorTransformDuration: number, indicatorTransformEaseing: string, activeTabTrigger: HTMLElement, indicatorClassName: string, tabList: HTMLElement }
+    { tabTriggers, tabPanels, tabsPanelContainer, showAnimation, indicatorTransformDuration, indicatorTransformEaseing, activeTabTrigger, tabList }: { tabTriggers: HTMLElement[], tabPanels: HTMLElement[], tabsPanelContainer: HTMLElement, showAnimation: string, indicatorTransformDuration: number, indicatorTransformEaseing: string, activeTabTrigger: HTMLElement, tabList: HTMLElement }
   ) {
-    
-    createIndicator({
-      activeTabTrigger,
-      indicatorClassName,
-      tabList
-    });
     for (const tabTrigger of tabTriggers) {
       this.attachTriggerEvents(tabTrigger);
     }
@@ -297,9 +287,7 @@ class Tabs {
    * ```js
    * const tabs = Tabs.init('#my-tabs', {
    *   defaultValue: 'tab1',
-   *   indicatorOptions: {
-   *     className: 'custom-indicator'
-   *   }
+   *   indicatorOptions: { transformDuration: 250 }
    * });
    * ```
    */

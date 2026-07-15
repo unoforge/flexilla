@@ -1,69 +1,59 @@
 {
   "name": "flexipop",
+  "version": "0.3.4",
   "private": false,
-  "version": "0.3.2",
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "description": "Popper for flexilla",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/flexipop.cjs",
-  "module": "./dist/flexipop.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/flexipop.js",
-      "require": "./dist/flexipop.cjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./create-overlay": {
-      "import": "./dist/create-overlay.js",
-      "require": "./dist/create-overlay.cjs"
+      "types": "./dist/create-overlay/index.d.ts",
+      "import": "./dist/create-overlay/index.js",
+      "require": "./dist/create-overlay/index.cjs"
     },
-    "./flexipop.css": "./dist/flexipop.css"
+    "./flexipop.css": "./dist/style.css"
   },
   "files": [
-    "dist",
-    "README.md"
+    "dist"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "test": "vitest run --config vitest.config.ts",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
+  },
+  "dependencies": {
+    "@flexilla/utilities": "2.5.5"
   },
   "devDependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@vitest/ui": "^3.1.4",
-    "jsdom": "^26.1.0",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.1.4"
+    "typescript": "5.9.3"
   },
   "keywords": [
-    "flexipop",
-    "flexilla popper",
-    "popper",
-    "dropdown",
-    "positioning engine",
-    "popover",
-    "tooltip",
     "flexilla",
-    "positioning"
+    "flexilla manager"
   ],
-  "homepage": "https://github.com/unoforge/flexilla/tree/main/packages/flexipop",
+  "homepage": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/unify-ui-dev/flexipop/tree/main/packages/flexipop"
+    "url": "https://github.com/unoforge/flexilla"
   },
   "bugs": {
-    "url": "https://github.com/unify-ui-dev/flexilla/issues"
+    "url": "https://github.com/unoforge/flexilla/issues"
   },
   "license": "MIT",
-  "author": "johnkat-mj",
-  "dependencies": {
-    "@flexilla/utilities": "^2.5.3"
-  },
-  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
+  "gitHead": "b642d6db4a3bb9d7d8193c4374b3d2fecbe6ed2e"
 }

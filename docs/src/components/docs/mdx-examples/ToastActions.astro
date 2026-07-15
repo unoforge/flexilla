@@ -1,0 +1,33 @@
+<div class="flex flex-wrap items-center gap-3">
+    <button data-toast-demo-action
+        class="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition">
+        With Action
+    </button>
+    <button data-toast-demo-close
+        class="bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition">
+        With Close Button
+    </button>
+    <button data-toast-demo-desc
+        class="bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition">
+        With Description
+    </button>
+</div>
+
+<script>
+import toast from '@flexilla/toast'
+toast.config({ closeButton: true })
+document.querySelector('[data-toast-demo-action]')?.addEventListener('click', () =>
+    toast('Item deleted.', {
+        action: { label: 'Undo', onClick: () => toast.success('Restored!') },
+    })
+);
+document.querySelector('[data-toast-demo-close]')?.addEventListener('click', () => {
+    toast.show?.('I have a close button.')
+});
+document.querySelector('[data-toast-demo-desc]')?.addEventListener('click', () =>
+    toast.success('Profile updated!', {
+        description: 'Your changes have been saved successfully.',
+        closeButton: true,
+    })
+);
+</script>

@@ -1,4 +1,4 @@
-import { expandElement, collapseElement, initCollapsible } from "./../../collapsible/src/collapsible"
+import { expandElement, collapseElement, initCollapsible } from "@flexilla/collapsible"
 import { $d, $$ } from "@flexilla/utilities/selector"
 
 const getAdjacentTrigger = (currentTrigger: HTMLElement, goUp: boolean, accordionElement: HTMLElement) => {

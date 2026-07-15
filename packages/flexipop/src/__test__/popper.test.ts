@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import CreatePopper from '../popper'; 
 import * as utils from '../utils'; // To mock getDimensions
 import * as helpers from '../helpers'; // To mock determinePosition
-import { Placement, PopperOptions } from '../types';
+import type { Placement, PopperOptions } from '../types';
 
 // Mock the helper modules
 vi.mock('../utils');
@@ -34,7 +34,7 @@ describe('CreatePopper', () => {
       refHeight: 50, refWidth: 100, refLeft: 10, refTop: 20, refRight: 110,
       popperHeight: 30, popperWidth: 60,
     });
-    mockDeterminePosition.mockReturnValue({ x: 5, y: 15 });
+    mockDeterminePosition.mockReturnValue({ x: 5, y: 15, maxHeight: undefined, resolvedPlacement: 'bottom' });
   });
 
   afterEach(() => {
@@ -69,7 +69,7 @@ describe('CreatePopper', () => {
     });
 
     it('should throw error for invalid popper element', () => {
-      expect(() => new CreatePopper(referenceEl, null as any)).toThrow('Invalid HTMLElement for Popper Element');
+      expect(() => new CreatePopper(referenceEl, null as any)).toThrow('Invalid HTMLElement for Popper');
     });
 
     it('should throw error for invalid offsetDistance type', () => {
@@ -82,11 +82,11 @@ describe('CreatePopper', () => {
       const popperInstance = new CreatePopper(referenceEl, popperEl);
       popperInstance.updatePosition();
       expect(mockGetDimensions).toHaveBeenCalledWith({ reference: referenceEl, popper: popperEl });
-      expect(mockDeterminePosition).toHaveBeenCalled();
+      expect(mockDeterminePosition).toHaveBeenCalledTimes(2);
     });
 
     it('should set popper styles based on determinePosition result', () => {
-      mockDeterminePosition.mockReturnValue({ x: 123, y: 456 });
+      mockDeterminePosition.mockReturnValue({ x: 123, y: 456, maxHeight: undefined, resolvedPlacement: 'bottom' });
       const popperInstance = new CreatePopper(referenceEl, popperEl);
       popperInstance.updatePosition();
       expect(popperEl.style.getPropertyValue('--fx-popper-placement-x')).toBe('123px');
@@ -96,12 +96,38 @@ describe('CreatePopper', () => {
     it('should call onUpdate callback if provided', () => {
       const onUpdateSpy = vi.fn();
       const options: PopperOptions = { onUpdate: onUpdateSpy, placement: 'left' };
-      mockDeterminePosition.mockReturnValue({ x: 10, y: 20 });
+      mockDeterminePosition.mockReturnValue({ x: 10, y: 20, maxHeight: undefined, resolvedPlacement: 'left' });
       
       const popperInstance = new CreatePopper(referenceEl, popperEl, options);
       popperInstance.updatePosition();
-      
+
       expect(onUpdateSpy).toHaveBeenCalledWith({ x: 10, y: 20, placement: 'left' });
+    });
+
+    it('should apply maxHeight and overflowY before the final position pass when readjustHeight is enabled', () => {
+      mockDeterminePosition
+        .mockReturnValueOnce({ x: 5, y: -200, maxHeight: 180, resolvedPlacement: 'top' })
+        .mockReturnValueOnce({ x: 12, y: 24, maxHeight: undefined, resolvedPlacement: 'top' });
+
+      mockGetDimensions
+        .mockReturnValueOnce({
+          refHeight: 50, refWidth: 100, refLeft: 10, refTop: 20, refRight: 110,
+          popperHeight: 300, popperWidth: 60,
+        })
+        .mockReturnValueOnce({
+          refHeight: 50, refWidth: 100, refLeft: 10, refTop: 20, refRight: 110,
+          popperHeight: 180, popperWidth: 60,
+        });
+
+      const popperInstance = new CreatePopper(referenceEl, popperEl, { readjustHeight: true });
+      popperInstance.updatePosition();
+
+      expect(popperEl.style.maxHeight).toBe('180px');
+      expect(popperEl.style.overflowY).toBe('auto');
+      expect(mockGetDimensions).toHaveBeenCalledTimes(2);
+      expect(mockDeterminePosition).toHaveBeenCalledTimes(2);
+      expect(popperEl.style.getPropertyValue('--fx-popper-placement-x')).toBe('12px');
+      expect(popperEl.style.getPropertyValue('--fx-popper-placement-y')).toBe('24px');
     });
 
     it('should attach window event listeners by default', () => {
@@ -133,7 +159,7 @@ describe('CreatePopper', () => {
       popperInstance.updatePosition();
       vi.clearAllMocks(); // Clear mocks after initial updatePosition
 
-      mockDeterminePosition.mockReturnValue({ x: 77, y: 88 }); // New position for setOptions call
+      mockDeterminePosition.mockReturnValue({ x: 77, y: 88, maxHeight: undefined, resolvedPlacement: 'right' }); // New position for setOptions call
 
       const newPlacement: Placement = 'right-end';
       const newOffset = 25;

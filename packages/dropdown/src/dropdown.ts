@@ -1,4 +1,4 @@
-import { DropdownOptions, ExperimentalOptions } from "./types"
+import type { DropdownOptions, ExperimentalOptions } from "./types"
 import { CreateOverlay, type Placement } from "flexipop/create-overlay"
 
 import { $$, $, keyboardNavigation, dispatchCustomEvent, waitForFxComponents } from "@flexilla/utilities"
@@ -55,6 +55,8 @@ class Dropdown {
     private preventFromCloseInside!: boolean
     private defaultState!: "open" | "close"
     private experimentalOptions!: ExperimentalOptions
+    private readjustHeight!: boolean
+    private minHeight!: number
     private teleporter!: {
         append: () => void;
         remove: () => void;
@@ -99,7 +101,8 @@ class Dropdown {
         this.preventFromCloseInside = this.contentElement.hasAttribute("data-prevent-close-inside") || this.options.preventCloseFromInside || false
         this.defaultState = this.contentElement.dataset.defaultState as "close" | "open" || this.options.defaultState || "close";
         this.experimentalOptions = Object.assign({}, defaultExperimentalOptions, options.experimental)
-
+        this.readjustHeight = this.contentElement.hasAttribute("data-readjust-height") || this.options.readjustHeight || false
+        this.minHeight = parseInt(`${this.contentElement.dataset.minHeight}`) || this.options.minHeight || 0
         this.teleporter = domTeleporter(this.contentElement, document.body, this.experimentalOptions.teleportMode)
 
         this.OverlayInstance = new CreateOverlay({
@@ -120,13 +123,16 @@ class Dropdown {
                         return { cancelAction: true }
                     }
                     this.beforeHide()
+                    return
                 },
                 onShow: this.onShow,
                 onHide: this.onHide,
                 onToggle: ({ isHidden }) => {
                     this.onToggle({ isHidden })
                 },
-                popper: this.options.popper
+                popper: this.options.popper,
+                readjustHeight: this.readjustHeight,
+                minHeight: this.minHeight
             }
         })
 

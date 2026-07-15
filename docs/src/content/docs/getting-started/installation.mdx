@@ -1,108 +1,230 @@
 ---
 title: Installation
-description: This guide will show How to install Flexilla In your New or Existing Project
+description: Install Flexilla, choose the right package strategy, and build your first working component.
 ---
 
-This guide will help you get started with Flexilla
+Flexilla can be installed either as the full library or as individual packages.
 
-## Install via npm
+- Install `@flexilla/flexilla` if you want several components in the same project.
+- Install a single package such as `@flexilla/accordion` if you only need one component.
 
-<Stepper>
-<Step>
-### Install the Full Library
+## Install the full library
 
+<TabCodeGroup
+  values={[
+    { text: "npm", value: "npm-tab", icon: "npm" },
+    { text: "yarn", value: "yarn-tab", icon: "yarn" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="npm-tab" active={true}>
 ```bash
 npm i @flexilla/flexilla
 ```
-
-</Step>
-<Step>
-### Usage
-
-```js
-import {Accordion, Tabs} from "@flexilla/flexilla"
-
-const accordion = new Accordion("#my-accordion")
-const tabs = new  Tabs("#my-tabs",{ 
-    // options
-})
+  </TabPanel>
+  <TabPanel value="yarn-tab">
+```bash
+yarn add @flexilla/flexilla
 ```
+  </TabPanel>
+</TabCodeGroup>
 
-</Step>
-</Stepper>
+## Install a single package
 
-## Install Single Component
-
-<Stepper>
-<Step>
-
-### Example: Install a Single Component
-
+<TabCodeGroup
+  values={[
+    { text: "Accordion", value: "accordion-tab" },
+    { text: "Collapse", value: "collapse-tab" },
+    { text: "Modal", value: "modal-tab" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="accordion-tab" active={true}>
+```bash
+npm i @flexilla/accordion
+```
+  </TabPanel>
+  <TabPanel value="collapse-tab">
 ```bash
 npm i @flexilla/collapse
 ```
+  </TabPanel>
+  <TabPanel value="modal-tab">
+```bash
+npm i @flexilla/modal
+```
+  </TabPanel>
+</TabCodeGroup>
 
-</Step>
-<Step>
-### Usage
+## Your first working example
 
-```js
-import {Collapse} from "@flexilla/collapse"
+The example below shows the full Flexilla flow:
 
-new Collapse("#my-collapse",{
-    // options
-})
+1. Add semantic HTML with the required `data-*` attributes.
+2. Add CSS for the states Flexilla updates.
+3. Initialize the component in JavaScript.
+
+### HTML
+
+```html
+<div id="getting-started-accordion" data-fx-accordion data-accordion-type="single">
+  <div data-accordion-item data-accordion-value="item-1">
+    <button type="button" data-accordion-trigger class="accordion-trigger">
+      What is Flexilla?
+    </button>
+    <div data-accordion-content class="accordion-content">
+      Flexilla is a headless library that gives your UI behavior and state, while you control the markup and styling.
+    </div>
+  </div>
+
+  <div data-accordion-item data-accordion-value="item-2">
+    <button type="button" data-accordion-trigger class="accordion-trigger">
+      Why is it headless?
+    </button>
+    <div data-accordion-content class="accordion-content">
+      Because it does not impose a design system. You style the component according to the states Flexilla manages.
+    </div>
+  </div>
+</div>
 ```
 
-</Step>
-</Stepper>
+### CSS
 
-## Using CDN
+```css
+#getting-started-accordion {
+  max-width: 42rem;
+  margin-inline: auto;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
 
-<Stepper>
-<Step>
-### Import from CDN
-All components
+.accordion-trigger {
+  width: 100%;
+  padding: 1rem;
+  border: 0;
+  background: #fff;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.accordion-trigger[aria-expanded="true"] {
+  background: #f4f4f5;
+}
+
+.accordion-content {
+  overflow: hidden;
+  height: 0;
+  padding-inline: 1rem;
+}
+
+.accordion-content[data-state="open"] {
+  height: auto;
+  padding-block: 0 1rem;
+}
+```
+
+### JavaScript
+
+Use either the full package import or the single-package import.
+
+<TabCodeGroup
+  values={[
+    { text: "Full library", value: "full-lib-tab" },
+    { text: "Single package", value: "single-package-tab" },
+    { text: "Auto init", value: "auto-init-tab" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="full-lib-tab" active={true}>
+```js
+import { Accordion } from "@flexilla/flexilla";
+
+new Accordion("#getting-started-accordion");
+```
+  </TabPanel>
+  <TabPanel value="single-package-tab">
+```js
+import { Accordion } from "@flexilla/accordion";
+
+new Accordion("#getting-started-accordion");
+```
+  </TabPanel>
+  <TabPanel value="auto-init-tab">
+```js
+import { Accordion } from "@flexilla/flexilla";
+
+Accordion.autoInit();
+```
+  </TabPanel>
+</TabCodeGroup>
+
+If everything is wired correctly:
+
+- clicking a trigger updates `aria-expanded`
+- the item and content receive state updates
+- your CSS reacts to those states
+
+## CDN usage
+
+If you are working without a bundler, you can import Flexilla from a CDN.
+
+### Full library
 
 ```html
 <script type="module">
-import {
-  Tabs,
-  Accordion
-} from 'https://cdn.jsdelivr.net/npm/@flexilla/flexilla@latest/+esm';
+  import { Accordion } from "https://cdn.jsdelivr.net/npm/@flexilla/flexilla@latest/+esm";
 
-new Tabs("#hego")
-new Accordion("#myAccordion")
+  new Accordion("#getting-started-accordion");
 </script>
 ```
 
-### Import a Single Package
+### Single package
 
 ```html
 <script type="module">
-import * as flexillatabs from 'https://cdn.jsdelivr.net/npm/@flexilla/tabs@latest/+esm';
-new flexillatabs.Tabs("#tabs")
+  import { Accordion } from "https://cdn.jsdelivr.net/npm/@flexilla/accordion@latest/+esm";
+
+  new Accordion("#getting-started-accordion");
 </script>
 ```
 
-</Step>
-</Stepper>
-
-
-## With Module (require)
+## CommonJS usage
 
 ```js
-const Accordion = require('@flexilla/accordion');
-new Accordion("#myAccordion")
+const { Accordion } = require("@flexilla/accordion");
+
+new Accordion("#getting-started-accordion");
 ```
 
-## Styling
+## Styling choices
 
-Flexilla is headless and does not come with built-in styles. You will need to apply your own CSS or use a framework like Tailwind CSS or UnoCSS. See the dedicated styling guides for more information:
-- [CSS Styling](/docs/styling/css)
-- [UnoCSS Preset](/docs/styling/unocss)
-- [Tailwind CSS Plugin](/docs/styling/tailwind)
+Flexilla is headless, so it does not ship a ready-made visual theme. You can style components in three main ways:
 
-## Quick Start Examples
+- plain CSS with attribute selectors
+- UnoCSS variants and utilities
+- Tailwind CSS variants and utilities
 
-Check out these quick start examples to get a feel of Flexilla [here](https://github.com/unoforge/flexilla/tree/main/examples)
+Recommended next reads:
+
+- [Pure CSS](/docs/styling/css)
+- [UnoCSS](/docs/styling/unocss)
+- [Tailwind CSS](/docs/styling/tailwind)
+
+## When to install what
+
+- Use `@flexilla/flexilla` when you want a simple entry point for multiple components.
+- Use individual packages when you want tighter control over what your app includes.
+- Start with one component first, then expand once the data attributes and styling model feel natural.
+
+## Next steps
+
+After this page, the best path is:
+
+1. Read [Introduction](/docs/getting-started)
+2. Pick a styling approach
+3. Open the component page you want to build next

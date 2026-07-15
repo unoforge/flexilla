@@ -3,17 +3,149 @@ title: Utilities
 description: A list of useful methods and functions to make things easier for you
 ---
 
-<Callout type="warning">
-We're currently working on this page.
-</Callout>
+The `@flexilla/utilities` package exports small DOM helpers that are useful both inside Flexilla components and in your own app code.
 
 ## Selectors
 
+### `$`
+
+Find the first matching element.
+
+```ts
+import { $ } from "@flexilla/utilities";
+
+const modal = $("#my-modal");
+```
+
+### `$$`
+
+Find all matching elements and return them as an array.
+
+```ts
+import { $$ } from "@flexilla/utilities";
+
+const items = $$("[data-menu-item]");
+```
+
+### `$d`
+
+Find the first direct child matching the selector.
+
+```ts
+import { $d } from "@flexilla/utilities";
+
+const panel = $d("[data-tab-panel]", tabsElement);
+```
 
 ## Dispatch event
 
+### `dispatchCustomEvent`
+
+Dispatch a custom event with a `detail` object on an element.
+
+```ts
+import { dispatchCustomEvent } from "@flexilla/utilities";
+
+dispatchCustomEvent(buttonEl, "save-complete", {
+  id: "post-1",
+});
+```
+
+```ts
+buttonEl.addEventListener("save-complete", (event) => {
+  console.log(event.detail.id);
+});
+```
 
 ## After Transition
 
+### `afterTransition`
+
+Run logic after a CSS transition finishes. If the element has no transition, the callback runs immediately.
+
+```ts
+import { afterTransition } from "@flexilla/utilities";
+
+afterTransition({
+  element: panelEl,
+  callback: () => {
+    console.log("Transition completed");
+  },
+});
+```
+
+### `afterAnimation`
+
+Run logic after a CSS animation ends.
+
+```ts
+import { afterAnimation } from "@flexilla/utilities";
+
+afterAnimation({
+  element: toastEl,
+  callback: () => {
+    console.log("Animation completed");
+  },
+});
+```
 
 ## Set Attributes
+
+### `setAttributes`
+
+Set multiple attributes at once.
+
+```ts
+import { setAttributes } from "@flexilla/utilities";
+
+setAttributes(dialogEl, {
+  role: "dialog",
+  "aria-modal": "true",
+  "data-state": "open",
+});
+```
+
+## Other Helpers
+
+### `appendBefore`
+
+Insert one element before another.
+
+```ts
+import { appendBefore } from "@flexilla/utilities";
+
+appendBefore({
+  newElement: overlayEl,
+  existingElement: modalEl,
+});
+```
+
+### `observeChildrenChanges`
+
+Watch a container and react when matching child elements are added.
+
+```ts
+import { observeChildrenChanges } from "@flexilla/utilities";
+
+const stopWatching = observeChildrenChanges({
+  container: listEl,
+  attributeToWatch: "data-tab-panel",
+  onChildAdded: () => {
+    console.log("A new panel was added");
+  },
+});
+
+stopWatching();
+```
+
+### `waitForFxComponents`
+
+Wait until all `[data-fx-component]` elements are initialized, then run your logic.
+
+```ts
+import { waitForFxComponents } from "@flexilla/utilities";
+
+waitForFxComponents(() => {
+  console.log("All Flexilla components are ready");
+});
+```

@@ -1,0 +1,151 @@
+---
+title: Select Core
+description: Use the headless selection engine behind Flexilla's select and autocomplete packages.
+references:
+    - Select: /docs/components/select
+    - Autocomplete: /docs/components/autocomplete
+---
+
+`@flexilla/select-core` is the headless state engine behind Flexilla's select-like packages.
+
+It does not touch the DOM. Instead, it gives you a small state container and selection API that you can wire into any UI you want.
+
+Use it when you want:
+
+- total control over rendering
+- custom DOM bindings
+- framework-specific UI on top of Flexilla's selection logic
+
+If you want ready-made DOM bindings, start with [Select](/docs/components/select) or [Autocomplete](/docs/components/autocomplete) instead.
+
+## Installation
+
+<TabCodeGroup
+  values={[
+    { text: "npm", value: "npm-tab", icon: "npm" },
+    { text: "yarn", value: "yarn-tab", icon: "yarn" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="npm-tab" active={true}>
+```bash
+npm i @flexilla/select-core
+```
+  </TabPanel>
+  <TabPanel value="yarn-tab">
+```bash
+yarn add @flexilla/select-core
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Create a core instance
+
+```js
+import { createSelectCore } from "@flexilla/select-core";
+
+const select = createSelectCore();
+```
+
+For multiple selection:
+
+```js
+const select = createSelectCore({ multiple: true });
+```
+
+## Register items
+
+The engine only knows about items you register.
+
+```js
+select.registerItem({ value: "astro", label: "Astro" });
+select.registerItem({ value: "vue", label: "Vue" });
+select.registerItem({ value: "laravel", label: "Laravel", disabled: true });
+```
+
+## Listen to state
+
+```js
+const unsubscribe = select.subscribe((state) => {
+  console.log(state);
+});
+```
+
+The state shape includes:
+
+- `open`
+- `highlightedIndex`
+- `selectedValues`
+- `search`
+- `items`
+
+## Common methods
+
+```js
+select.open();
+select.close();
+select.toggle();
+
+select.select("astro");
+select.unselect("astro");
+select.toggleValue("vue");
+select.clear();
+
+select.highlight(0);
+select.highlightNext();
+select.highlightPrev();
+
+select.setSearch("as");
+```
+
+You can inspect the current state at any time:
+
+```js
+const state = select.getState();
+```
+
+## Example pattern
+
+This is the typical flow when building a custom UI on top of `select-core`:
+
+1. create the core instance
+2. register your items
+3. subscribe to state updates
+4. render your UI from state
+5. call the core methods from your event handlers
+
+```js
+import { createSelectCore } from "@flexilla/select-core";
+
+const select = createSelectCore({ multiple: true });
+
+["astro", "vue", "laravel"].forEach((value) => {
+  select.registerItem({ value, label: value });
+});
+
+const unsubscribe = select.subscribe((state) => {
+  console.log("Selected:", state.selectedValues);
+});
+
+select.toggleValue("astro");
+select.highlightNext();
+```
+
+## When to choose Select Core
+
+Choose `select-core` when:
+
+- you need custom rendering
+- you are building a framework-specific abstraction
+- you want to reuse selection logic across multiple UIs
+
+Choose the higher-level packages when:
+
+- you want DOM bindings already handled
+- you want faster setup in plain HTML or framework templates
+
+## Related packages
+
+- [Select](/docs/components/select) for DOM-first select bindings
+- [Autocomplete](/docs/components/autocomplete) for typed search interactions

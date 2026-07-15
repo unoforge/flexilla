@@ -1,0 +1,91 @@
+---
+title: Component Events
+description: Listen to Flexilla custom events and connect component state to your application logic.
+references:
+    - Accordion: /docs/components/accordion
+    - Modal: /docs/components/modal
+    - Dropdown: /docs/components/dropdown
+    - Tooltip: /docs/components/tooltip
+---
+
+Some Flexilla components dispatch custom events on the elements they control. This is one of the easiest ways to connect UI state to your application logic without tightly coupling everything to component instances.
+
+Use custom events when you want to:
+
+- react to state changes from outside the component
+- trigger analytics or logging
+- update other parts of the page
+- keep your app logic separate from rendering code
+
+## Accordion example
+
+The accordion dispatches `change-item` on the accordion root element.
+
+```js
+import { Accordion } from "@flexilla/accordion";
+
+const faqEl = document.querySelector("[data-faq-section]");
+
+new Accordion(faqEl);
+
+faqEl.addEventListener("change-item", (event) => {
+  console.log("Accordion changed:", event.detail);
+});
+```
+
+This works well when the accordion is already rendered and you want to respond whenever the active item changes.
+
+## Common event patterns
+
+Based on the current packages, Flexilla components dispatch events such as:
+
+- accordion: `change-item`
+- tabs: `change-tab`
+- modal: `modal-open`, `modal-close`, `before-hide`
+- dropdown: `dropdown-show`, `dropdown-hide`
+- popover: `popover-show`, `popover-hide`, `popover-toggle`
+- tooltip: `tooltip-show`, `tooltip-hide`
+- offcanvas: `offcanvas-open`, `offcanvas-close`, `offcanvas-before-hide`
+- collapse: `before-expand`, `expanded`, `collapsed`
+
+## Modal example
+
+```js
+const modalEl = document.querySelector("#delete-modal");
+
+modalEl.addEventListener("modal-open", (event) => {
+  console.log("Modal opened:", event.detail.modalId);
+});
+
+modalEl.addEventListener("modal-close", (event) => {
+  console.log("Modal closed:", event.detail.modalId);
+});
+
+modalEl.addEventListener("before-hide", (event) => {
+  console.log("Modal is about to close", event.detail);
+});
+```
+
+## Why this matters
+
+Events make Flexilla easier to compose because they let the component stay focused on interaction while the rest of your app reacts from the outside.
+
+That is especially useful in:
+
+- server-rendered pages
+- progressively enhanced UIs
+- dashboards that update multiple areas together
+- analytics and telemetry hooks
+
+## Good practice
+
+When you document or consume a Flexilla component, try to note:
+
+- which element dispatches the event
+- the event name
+- when it fires
+- what is available in `event.detail`
+
+## Next step
+
+When a component page exposes meaningful events, add an `Events` section there too so users can discover the behavior without needing a separate guide.

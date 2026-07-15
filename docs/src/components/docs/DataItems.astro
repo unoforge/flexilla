@@ -113,29 +113,6 @@ export const sidebarItems = [
     ],
   },
   {
-    label: "Disclosure",
-    items: [
-      {
-        icon: "i-fx-expand",
-        text: "Accordion",
-        href: "/docs/components/accordion",
-        description:
-          "Flexilla's versatile accordion component, providing a seamless and customizable way to organize and display content in a collapsible format.",
-        keywords: "accordion, accordion component",
-        draft: false,
-      },
-      {
-        icon: "i-fx-expand-two-way",
-        text: "Collapse",
-        href: "/docs/components/collapse",
-        description:
-          "Flexilla Collapse component, designed to create collapsible content sections with smooth transitions.",
-        keywords: "collapse, collapsible, collapse component",
-        draft: false,
-      },
-    ],
-  },
-  {
     label: "Helpers",
     items: [
       {
@@ -207,15 +184,52 @@ export const sidebarItems = [
     ],
   },
   {
-    label: "Navigations",
+    label: "Forms",
     items: [
       {
-        icon: "i-fx-tabs",
-        text: "Tabs",
-        href: "/docs/components/tabs",
+        icon: "i-fx-auto-resize",
+        text: "Auto Resize Area",
+        href: "/docs/components/auto-resize-area",
         description:
-          "Flexilla's versatile tabs component, providing a seamless and customizable way to organize and display content in a tabbed format.",
-        keywords: "tabs, tabs component",
+          "Flexilla Autoresize component, designed to create autoresize textareas with smooth transitions.",
+        keywords: "Autoresize area, auto resize text area",
+        draft: false,
+      },
+      {
+        icon: "i-carbon-list-boxes",
+        text: "Select",
+        href: "/docs/components/select",
+        description:
+          "DOM-first select bindings powered by the headless select-core engine.",
+        keywords: "select, combobox, listbox, form",
+        draft: false,
+      },
+      {
+        icon: "i-carbon-search",
+        text: "Autocomplete",
+        href: "/docs/components/autocomplete",
+        description:
+          "Autocomplete built on the select-core engine with search-driven filtering and selection.",
+        keywords: "autocomplete, search, combobox, form",
+        draft: false,
+      },
+      {
+        icon: "i-carbon-password",
+        text: "Pin Input",
+        href: "/docs/components/pin-input",
+        description:
+          "PIN and OTP input component with focus management, paste handling, and validation.",
+        keywords: "pin input, otp, verification code, form",
+        draft: false,
+      },
+      {
+        icon: "",
+        text: "Select Core",
+        href: "/docs/helpers/select-core",
+        description:
+          "Headless engine for building select-like experiences without DOM assumptions.",
+        keywords: "select core, headless, state engine, autocomplete",
+        hideFromSidebar: true,
         draft: false,
       },
     ],
@@ -287,18 +301,91 @@ export const sidebarItems = [
         keywords: "tooltip, popover, tooltip component, popover component",
         draft: false,
       },
+      {
+        icon: "i-carbon-notification",
+        text: "Toast",
+        href: "/docs/components/toast",
+        description:
+          "A lightweight, framework-agnostic toast notification component inspired by Sonner — with zero dependencies, shadow DOM encapsulation, promise support, swipe-to-dismiss, and stacking.",
+        keywords: "toast, notification, sonner, alert, feedback, snackbar",
+        draft: false,
+      },
     ],
   },
   {
-    label: "Forms",
+    label: "Disclosure",
     items: [
       {
-        icon: "i-fx-auto-resize",
-        text: "Auto Resize Area",
-        href: "/docs/components/auto-resize-area",
+        icon: "i-fx-expand",
+        text: "Accordion",
+        href: "/docs/components/accordion",
         description:
-          "Flexilla Autoresize component, designed to create autoresize textareas with smooth transitions.",
-        keywords: "Autoresize area, auto resize text area",
+          "Flexilla's versatile accordion component, providing a seamless and customizable way to organize and display content in a collapsible format.",
+        keywords: "accordion, accordion component",
+        draft: false,
+      },
+      {
+        icon: "i-fx-expand-two-way",
+        text: "Collapse",
+        href: "/docs/components/collapse",
+        description:
+          "Flexilla Collapse component, designed to create collapsible content sections with smooth transitions.",
+        keywords: "collapse, collapsible, collapse component",
+        draft: false,
+      },
+    ],
+  },
+  {
+    label: "Navigations",
+    items: [
+      {
+        icon: "i-fx-tabs",
+        text: "Tabs",
+        href: "/docs/components/tabs",
+        description:
+          "Flexilla's versatile tabs component, providing a seamless and customizable way to organize and display content in a tabbed format.",
+        keywords: "tabs, tabs component",
+        draft: false,
+      },
+    ],
+  },
+  {
+    label: "Advanced",
+    items: [
+      {
+        icon: "i-carbon-events",
+        text: "Component Events",
+        href: "/docs/guides/component-events",
+        description:
+          "Listen to Flexilla custom events and wire component state into your application logic.",
+        keywords: "events, custom events, advanced guide, component events",
+        draft: false,
+      },
+      {
+        icon: "i-carbon-search",
+        text: "Searchable Select",
+        href: "/docs/guides/searchable-select",
+        description:
+          "Build a searchable selection flow using autocomplete or select-core.",
+        keywords: "select, autocomplete, advanced guide, search",
+        draft: false,
+      },
+      {
+        icon: "i-carbon-password",
+        text: "OTP Flow",
+        href: "/docs/guides/otp-flow",
+        description:
+          "Create OTP and verification-code flows with pin-input and lifecycle-safe cleanup.",
+        keywords: "otp, pin input, verification code, advanced guide",
+        draft: false,
+      },
+      {
+        icon: "i-fx-overlay-modal",
+        text: "Stacked Modals",
+        href: "/docs/guides/stacked-modals",
+        description:
+          "Handle layered modal flows, guarded closing, and modal lifecycle hooks.",
+        keywords: "modal, stacked modals, beforeHide, advanced guide",
         draft: false,
       },
     ],

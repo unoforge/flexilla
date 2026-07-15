@@ -44,7 +44,7 @@ yarn add @flexilla/collapse
   <PreviewComponent>
     <DefaultCollapse/>
   </PreviewComponent>
-  <CodeLoader source="collapseDefault" noRoundedTop/>
+  <CodeLoader source="CollapseExample1" noRoundedTop/>
 </PreviewTopCodeBottom>
 
 ## Initializing the Component
@@ -70,7 +70,7 @@ You can use one trigger to control multiple collapse elements.
   <PreviewComponent>
     <MultipleCollapse/>
   </PreviewComponent>
-  <CodeLoader source="collapseMultiple" noRoundedTop/>
+  <CodeLoader source="MultipleCollapse" noRoundedTop/>
 </PreviewTopCodeBottom>
 
 ## Close height
@@ -192,6 +192,22 @@ Toggle the collapse element between showing and hiding.
 myCollapse.toggle();
 ```
 
+### `setCloseHeight`
+
+Update the collapsed height programmatically.
+
+```js
+myCollapse.setCloseHeight(80);
+```
+
+### `cleanup`
+
+Remove the event listeners attached by the component when you no longer need the instance.
+
+```js
+myCollapse.cleanup();
+```
+
 ### Auto Init
 
 The `autoInit` method initializes all collapse elements. This method accepts a string to identify the elements (using a class name or data attribute). By default, it uses `[data-fx-collapse]`.
@@ -202,4 +218,33 @@ import { Collapse } from "@flexilla/collapse";
 Collapse.autoInit();  // Initializes collapse components using `data-fx-collapse`
 // or
 Collapse.autoInit(".collapse-item");
+```
+
+## Events
+
+The collapse element dispatches custom events that you can listen to from your application code.
+
+### `before-expand`
+
+Fires right before the element is expanded.
+
+### `expanded`
+
+Fires after the element has been expanded.
+
+### `collapsed`
+
+Fires after the element has been collapsed.
+
+```js
+const collapseEl = document.querySelector("#collapse1");
+const collapse = new Collapse(collapseEl);
+
+collapseEl.addEventListener("expanded", (event) => {
+  console.log("Collapse is open", event.detail);
+});
+
+collapseEl.addEventListener("collapsed", (event) => {
+  console.log("Collapse is closed", event.detail);
+});
 ```

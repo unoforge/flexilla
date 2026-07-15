@@ -1,9 +1,144 @@
 ---
 title: Symfony Guide
-description: This guide will show How to install Flexilla In your Symfony Project
+description: Use Flexilla in Symfony by enhancing Twig-rendered markup from your frontend entry file.
 ---
 
-<Callout type="warning">
-We're currently working on this page.
-You can [Edit this page](https://github.com/unoforge/flexilla/blob/main/docs/src/content/docs/framework-guide/symfony-guide.mdx)
-</Callout>
+Symfony is another strong match for Flexilla because Twig can render the final HTML structure and Flexilla can enhance it in the browser.
+
+This guide assumes your Symfony app already has a frontend entry file managed by your preferred asset pipeline.
+
+## Install Flexilla
+
+<TabCodeGroup
+  values={[
+    { text: "Full library", value: "full-tab", icon: "npm" },
+    { text: "Single package", value: "single-tab", icon: "npm" },
+  ]}
+  autoHeight
+  showCopyBlock
+>
+  <TabPanel value="full-tab" active={true}>
+```bash
+npm i @flexilla/flexilla
+```
+  </TabPanel>
+  <TabPanel value="single-tab">
+```bash
+npm i @flexilla/accordion
+```
+  </TabPanel>
+</TabCodeGroup>
+
+## Twig markup example
+
+Place this in a Twig template such as `templates/home/index.html.twig`.
+
+```html
+<div id="symfony-accordion" data-fx-accordion data-accordion-type="single">
+    <div data-accordion-item data-accordion-value="item-1">
+        <button type="button" data-accordion-trigger class="accordion-trigger">
+            Does Twig work well with Flexilla?
+        </button>
+        <div data-accordion-content class="accordion-content">
+            Yes. Twig renders the markup, and Flexilla adds interactive behavior after the page loads.
+        </div>
+    </div>
+
+    <div data-accordion-item data-accordion-value="item-2">
+        <button type="button" data-accordion-trigger class="accordion-trigger">
+            Do I keep control over styling?
+        </button>
+        <div data-accordion-content class="accordion-content">
+            Yes. Flexilla is headless, so the final visual design still belongs to your app.
+        </div>
+    </div>
+</div>
+```
+
+## JavaScript entry
+
+Initialize Flexilla in the frontend entry file your Symfony app already uses.
+
+Example:
+
+```js
+import { Accordion } from "@flexilla/flexilla";
+
+new Accordion("#symfony-accordion");
+```
+
+Or with a single package:
+
+```js
+import { Accordion } from "@flexilla/accordion";
+
+new Accordion("#symfony-accordion");
+```
+
+Or via auto init:
+
+```js
+import { Accordion } from "@flexilla/accordion";
+
+Accordion.autoInit();
+```
+
+## Styling
+
+Add the state-based CSS in your normal application stylesheet.
+
+```css
+#symfony-accordion {
+  max-width: 42rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.accordion-trigger {
+  width: 100%;
+  padding: 1rem;
+  border: 0;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.accordion-trigger[aria-expanded="true"] {
+  background: #f4f4f5;
+}
+
+.accordion-content {
+  height: 0;
+  overflow: hidden;
+  padding-inline: 1rem;
+}
+
+.accordion-content[data-state="open"] {
+  height: auto;
+  padding-block: 0 1rem;
+}
+```
+
+## Why Symfony works well with Flexilla
+
+- Twig keeps the HTML explicit and easy to reason about
+- Flexilla adds behavior without forcing a different rendering model
+- server-rendered apps often benefit the most from this style of progressive enhancement
+
+## Styling options
+
+Symfony projects can use:
+
+- plain CSS
+- [UnoCSS](/docs/styling/unocss)
+- [Tailwind CSS](/docs/styling/tailwind)
+
+## Next step
+
+Once one component works in Twig, keep the same structure for the rest:
+
+1. render the required markup in Twig
+2. initialize from your frontend entry
+3. style the states in your stylesheet

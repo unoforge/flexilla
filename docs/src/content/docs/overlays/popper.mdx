@@ -55,12 +55,14 @@ new CreatePopper(
 
 ## Usage with `position: absolute`
 
-Flexipop also supports poppers with `position: absolute`. This version is useful when the reference and popper elements are within the same container, and you need the popper to behave according to the flow of the containing element.
+Flexipop also supports poppers with `position: absolute`. This is useful when the reference and popper elements are within the same container, and you need the popper to behave according to the flow of the containing element.
 
-### Installation for Absolute Positioning
+### Setup for Absolute Positioning
+
+Use the same `CreatePopper` constructor — simply set `position: absolute` on the popper element and `position: relative` on the parent container.
 
 ```js
-import { UseCreatePopperAbsolute as CreatePopper } from 'flexipop/with-absolute';
+import { CreatePopper } from 'flexipop';
 
 new CreatePopper(
   referenceElement,  // The reference element (HTMLElement)
@@ -117,4 +119,142 @@ The options provided to Flexipop help control how your popper is positioned. You
   ```
 
 - **`offsetDistance`**: Adds a specific distance (in pixels) between the reference and popper elements.
+
+  ```js
+  new CreatePopper(referenceElement, popperElement, { offsetDistance: 16 });
+  ```
+
+  Default: `10`
+
+- **`eventEffect`**: Controls whether the popper repositions on scroll and/or resize.
+
+  ```ts
+  type EventEffect = {
+    disableOnScroll?: boolean, // Disable repositioning on scroll
+    disableOnResize?: boolean  // Disable repositioning on resize
+  }
+  ```
+
+  ```js
+  new CreatePopper(referenceElement, popperElement, {
+    eventEffect: {
+      disableOnScroll: false,
+      disableOnResize: true,
+    }
+  });
+  ```
+
+- **`onUpdate`**: A callback invoked every time the popper position is recalculated. Receives `{ x, y, placement }`.
+
+  ```js
+  new CreatePopper(referenceElement, popperElement, {
+    onUpdate: ({ x, y, placement }) => {
+      console.log(`Popper at ${x}, ${y} (${placement})`);
+    }
+  });
+  ```
+
+- **`readjustHeight`**: When `true`, the popper's `maxHeight` and `overflowY` are adjusted so the popper fits within the viewport. Useful for dropdowns and select menus with long item lists.
+
+  ```js
+  new CreatePopper(referenceElement, popperElement, { readjustHeight: true });
+  ```
+
+  Default: `false`
+
+- **`minHeight`**: Minimum height (in pixels) enforced when `readjustHeight` is active. If the available viewport space is less than `minHeight`, the popper flips instead of shrinking further.
+
+  Default: `140`
+
+### Full Options Type
+
+```ts
+type PopperOptions = {
+  placement?: Placement,
+  offsetDistance?: number,
+  eventEffect?: {
+    disableOnScroll?: boolean,
+    disableOnResize?: boolean
+  },
+  onUpdate?: ({ x, y, placement }: { x: number, y: number, placement?: Placement }) => void,
+  readjustHeight?: boolean,
+  minHeight?: number
+}
+```
+
+### Placement
+
+The `placement` option defines where the popper appears relative to the reference element. Each direction supports alignment suffixes:
+
+| Direction | Alignments |
+|---|---|
+| `top` | `top-start`, `top-middle`, `top-end` |
+| `bottom` | `bottom-start`, `bottom-middle`, `bottom-end` |
+| `left` | `left-start`, `left-middle`, `left-end` |
+| `right` | `right-start`, `right-middle`, `right-end` |
+
+When there isn't enough space in the requested direction, Flexipop automatically flips to the opposite side.
+
+```js
+new CreatePopper(referenceElement, popperElement, { placement: 'bottom-middle' });
+```
+
+<Callout type="note">
+If the popper doesn't fit on the flipped side either, Flexipop will align it to keep as much of it visible as possible within the viewport.
+</Callout>
+
+## CSS Custom Properties
+
+During positioning, Flexipop sets the following CSS custom properties on the popper element:
+
+| Property | Description |
+|---|---|
+| `--fx-popper-placement-x` | The computed `left` position in pixels |
+| `--fx-popper-placement-y` | The computed `top` position in pixels |
+| `--trigger-width` | The reference element's width in pixels |
+
+The popper also receives a `data-show-placement` attribute reflecting the **resolved** placement (which may differ from the requested one if a flip occurred).
+
+```css
+.myPopper {
+  position: fixed;
+  top: var(--fx-popper-placement-y);
+  left: var(--fx-popper-placement-x);
+}
+```
+
+## Methods
+
+### `updatePosition()`
+
+Recalculates and applies the popper position. Call this when the reference element moves (e.g., after layout changes) or after the popper content changes size.
+
+```js
+const popper = new CreatePopper(referenceElement, popperElement);
+popper.updatePosition();
+```
+
+### `setOptions({ placement, offsetDistance })`
+
+Updates the placement and/or offset distance, then immediately recalculates the position.
+
+```js
+popper.setOptions({ placement: 'right', offsetDistance: 20 });
+```
+
+### `resetPosition()`
+
+Clears all positioning styles (the CSS custom properties) and resets `maxHeight`/`overflowY`. Useful when hiding the popper.
+
+```js
+popper.resetPosition();
+```
+
+### `cleanupEvents()`
+
+Removes all window event listeners (resize/scroll) and clears positioning styles. Call this when the popper is no longer needed.
+
+```js
+popper.cleanupEvents();
+```
 

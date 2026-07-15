@@ -14,3 +14,4 @@ export { initScrollToTop } from "./scroll-to-top"
 export { domTeleporter } from "./dom-teleport"
 
 export { flexiTheme, getSystemTheme, type ThemeOptions } from "./theme"
+export { createLocker, type Locker } from "./locker"

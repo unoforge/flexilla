@@ -31,6 +31,12 @@ import CardTech from "./mdx-components/CardTech.astro"
 import CardTechBox from "./mdx-components/CardTechBox.astro"
 import PreviewBox from "./mdx-components/PreviewBox.astro";
 import CardLink from "./mdx-components/CardLink.astro";
+import Table from "./mdx-components/Table.astro";
+import THead from "./mdx-components/THead.astro";
+import TBody from "./mdx-components/TBody.astro";
+import TR from "./mdx-components/TR.astro";
+import TH from "./mdx-components/TH.astro";
+import TD from "./mdx-components/TD.astro";
 
 export const components = {
   TabCodeGroup: TabCodeBlock,
@@ -64,6 +70,12 @@ export const components = {
   ul: Ul,
   ol: Ol,
   a: Link,
+  table: Table,
+  thead: THead,
+  tbody: TBody,
+  tr: TR,
+  th: TH,
+  td: TD,
   ...examples_components,
 };
 ---

@@ -1,0 +1,17 @@
+<div class="flex flex-wrap items-center gap-3">
+    <button data-toast-demo-rich
+        class="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition">
+        Rich Colors
+    </button>
+</div>
+
+<script>
+import toast from '@flexilla/toast'
+toast.config({ richColors: true })
+document.querySelector('[data-toast-demo-rich]')?.addEventListener('click', () => {
+    toast.success('Order confirmed!')
+    setTimeout(() => toast.error('Payment failed!'), 600)
+    setTimeout(() => toast.warning('Low disk space'), 1200)
+    setTimeout(() => toast.info('Session expiring soon'), 1800)
+});
+</script>

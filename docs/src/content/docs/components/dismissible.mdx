@@ -40,7 +40,7 @@ yarn add @flexilla/dismissible
   <PreviewComponent>
     <DismissFromScreen/>
   </PreviewComponent>
-  <CodeLoader source="dismissibleDefault" noRoundedTop/>
+  <CodeLoader source="DismissFromScreen" noRoundedTop/>
 </PreviewTopCodeBottom>
 
 ## Using the Component
@@ -81,7 +81,7 @@ Here's an example of removing an element from the DOM.
   <PreviewComponent>
     <DismissFromDom/>
   </PreviewComponent>
-  <CodeLoader source="dismissibleRemoveDom" noRoundedTop/>
+  <CodeLoader source="DismissFromDom" noRoundedTop/>
 </PreviewTopCodeBottom>
 
 ## Examples
@@ -132,6 +132,22 @@ const dismissEl = new Dismissible("#dismiss-me");
 dismissEl.dismiss();
 ```
 
+### `restore`
+
+Restore the element after it has been hidden or removed.
+
+```js
+dismissEl.restore();
+```
+
+### `cleanup`
+
+Remove the dismiss and restore listeners attached by the component when the instance is no longer needed.
+
+```js
+dismissEl.cleanup();
+```
+
 ### Auto Init
 
 The `autoInit` method allows you to initialize all dismissible elements. It accepts a string to identify the elements (e.g., by class name or data attribute). By default, `[data-fx-dismissible]` is used.
@@ -142,4 +158,16 @@ import { Dismissible } from "@flexilla/dismissible";
 Dismissible.autoInit();  // Initializes dismissible components based on `data-fx-dismissible`
 // or
 Dismissible.autoInit(".dismiss-item");
+```
+
+## Restore Buttons
+
+If you want to restore a dismissible instance through markup, add a button with `data-restore-btn`. Restore buttons can live anywhere in the document.
+
+```html
+<div id="dismiss-me" data-fx-dismissible>
+  <button data-dismiss-btn>Dismiss</button>
+</div>
+
+<button data-restore-btn>Restore</button>
 ```

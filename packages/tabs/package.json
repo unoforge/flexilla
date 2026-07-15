@@ -1,46 +1,43 @@
 {
   "name": "@flexilla/tabs",
+  "version": "2.2.6",
   "private": false,
-  "version": "2.2.4",
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "description": "A versatile tabs component for organizing content in a tabbed interface, enhancing user navigation.",
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/tabs.umd.cjs",
-  "module": "./dist/tabs.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/tabs.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/tabs.umd.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./tabs.css": "./dist/tabs.css"
+    "./tabs.css": "./dist/style.css"
   },
   "files": [
     "dist",
     "README.md",
-    "package.json",
-    "!vite.config.ts",
-    "!.gitignore",
-    "!tsconfig.json"
+    "LICENSE"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsdown",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
+  },
+  "dependencies": {
+    "@flexilla/manager": "0.2.4",
+    "@flexilla/utilities": "2.5.5"
   },
   "devDependencies": {
-    "@flexilla/utilities": "latest",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "5.9.3"
   },
   "keywords": [
     "tabs",
@@ -61,8 +58,5 @@
   },
   "license": "MIT",
   "author": "johnkat-mj",
-  "dependencies": {
-    "@flexilla/manager": "^0.2.2"
-  },
-  "gitHead": "d7ff0b1f6b816f508b255714a15504b41992723d"
+  "gitHead": "b642d6db4a3bb9d7d8193c4374b3d2fecbe6ed2e"
 }

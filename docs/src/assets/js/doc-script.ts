@@ -1,5 +1,5 @@
 import { Tabs, Collapse, Dismissible, Popover, Dropdown, Accordion, Tooltip, Modal, OffCanvas, AutoResizeTextArea } from "@flexilla/flexilla";
-import { $, $$, actionToggler } from "@flexilla/utilities";
+import { $,  actionToggler } from "@flexilla/utilities";
 
 
 const initTableOfContent = () => {
@@ -41,40 +41,7 @@ const initTableOfContent = () => {
         tabOfContentMob.addEventListener("click", hideTabOfContent);
     }
 }
-const initAllCustomComponents = () => {
-    const customBlockCodes = $$("[data-custom-block-code]")
-    for (const blockCode of customBlockCodes) {
-        const selectD = blockCode.querySelector("[data-tab-select]");
-        const panelsD = Array.from(
-            blockCode.querySelectorAll("[data-snippet-bloc]"),
-        );
-        const desactiveAll = (exept: HTMLElement) => {
-            panelsD.forEach((panel) => {
-                if (panel !== exept) {
-                    panel.setAttribute("data-state", "inactive");
-                    panel.ariaHidden = "true";
-                }
-            });
-        };
-        if (selectD instanceof HTMLSelectElement) {
-            const defaultPanel = blockCode.querySelector(
-                `[data-snippet-bloc]#snippet-bloc-${selectD.value}`,
-            ) as HTMLElement;
-            desactiveAll(defaultPanel);
-            selectD.addEventListener("change", () => {
-                const panelTo = blockCode.querySelector(
-                    `[data-snippet-bloc]#snippet-bloc-${selectD.value}`,
-                );
-                if (!(panelTo instanceof HTMLElement)) return;
-                desactiveAll(panelTo);
-                if (panelTo?.getAttribute("data-state") !== "active") {
-                }
-                panelTo.setAttribute("data-state", "active");
-                panelTo.ariaHidden = "false";
-            });
-        }
-    }
-}
+
 
 
 export const initAppScript = () => {
@@ -117,7 +84,6 @@ export const initAppScript = () => {
     Tabs.autoInit("[data-tab-fx-site]")
     Accordion.autoInit("[data-accordion-example]")
     Popover.autoInit("[data-fx-popover]")
-    initAllCustomComponents()
     initTableOfContent()
     Dropdown.autoInit("[data-dropdown-demo]")
     Modal.autoInit("[data-modal-demo]")
