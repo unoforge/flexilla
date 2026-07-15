@@ -1,6 +1,6 @@
 ---
 name: flexilla
-description: Use this skill when an AI assistant needs to help someone use Flexilla, a headless, framework-agnostic library for interactive UI components (accordion, tabs, dropdown, modal, tooltip, etc.).
+description: Use this skill when an AI assistant needs to help someone use Flexilla, a headless, framework-agnostic library for interactive UI components (accordion, tabs, dropdown, modal, tooltip, toast, etc.).
 license: MIT
 ---
 
@@ -45,16 +45,17 @@ Component files:
 - [components/select-core.md](./components/select-core.md) — headless state engine (no DOM)
 - [components/select.md](./components/select.md)
 - [components/tabs.md](./components/tabs.md)
+- [components/toast.md](./components/toast.md)
 - [components/tooltip.md](./components/tooltip.md)
 
 ## Working Rules
 
 1. Never invent components, options, data-attributes, or methods not present in these skill files or the public docs at `https://flexilla.unoforge.com`.
 2. Prefer the data-attribute auto-init pattern for simple cases. Use JS instantiation only when options are needed.
-3. Flexilla is headless — always tell the user they need to write CSS for open/close states.
+3. Flexilla is headless — always tell the user they need to write CSS for open/close states. **Exception:** Toast is fully self-contained — it renders into a Shadow DOM and requires no CSS.
 4. When a component uses Flexipop for positioning, mention the required CSS: `position: fixed; top: var(--fx-popper-placement-y); left: var(--fx-popper-placement-x);` (or the `ui-popper` utility class).
 5. Components that need styles for state changes use `data-state="open"` / `data-state="close"` and `aria-expanded="true"` / `aria-expanded="false"`.
-6. All components support dual initialization: `new Component(selector, options)` and `Component.autoInit()`.
+6. All components support dual initialization: `new Component(selector, options)` and `Component.autoInit()`. **Exception:** Toast uses a function API (`toast()`, `toast.success()`) or static class methods (`Toast.success()`) — there is no `new Toast()` or auto-init.
 
 ## Installation
 
@@ -103,6 +104,7 @@ All components follow this pattern with their own `[data-fx-*]` selector.
 | Dropdown | `@flexilla/dropdown` | `[data-fx-dropdown]` | Yes |
 | Popover | `@flexilla/popover` | `[data-fx-popover]` | Yes |
 | Tooltip | `@flexilla/tooltip` | `[data-fx-tooltip]` | Yes |
+| Toast | `@flexilla/toast` | None (function API) | No |
 
 ### Navigation
 | Component | Package | Auto-init selector | Popper? |

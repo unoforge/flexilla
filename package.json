@@ -12,10 +12,6 @@
   "scripts": {
     "build": "bun run --filter 'flexipop' build && bun run --filter '@flexilla/*' build",
     "clean": "bun run --filter 'flexipop' clean && bun run --filter '@flexilla/*' clean",
-    "release:version": "lerna version --no-private",
-    "release:version:yes": "lerna version --no-private --yes",
-    "release:publish": "lerna publish from-package --no-private",
-    "release:publish:yes": "lerna publish from-package --no-private --yes",
     "bump": "node scripts/bump-versions.mjs",
     "publish:all": "node scripts/publish-all.mjs",
     "release": "bun run build && bun run typecheck && bun run release:publish",
@@ -26,7 +22,6 @@
     "@tsdown/css": "0.21.4",
     "@types/node": "25.5.0",
     "jsdom": "^26.1.0",
-    "lerna": "9.0.7",
     "tsdown": "0.21.4",
     "typescript": "5.9.3",
     "vitest": "4.1.0"

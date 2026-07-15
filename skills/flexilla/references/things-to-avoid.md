@@ -55,3 +55,10 @@
 ### Tooltip
 - ❌ Do not use Tooltip for rich interactive content. It's for short labels and descriptions.
 - ❌ Do not use Tooltip with `triggerStrategy: "click"` unless you have a specific reason. Default is hover.
+
+### Toast
+- ❌ Do not add `data-*` attributes to your markup — Toast is a function API, not a DOM-trigger component.
+- ❌ Do not import any CSS file — all styles are encapsulated in a Shadow DOM.
+- ❌ Do not use `new Toast()` — the class export uses **static methods** only (`Toast.success()`, `Toast.error()`). There is no instance API.
+- ❌ Do not try to style toast elements with external CSS — Shadow DOM encapsulates all styles. Use `toast.config()` instead.
+- ❌ Do not forget to pass `{ id }` when updating a loading toast — without it, a new toast is created instead of replacing the existing one.

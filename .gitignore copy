@@ -1,8 +1,0 @@
-node_modules/
-.nx/cache
-.nx/workspace-data
-.nx/
-lerna-debug.log
-zip
-log
-**.DS_Store

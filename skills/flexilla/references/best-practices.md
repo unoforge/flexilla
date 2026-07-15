@@ -21,6 +21,7 @@
 2. **Call `cleanup()`** when removing components from the DOM to prevent memory leaks.
 3. **Check for existing instances** — Flexilla's manager prevents double-initialization automatically.
 4. **Use `import { Component } from "@flexilla/flexilla"`** when using multiple components from the same library entry.
+5. **For Toast**, use the function API (`toast.success(...)`) or static class methods (`Toast.success(...)`) — there is no `new Toast()` or `autoInit()`. Pass `{ id }` to update an existing loading toast instead of creating a new one.
 
 ## Accessibility
 
