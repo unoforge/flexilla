@@ -72,10 +72,10 @@
       "name": "@flexilla/autocomplete",
       "version": "0.1.2",
       "dependencies": {
-        "@flexilla/manager": "0.2.3",
-        "@flexilla/select-core": "0.1.1",
-        "@flexilla/utilities": "latest",
-        "flexipop": "0.3.3",
+        "@flexilla/manager": "0.2.4",
+        "@flexilla/select-core": "0.1.2",
+        "@flexilla/utilities": "2.5.5",
+        "flexipop": "0.3.4",
       },
       "devDependencies": {
         "typescript": "5.9.3",
@@ -1891,8 +1891,6 @@
     "@babel/traverse/@babel/parser": ["@babel/parser@7.29.2", "", { "dependencies": { "@babel/types": "^7.29.0" }, "bin": "./bin/babel-parser.js" }, "sha512-4GgRzy/+fsBa72/RZVJmGKPmZu9Byn8o4MoLpmNe1m8ZfYnz5emHLQz3U4gLud6Zwl0RZIcgiLD7Uq7ySFuDLA=="],
 
     "@babel/traverse/@babel/types": ["@babel/types@7.29.0", "", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.28.5" } }, "sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A=="],
-
-    "@flexilla/autocomplete/@flexilla/utilities": ["@flexilla/utilities@2.5.4", "", {}, "sha512-Q00wBmqCXR3RLy2D1Pn+uoxj2gJpBKyB4D1sGF8qC2WzHnZNLTXjQgfD3jNS6QxTtT1McdY6+95Zltp2lq5Vcg=="],
 
     "@prefresh/vite/@rollup/pluginutils": ["@rollup/pluginutils@4.2.1", "", { "dependencies": { "estree-walker": "^2.0.1", "picomatch": "^2.2.2" } }, "sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ=="],
 

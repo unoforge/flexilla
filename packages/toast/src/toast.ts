@@ -6,24 +6,68 @@ import {
 
 const STYLES = `
 /* ── Toaster container ─────────────────────────── */
+/*
+ * Theming: custom properties inherit through the shadow boundary, so a page
+ * can restyle toasts by setting --fx-toast-* on :root (or on any ancestor of
+ * the host). Every public hook falls back to the built-in light or dark value.
+ */
 [data-fx-toaster] {
   position: fixed;
-  width: 356px;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+  width: var(--fx-toast-width, 356px);
+  font-family: var(--fx-toast-font, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji");
   --gray1: hsl(0,0%,99%); --gray2: hsl(0,0%,97.3%); --gray3: hsl(0,0%,95.1%);
   --gray4: hsl(0,0%,93%); --gray5: hsl(0,0%,90.9%); --gray6: hsl(0,0%,88.7%);
   --gray7: hsl(0,0%,85.8%); --gray8: hsl(0,0%,78%); --gray9: hsl(0,0%,56.1%);
   --gray10: hsl(0,0%,52.3%); --gray11: hsl(0,0%,43.5%); --gray12: hsl(0,0%,9%);
-  --normal-bg: #fff; --normal-border: var(--gray4); --normal-text: var(--gray12);
-  --success-bg: hsl(143,85%,96%); --success-border: hsl(145,92%,91%); --success-text: hsl(140,100%,27%);
-  --info-bg: hsl(208,100%,97%); --info-border: hsl(221,91%,91%); --info-text: hsl(210,92%,45%);
-  --warning-bg: hsl(49,100%,97%); --warning-border: hsl(49,91%,91%); --warning-text: hsl(31,92%,45%);
-  --error-bg: hsl(359,100%,97%); --error-border: hsl(359,100%,94%); --error-text: hsl(360,100%,45%);
-  --border-radius: 8px;
+  --base-bg: #fff;
+  --base-success-bg: hsl(143,85%,96%); --base-success-border: hsl(145,92%,91%); --base-success-text: hsl(140,100%,27%);
+  --base-info-bg: hsl(208,100%,97%); --base-info-border: hsl(221,91%,91%); --base-info-text: hsl(210,92%,45%);
+  --base-warning-bg: hsl(49,100%,97%); --base-warning-border: hsl(49,91%,91%); --base-warning-text: hsl(31,92%,45%);
+  --base-error-bg: hsl(359,100%,97%); --base-error-border: hsl(359,100%,94%); --base-error-text: hsl(360,100%,45%);
   box-sizing: border-box; padding: 0; margin: 0; list-style: none;
-  outline: none; z-index: 999999999;
+  outline: none; z-index: var(--fx-toast-z-index, 999999999);
+}
+[data-fx-toaster][data-theme="dark"] {
+  --gray1: hsl(0,0%,11%); --gray2: hsl(0,0%,13.6%); --gray3: hsl(0,0%,15.8%);
+  --gray4: hsl(0,0%,17.9%); --gray5: hsl(0,0%,20.5%); --gray6: hsl(0,0%,24.3%);
+  --gray7: hsl(0,0%,31.2%); --gray8: hsl(0,0%,43.9%); --gray9: hsl(0,0%,43.9%);
+  --gray10: hsl(0,0%,49.4%); --gray11: hsl(0,0%,62.8%); --gray12: hsl(0,0%,93%);
+  --base-bg: #000;
+  --base-success-bg: hsl(150,100%,6%); --base-success-border: hsl(147,100%,12%); --base-success-text: hsl(150,86%,65%);
+  --base-info-bg: hsl(215,100%,6%); --base-info-border: hsl(223,43%,17%); --base-info-text: hsl(216,87%,65%);
+  --base-warning-bg: hsl(64,100%,6%); --base-warning-border: hsl(60,100%,9%); --base-warning-text: hsl(46,87%,65%);
+  --base-error-bg: hsl(358,76%,10%); --base-error-border: hsl(357,89%,16%); --base-error-text: hsl(358,100%,81%);
+}
+@media (prefers-color-scheme: dark) {
+  [data-fx-toaster][data-theme="system"] {
+    --gray1: hsl(0,0%,11%); --gray2: hsl(0,0%,13.6%); --gray3: hsl(0,0%,15.8%);
+    --gray4: hsl(0,0%,17.9%); --gray5: hsl(0,0%,20.5%); --gray6: hsl(0,0%,24.3%);
+    --gray7: hsl(0,0%,31.2%); --gray8: hsl(0,0%,43.9%); --gray9: hsl(0,0%,43.9%);
+    --gray10: hsl(0,0%,49.4%); --gray11: hsl(0,0%,62.8%); --gray12: hsl(0,0%,93%);
+    --base-bg: #000;
+    --base-success-bg: hsl(150,100%,6%); --base-success-border: hsl(147,100%,12%); --base-success-text: hsl(150,86%,65%);
+    --base-info-bg: hsl(215,100%,6%); --base-info-border: hsl(223,43%,17%); --base-info-text: hsl(216,87%,65%);
+    --base-warning-bg: hsl(64,100%,6%); --base-warning-border: hsl(60,100%,9%); --base-warning-text: hsl(46,87%,65%);
+    --base-error-bg: hsl(358,76%,10%); --base-error-border: hsl(357,89%,16%); --base-error-text: hsl(358,100%,81%);
+  }
+}
+/* Resolved tokens: public hook first, then the theme value. */
+[data-fx-toaster] {
+  --normal-bg: var(--fx-toast-bg, var(--base-bg));
+  --normal-border: var(--fx-toast-border, var(--gray4));
+  --normal-text: var(--fx-toast-fg, var(--gray12));
+  --muted-text: var(--fx-toast-muted-fg, var(--gray11));
+  --action-bg: var(--fx-toast-action-bg, var(--normal-text));
+  --action-text: var(--fx-toast-action-fg, var(--normal-bg));
+  --ring: var(--fx-toast-ring, var(--gray9));
+  --border-radius: var(--fx-toast-radius, 8px);
+  --shadow: var(--fx-toast-shadow, 0 4px 12px rgba(0,0,0,.1));
+  --success-bg: var(--fx-toast-success-bg, var(--base-success-bg)); --success-border: var(--fx-toast-success-border, var(--base-success-border)); --success-text: var(--fx-toast-success-fg, var(--base-success-text));
+  --info-bg: var(--fx-toast-info-bg, var(--base-info-bg)); --info-border: var(--fx-toast-info-border, var(--base-info-border)); --info-text: var(--fx-toast-info-fg, var(--base-info-text));
+  --warning-bg: var(--fx-toast-warning-bg, var(--base-warning-bg)); --warning-border: var(--fx-toast-warning-border, var(--base-warning-border)); --warning-text: var(--fx-toast-warning-fg, var(--base-warning-text));
+  --error-bg: var(--fx-toast-error-bg, var(--base-error-bg)); --error-border: var(--fx-toast-error-border, var(--base-error-border)); --error-text: var(--fx-toast-error-fg, var(--base-error-text));
 }
 [data-fx-toaster][data-x-position="right"] { right: max(var(--offset,24px), env(safe-area-inset-right)); }
 [data-fx-toaster][data-x-position="left"]  { left: max(var(--offset,24px), env(safe-area-inset-left)); }
@@ -43,14 +87,14 @@ const STYLES = `
   will-change: transform, opacity, height;
   transition: transform 400ms, opacity 400ms, height 400ms, box-shadow 200ms;
   box-sizing: border-box; outline: none; overflow-wrap: anywhere;
-  width: 356px; padding: 16px;
+  width: var(--fx-toast-width, 356px); padding: 16px;
   background: var(--normal-bg); border: 1px solid var(--normal-border);
   color: var(--normal-text); border-radius: var(--border-radius);
-  box-shadow: 0 4px 12px rgba(0,0,0,.1);
-  font-size: 13px; display: flex; align-items: center; gap: 6px;
+  box-shadow: var(--shadow);
+  font-size: var(--fx-toast-font-size, 13px); display: flex; align-items: center; gap: 6px;
 }
 [data-fx-toast]:focus-visible {
-  box-shadow: 0 4px 12px rgba(0,0,0,.1), 0 0 0 2px rgba(0,0,0,.2);
+  box-shadow: var(--shadow), 0 0 0 2px var(--ring);
 }
 [data-fx-toast][data-y-position="top"] {
   top: 0; --y: translateY(-100%); --lift: 1;
@@ -130,7 +174,15 @@ const STYLES = `
 [data-fx-toast] [data-icon] svg { width: 20px; height: 20px; }
 [data-fx-toast] [data-content] { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 [data-fx-toast] [data-title] { font-weight: 500; line-height: 1.5; }
-[data-fx-toast] [data-description] { font-weight: 400; line-height: 1.4; opacity: .8; }
+[data-fx-toast] [data-description] { font-weight: 400; line-height: 1.4; color: var(--muted-text); }
+[data-fx-toaster][data-rich-colors] [data-fx-toast][data-type] [data-description] { color: inherit; opacity: .85; }
+
+/* Icon tint outside rich colors: set --fx-toast-success-icon and friends. */
+[data-fx-toast][data-type="success"] [data-icon] { color: var(--fx-toast-success-icon, currentColor); }
+[data-fx-toast][data-type="info"]    [data-icon] { color: var(--fx-toast-info-icon, currentColor); }
+[data-fx-toast][data-type="warning"] [data-icon] { color: var(--fx-toast-warning-icon, currentColor); }
+[data-fx-toast][data-type="error"]   [data-icon] { color: var(--fx-toast-error-icon, currentColor); }
+[data-fx-toaster][data-rich-colors] [data-fx-toast][data-type] [data-icon] { color: currentColor; }
 
 /* ── Close button ────────────────────────────── */
 [data-fx-toast] [data-close-button] {
@@ -138,23 +190,27 @@ const STYLES = `
   transform: translate(35%, -35%);
   height: 20px; width: 20px;
   display: flex; align-items: center; justify-content: center;
-  padding: 0; background: var(--gray1); color: var(--gray12);
-  border: 1px solid var(--gray4); border-radius: 50%; cursor: pointer; z-index: 1;
+  padding: 0; background: var(--normal-bg); color: var(--normal-text);
+  border: 1px solid var(--normal-border); border-radius: 50%; cursor: pointer; z-index: 1;
   transition: opacity 100ms, background 200ms, border-color 200ms;
 }
 [data-fx-toast] [data-close-button]:hover {
-  background: var(--gray2); border-color: var(--gray5);
+  background: color-mix(in srgb, var(--normal-text) 6%, var(--normal-bg));
+}
+[data-fx-toast] [data-close-button]:focus-visible,
+[data-fx-toast] [data-button]:focus-visible {
+  outline: 2px solid var(--ring); outline-offset: 2px;
 }
 
 /* ── Action button ───────────────────────────── */
 [data-fx-toast] [data-button] {
-  border-radius: 4px; padding: 0 8px; height: 24px; font-size: 12px;
-  color: var(--normal-bg); background: var(--normal-text);
+  border-radius: 4px; padding: 0 8px; height: 24px; font: inherit; font-size: 12px; font-weight: 500;
+  color: var(--action-text); background: var(--action-bg);
   border: none; cursor: pointer; outline: none;
   display: flex; align-items: center; flex-shrink: 0;
 }
 [data-fx-toast] [data-button][data-cancel] {
-  color: var(--normal-text); background: rgba(0,0,0,.08);
+  color: var(--normal-text); background: color-mix(in srgb, currentColor 10%, transparent);
 }
 
 /* ── Rich colors ─────────────────────────────── */
@@ -166,7 +222,7 @@ const STYLES = `
 /* ── Loading spinner ─────────────────────────── */
 .fx-loader-wrapper { --size: 16px; height: var(--size); width: var(--size); position: absolute; inset: 0; z-index: 10; }
 .fx-spinner { position: relative; top: 50%; left: 50%; height: var(--size); width: var(--size); }
-.fx-loading-bar { animation: fx-spin 1.2s linear infinite; background: var(--gray11); border-radius: 6px; height: 8%; left: -10%; position: absolute; top: -3.9%; width: 24%; }
+.fx-loading-bar { animation: fx-spin 1.2s linear infinite; background: var(--muted-text); border-radius: 6px; height: 8%; left: -10%; position: absolute; top: -3.9%; width: 24%; }
 .fx-loading-bar:nth-child(1)  { animation-delay: -1.2s; transform: rotate(.0001deg) translate(146%); }
 .fx-loading-bar:nth-child(2)  { animation-delay: -1.1s; transform: rotate(30deg) translate(146%); }
 .fx-loading-bar:nth-child(3)  { animation-delay: -1s;   transform: rotate(60deg) translate(146%); }
@@ -180,6 +236,18 @@ const STYLES = `
 .fx-loading-bar:nth-child(11) { animation-delay: -.2s;  transform: rotate(300deg) translate(146%); }
 .fx-loading-bar:nth-child(12) { animation-delay: -.1s;  transform: rotate(330deg) translate(146%); }
 @keyframes fx-spin { 0% { opacity: 1; } 100% { opacity: .15; } }
+
+/* ── Screen reader announcer ─────────────────── */
+[data-fx-toast-announcer] {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ── Reduced motion ──────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [data-fx-toast], [data-fx-toast] * { transition-duration: 0ms !important; }
+  .fx-loading-bar { animation-duration: 2.4s; }
+}
 
 /* ── Mobile ──────────────────────────────────── */
 @media (max-width: 600px) {
@@ -195,6 +263,7 @@ const STYLES = `
 
 export type ToastType = "success" | "error" | "info" | "warning" | "loading"
 export type Position = "top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center"
+export type Theme = "light" | "dark" | "system"
 
 export interface ToastOptions {
   position?: Position
@@ -206,6 +275,10 @@ export interface ToastOptions {
   offset?: number
   mobileOffset?: number
   gap?: number
+  /** Built-in palette. --fx-toast-* custom properties override it either way. */
+  theme?: Theme
+  /** Accessible name of the close button. */
+  closeButtonLabel?: string
 }
 
 export interface ToastContent {
@@ -242,6 +315,8 @@ const defaultConfig: Required<ToastOptions> = {
   offset: 24,
   mobileOffset: 16,
   gap: 14,
+  theme: "light",
+  closeButtonLabel: "Close notification",
 }
 
 let config: Required<ToastOptions> = { ...defaultConfig }
@@ -276,7 +351,35 @@ function getOrCreateShadowRoot(): ShadowRoot {
   const style = document.createElement("style")
   style.textContent = STYLES
   shadow.appendChild(style)
+
+  // Live regions exist before any message is written into them, so screen
+  // readers pick up the very first toast too. Errors interrupt; the rest wait.
+  for (const politeness of ["polite", "assertive"]) {
+    const region = document.createElement("div")
+    region.setAttribute("data-fx-toast-announcer", politeness)
+    region.setAttribute("aria-live", politeness)
+    region.setAttribute("aria-atomic", "true")
+    if (politeness === "assertive") region.setAttribute("role", "alert")
+    else region.setAttribute("role", "status")
+    shadow.appendChild(region)
+  }
+
   return shadow
+}
+
+function announce(data: ToastData) {
+  const shadow = getOrCreateShadowRoot()
+  const politeness = data.type === "error" ? "assertive" : "polite"
+  const region = shadow.querySelector<HTMLElement>(`[data-fx-toast-announcer="${politeness}"]`)
+  if (!region) return
+  const title = data.title.trim()
+  const text = data.description
+    ? `${title}${/[.!?…:]$/.test(title) ? "" : "."} ${data.description}`
+    : title
+
+  // Clear, then write on the next tick: repeating the same message is announced again.
+  region.textContent = ""
+  setTimeout(() => { region.textContent = text }, 100)
 }
 
 function getOrCreateToaster(position: Position): HTMLElement {
@@ -292,6 +395,8 @@ function getOrCreateToaster(position: Position): HTMLElement {
   toaster.setAttribute("data-y-position", yPos)
   toaster.setAttribute("data-x-position", xPos)
   toaster.setAttribute("data-expand", String(config.expand))
+  toaster.setAttribute("data-theme", config.theme)
+  toaster.setAttribute("aria-label", "Notifications")
   if (config.richColors) toaster.setAttribute("data-rich-colors", "")
   toaster.dir = "ltr"
   toaster.style.setProperty("--gap", `${config.gap}px`)
@@ -307,22 +412,36 @@ function getOrCreateToaster(position: Position): HTMLElement {
   })
   observer.observe(toaster, { childList: true })
 
-  toaster.addEventListener("mouseenter", () => {
+  // Hover and keyboard focus both expand the stack and pause the timers:
+  // nobody should lose a toast while reading it or reaching its action.
+  let hovered = false
+  let focused = false
+
+  const pause = () => {
     if (toaster.getAttribute("data-expand") === "true") return
     toaster.setAttribute("data-expand", "true")
     toastTimers.forEach((t) => {
       clearTimeout(t.timeId)
       t.remainingTime -= Date.now() - t.startTime
     })
-    const onLeave = () => {
-      toaster.setAttribute("data-expand", "false")
-      toastTimers.forEach((t, id) => {
-        t.startTime = Date.now()
-        t.timeId = setTimeout(() => dismissToast(id), Math.max(0, t.remainingTime))
-      })
-      toaster.removeEventListener("mouseleave", onLeave)
-    }
-    toaster.addEventListener("mouseleave", onLeave)
+  }
+
+  const resume = () => {
+    if (hovered || focused || config.expand) return
+    toaster.setAttribute("data-expand", "false")
+    toastTimers.forEach((t, id) => {
+      t.startTime = Date.now()
+      t.timeId = setTimeout(() => dismissToast(id), Math.max(0, t.remainingTime))
+    })
+  }
+
+  toaster.addEventListener("mouseenter", () => { hovered = true; pause() })
+  toaster.addEventListener("mouseleave", () => { hovered = false; resume() })
+  toaster.addEventListener("focusin", () => { focused = true; pause() })
+  toaster.addEventListener("focusout", (event) => {
+    if (toaster.contains(event.relatedTarget as Node | null)) return
+    focused = false
+    resume()
   })
 
   shadow.appendChild(toaster)
@@ -371,7 +490,9 @@ function createToastElement(data: ToastData): HTMLElement {
   // close button — only when requested
   if (data.closeButton) {
     const close = document.createElement("button")
+    close.type = "button"
     close.setAttribute("data-close-button", "")
+    close.setAttribute("aria-label", data.closeButtonLabel ?? config.closeButtonLabel)
     close.innerHTML = closeIcon
     close.addEventListener("click", () => dismissToast(data.id))
     toast.appendChild(close)
@@ -381,6 +502,7 @@ function createToastElement(data: ToastData): HTMLElement {
   if (data.type) {
     const icon = document.createElement("span")
     icon.setAttribute("data-icon", "")
+    icon.setAttribute("aria-hidden", "true")
     icon.innerHTML = icons[data.type] || ""
     toast.appendChild(icon)
   }
@@ -404,7 +526,8 @@ function createToastElement(data: ToastData): HTMLElement {
 
   // action button(s)
   if (data.action) {
-    const btn = document.createElement("span")
+    const btn = document.createElement("button")
+    btn.type = "button"
     btn.setAttribute("data-button", "")
     btn.textContent = data.action.label
     if (data.action.cancel) btn.setAttribute("data-cancel", "")
@@ -501,6 +624,7 @@ function addToast(data: ToastData): string | number {
   }
 
   const toaster = getOrCreateToaster(merged.position ?? config.position)
+  announce(merged)
   const existing = data.id && toastMap.get(data.id)?.isConnected ? toastMap.get(data.id) : null
   const toast = createToastElement(merged)
 
