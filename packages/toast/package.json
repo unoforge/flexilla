@@ -1,6 +1,6 @@
 {
   "name": "@flexilla/toast",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "type": "module",
   "description": "A lightweight, framework-agnostic toast/notification component inspired by Sonner — works great with Alpine.js and Livewire.",

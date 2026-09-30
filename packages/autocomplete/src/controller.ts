@@ -283,12 +283,24 @@ export const createAutocomplete = (options: AutocompleteOptions = {}): Autocompl
   };
 
   const updateAria = (state: SelectState) => {
+    if (content) {
+      if (!content.id) content.id = `${selectId}-listbox`;
+      content.setAttribute("role", "listbox");
+      if (options.multiple) content.setAttribute("aria-multiselectable", "true");
+    }
+    // The input is the combobox: it owns the list and says whether it is open.
+    if (input) {
+      input.setAttribute("role", "combobox");
+      input.setAttribute("aria-autocomplete", "list");
+      input.setAttribute("aria-haspopup", "listbox");
+      input.setAttribute("aria-expanded", String(state.open));
+      if (content) input.setAttribute("aria-controls", content.id);
+      if (!input.hasAttribute("autocomplete")) input.setAttribute("autocomplete", "off");
+    }
     if (trigger) {
       trigger.setAttribute("aria-haspopup", "listbox");
       trigger.setAttribute("aria-expanded", String(state.open));
-    }
-    if (content) {
-      content.setAttribute("role", "listbox");
+      if (content) trigger.setAttribute("aria-controls", content.id);
     }
   };
 

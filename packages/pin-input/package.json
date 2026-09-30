@@ -1,6 +1,6 @@
 {
   "name": "@flexilla/pin-input",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -30,7 +30,7 @@
     "typecheck": "tsc --noEmit -p ../../tsconfig.json"
   },
   "dependencies": {
-    "@flexilla/manager": "0.2.4"
+    "@flexilla/manager": "0.2.5"
   },
   "devDependencies": {
     "typescript": "5.9.3"

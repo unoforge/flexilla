@@ -258,12 +258,16 @@ export const createSelect = (options: SelectOptions = {}): SelectController => {
   };
 
   const updateAria = (state: SelectState) => {
+    if (content) {
+      // The trigger points at its list: screen readers can move between both.
+      if (!content.id) content.id = `${selectId}-listbox`;
+      content.setAttribute("role", "listbox");
+      if (options.multiple) content.setAttribute("aria-multiselectable", "true");
+    }
     if (trigger) {
       trigger.setAttribute("aria-haspopup", "listbox");
       trigger.setAttribute("aria-expanded", String(state.open));
-    }
-    if (content) {
-      content.setAttribute("role", "listbox");
+      if (content) trigger.setAttribute("aria-controls", content.id);
     }
   };
 

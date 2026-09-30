@@ -3,7 +3,7 @@
 Package: `@flexilla/toast`
 Auto-init: None — Toast is a function API, not a DOM-trigger component.
 Popper: No
-CSS required: None — styles are injected into a Shadow DOM.
+CSS required: None — styles are injected into a Shadow DOM. Theme with `--fx-toast-*` custom properties.
 
 A lightweight, framework-agnostic toast notification component inspired by Sonner.
 Unlike other Flexilla components, Toast is **not** a DOM-trigger component — there are no `data-*` attributes to add to your markup.
@@ -82,9 +82,45 @@ toast.success("Hello!", {
 | `offset` | `number` | `24` | Distance from viewport edge in px |
 | `mobileOffset` | `number` | `16` | Offset on mobile |
 | `gap` | `number` | `14` | Gap between stacked toasts in px |
+| `theme` | `"light"` \| `"dark"` \| `"system"` | `"light"` | Built-in palette; `--fx-toast-*` properties override it |
+| `closeButtonLabel` | `string` | `"Close notification"` | Accessible name of the close button |
 | `description` | `string` | — | Secondary text under the title |
 | `id` | `string \| number` | auto-generated | Custom ID — matching an existing ID replaces that toast |
 | `action` | `{ label: string, onClick: (e: MouseEvent) => void, cancel?: boolean }` | — | Action button |
+
+## Theming
+
+Custom properties cross the shadow boundary, so you restyle toasts from your own CSS by setting `--fx-toast-*` on `:root` or on any ancestor of `<body>`. Each one falls back to the built-in palette.
+
+```css
+:root {
+  --fx-toast-bg: var(--background);
+  --fx-toast-fg: var(--foreground);
+  --fx-toast-muted-fg: var(--muted-foreground);
+  --fx-toast-border: var(--border);
+  --fx-toast-radius: 12px;
+  --fx-toast-font: "Inter", sans-serif;
+  --fx-toast-success-icon: var(--success);
+}
+```
+
+| Property | Styles |
+|----------|--------|
+| `--fx-toast-bg`, `--fx-toast-fg`, `--fx-toast-muted-fg`, `--fx-toast-border` | Surface, title, description and border |
+| `--fx-toast-radius`, `--fx-toast-shadow`, `--fx-toast-width`, `--fx-toast-font`, `--fx-toast-font-size` | Shape and type |
+| `--fx-toast-action-bg`, `--fx-toast-action-fg`, `--fx-toast-ring` | Action button and focus ring |
+| `--fx-toast-{success,info,warning,error}-icon` | Icon color in plain toasts |
+| `--fx-toast-{success,info,warning,error}-{bg,fg,border}` | Rich colors |
+| `--fx-toast-z-index` | Stacking order of the toaster |
+
+Without custom properties, `theme` picks the built-in palette: `"light"` (default), `"dark"`, or `"system"` to follow the OS.
+
+## Accessibility
+
+- Every toast is announced to screen readers through a live region: errors interrupt, other types wait for a pause.
+- Hovering the stack or moving keyboard focus into it pauses every timer.
+- Action and close buttons are real buttons. Name the close button with `closeButtonLabel` (default: `"Close notification"`).
+- Transitions are removed when the OS asks for reduced motion.
 
 ## Methods (function API)
 
@@ -157,4 +193,4 @@ Enabled by default on toasts with a non-zero `duration`.
 - ❌ Do not add `data-*` attributes to your markup — Toast is a function API, not a DOM-trigger component.
 - ❌ Do not import any CSS file — all styles are encapsulated in the Shadow DOM.
 - ❌ Do not use `new Toast()` — the class export uses **static methods** only (`Toast.success()`, `Toast.error()`, etc.). There is no instance API.
-- ❌ Do not try to style toast elements with external CSS — Shadow DOM encapsulates all styles. Use `toast.config()` for built-in customization (position, rich colors, etc.).
+- ❌ Do not target toast elements with selectors from outside — Shadow DOM blocks them. Set `--fx-toast-*` custom properties instead, and `toast.config()` for behavior (position, theme, rich colors…).
